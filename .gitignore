@@ -20,4 +20,3 @@ utils/ExcelReader.js
 utils/tryExcel.spec.js
 /.vscode/
 /reports/
-.features-gen/
