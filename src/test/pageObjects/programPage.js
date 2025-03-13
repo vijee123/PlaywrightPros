@@ -1,26 +1,28 @@
 
 const { expect } = require('@playwright/test');
+import LoginPage from './loginPage';
 
-export class programPage {
+export default class programPage {
     
     constructor(page) {
       this.page = page;
       this.userName = this.page.locator('//input[@id="username"]'); 
       this.password=this.page.locator('//input[@id="password"]');
+      this.programBtn = this.page.locator('//button[@id="program"]');
     }
   
-    async openURL(){
-    await this.page.goto("https://playwright-frontend-app-a9ea85794ad9.herokuapp.com/login");
-    }
+     
+      async clickProgramBtn() {    
+        await this.programBtn.click();
+        await page.mouse.click(100, 200);
 
-    async enterUserName(username) {
-      await this.userName.fill(username);
-    }
-
-    async enterPassword(password) {
-        await this.password.fill(password);
       }
+
+      async programLogin(url, username, password){
+              let loginPage = new LoginPage(this.page);
+              await loginPage.launchApp(url);
+              await loginPage.validLogin(username, password); 
+      }    
 
 
   }
-  module.exports = programPage;

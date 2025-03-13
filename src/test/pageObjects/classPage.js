@@ -1,22 +1,28 @@
 import {expect} from "@playwright/test";
 
-export class classPage{
+import LoginPage from './loginPage';
+
+export default class classPage{
 
     constructor(page) {
         this.page = page;
         this.classMenuLink = this.page.locator("//span[text()='Class']/parent::button");
         this.manageClassText = this.page.locator("//div[normalize-space()='Manage Class']");
         this.LMSDisplayHomePage = this.page.locator("//span[normalize-space()='LMS - Learning Management System']");
-      //  this.addNewClassBtn = 
     }
 
     async clickClassMenu(){
         await this.classMenuLink.click();
-        await this.page.mouse.click(100, 200); 
     }   
 
+    async classLogin(url, username, password){
+        let loginPage = new LoginPage(this.page);
+        await loginPage.launchApp(url);
+        await loginPage.validLogin(username, password); 
+    }
+
     async verifyManageClassDisplay(){
-        await this.manageClassText.waitFor({timeout: 3000});
+       // await this.manageClassText.waitFor({timeout: 3000});
         return await this.manageClassText.isVisible();
     }
 
@@ -26,4 +32,3 @@ export class classPage{
 
 }
 
-module.exports = classPage;

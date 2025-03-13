@@ -5,8 +5,12 @@ import { on } from 'events';
 import { defineBddConfig } from 'playwright-bdd';
 
 const testDir = defineBddConfig({
-  features: ['src/test/resources/features/program.feature'],
-  steps: ['src/test/stepDef/***.js','src/test/pageObjects/***.js']
+  features: ['src/test/features/*.feature'], 
+  steps: [
+    './fixture/customFixtures.js', 
+    'src/test/stepDef/**/*.js', 
+    'src/test/pageObjects/**/*.js' 
+  ],
 });
 
 
@@ -23,8 +27,14 @@ const testDir = defineBddConfig({
  */
 export default defineConfig({
   testDir,
+
   /* Run tests in files in parallel */
-  fullyParallel: true,
+  fullyParallel: false,
+
+  //Global Setup and TearDown
+   //  globalSetup: require.resolve('./src/test/global-setup.js'),
+  // globalTeardown: require.resolve('./src/test/stepDef/global-teardown'),
+
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
@@ -38,15 +48,15 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://127.0.0.1:3000',
-
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-    video: 'on',
-    screenshot: 'on',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
     headless: false, 
     retries: 2, 
   },
 
+  
   /* Configure projects for major browsers */
   projects: [
     {
@@ -54,15 +64,15 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
 
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    // },
 
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
+    // {
+    //   name: 'webkit',
+    //   use: { ...devices['Desktop Safari'] },
+    // },
 
     /* Test against mobile viewports. */
     // {

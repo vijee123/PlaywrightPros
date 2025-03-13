@@ -9,7 +9,7 @@ allure-results/
 cucumber-report.html
 /.github/workflows/
 screenshotdir/
-/allure-report/
+/allure-results/
 global-setup.js
 loginauth.json
 .DS_Store
@@ -20,3 +20,4 @@ utils/ExcelReader.js
 utils/tryExcel.spec.js
 /.vscode/
 /reports/
+/.features-gen/
