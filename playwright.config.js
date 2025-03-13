@@ -1,10 +1,16 @@
 // @ts-check
 import { defineConfig, devices } from '@playwright/test';
+import { fail } from 'assert';
+import { on } from 'events';
 import { defineBddConfig } from 'playwright-bdd';
 
 const testDir = defineBddConfig({
-  features: ['src/test/resources/features/***.feature'],
-  steps: ['src/test/stepDef/***.js','src/test/pageObjects/***.js']
+  features: ['src/test/features/*.feature'], 
+  steps: [
+    './fixture/customFixtures.js', 
+    'src/test/stepDef/**/*.js', 
+    'src/test/pageObjects/**/*.js' 
+  ],
 });
 
 
@@ -21,8 +27,14 @@ const testDir = defineBddConfig({
  */
 export default defineConfig({
   testDir,
+
   /* Run tests in files in parallel */
-  fullyParallel: true,
+  fullyParallel: false,
+
+  //Global Setup and TearDown
+   //  globalSetup: require.resolve('./src/test/global-setup.js'),
+  // globalTeardown: require.resolve('./src/test/stepDef/global-teardown'),
+
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
@@ -30,16 +42,21 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: [['html'],["line"], ["allure-playwright"]],
+  timeout: 30* 1000,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://127.0.0.1:3000',
-
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    headless: false, 
+    retries: 2, 
   },
 
+  
   /* Configure projects for major browsers */
   projects: [
     {
@@ -47,16 +64,15 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
 
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    // },
 
-    /*
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },*/
+    // {
+    //   name: 'webkit',
+    //   use: { ...devices['Desktop Safari'] },
+    // },
 
     /* Test against mobile viewports. */
     // {
