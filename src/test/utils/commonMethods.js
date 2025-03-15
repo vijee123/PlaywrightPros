@@ -10,6 +10,8 @@ export default class commonTest{
         this.nextPageIcon = this.page.locator("//span[@class='p-paginator-icon pi pi-angle-right']//parent::button");
         this.lastPageIcon = this.page.locator("//span[@class='p-paginator-icon pi pi-angle-double-right']//parent::button");    
         this.PageNo = this.page.locator("//span[@class='p-paginator-pages ng-star-inserted']/button");
+        this.pageHeaderColumns = this.page.locator("//thead[@class='p-datatable-thead']//th[@role='columnheader']");
+        this.sortIcon = this.page.locator("//p-sorticon");
     }
 
     async verifyPaginationTextAndIcons(item){
@@ -30,6 +32,44 @@ export default class commonTest{
             default:
                 throw new Error(`Item "${item}" not found!`);
          }
-       }     
+    }    
+    
+    // async verifySortIconDisplayInHeaderFields(){
+    //     const headersList = await this.pageHeaderColumns.all(); 
+
+    //     for (const header of headersList){
+    //         const headerText = await header.innerText(); 
+    //         console.log("Testing "+headerText +" column for sort icon...");
+    //         if(await this.sortIcon.isVisible()){
+    //             console.log(headerText+" sort icon is visible in the header." );
+    //             return true;
+    //         }
+    //         return false;
+    //     }
+    //  }
+
+
+    async verifyHeaderFieldsSortIcons() { 
+        const headersList = await this.pageHeaderColumns.all(); 
+        let results = [];
+    
+        for (const header of headersList) {
+            const headerText = await header.innerText(); 
+            console.log("Testing " + headerText + " column for sort icon...");
+    
+            // Find the sort icon inside the specific header
+            const sortIcon = await header.locator("//p-sorticon"); 
+    
+            if (await sortIcon.isVisible()) {
+                console.log(headerText + " sort icon is visible in the header.");
+                results.push({ header: headerText, hasSortIcon: true });
+            } else {
+                console.log(headerText + " sort icon is NOT visible in the header.");
+                results.push({ header: headerText, hasSortIcon: false });
+            }
+        }
+    
+        return results; // Return the list of headers with their sort icon status
+    }
     
 }

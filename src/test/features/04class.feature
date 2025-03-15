@@ -40,3 +40,7 @@ Feature: Validate class page functionality
       | nextPageIcon     |
       | lastPageIcon     |
 
+  Scenario: Validate the sort icon of all the field in datatable
+    When Admin clicks the Class Navigation bar in the Header
+    Then Admin should see the sort icon in all the fields of the datatable
+
