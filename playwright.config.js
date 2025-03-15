@@ -5,7 +5,7 @@ import { on } from 'events';
 import { defineBddConfig } from 'playwright-bdd';
 
 const testDir = defineBddConfig({
-  features: ['src/test/features/*.feature'], 
+  features: ['src/test/features/04class.feature'], 
   steps: [
     './fixture/customFixtures.js', 
     'src/test/stepDef/**/*.js', 
@@ -29,7 +29,10 @@ export default defineConfig({
   testDir,
 
   /* Run tests in files in parallel */
-  fullyParallel: false,
+  fullyParallel: true,
+
+  // Limits the number of parallel workers
+  workers: 3,
 
   //Global Setup and TearDown
    //  globalSetup: require.resolve('./src/test/global-setup.js'),
