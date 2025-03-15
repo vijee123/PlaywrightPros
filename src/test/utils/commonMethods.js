@@ -16,13 +16,13 @@ export default class commonTest{
         console.log("Pagination item checked: " + item);
         switch(item){
             case "paginationText":
-                {console.log("into page text");return await this.paginationText.isVisible();}
+                return await this.paginationText.isVisible();
             case "firstPageIcon":
                 return await this.firstPageIcon.isVisible();
             case "previousPageIcon":
                 return await this.previousPageIcon.isVisible();
             case "nextPageIcon":
-                {console.log("into next page icon");return await this.nextPageIcon.isVisible();}
+               return await this.nextPageIcon.isVisible();
             case "lastPageIcon":
                 return await this.lastPageIcon.isVisible();
             case "pageNumber":
