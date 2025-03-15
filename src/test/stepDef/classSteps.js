@@ -38,3 +38,10 @@ import { test, Given, Then, When } from '../../../fixture/customFixtures.js';
     console.log("Admin should see the : "+ items +" under the data table...");
     await classPageFixture.verifyPaginationTextAndIcons(items);  
   });
+
+  Then('Admin should see the sort icon in all the fields of the datatable', async ({classPageFixture}) => {
+    console.log("Admin should see the sort icon in all the fields of the datatable...");
+    const sortIconResults = await classPageFixture.verifySortIconDisplayInHeaderFields();
+    const allHaveIcons = sortIconResults.every(item => item.hasSortIcon);
+    await expect(allHaveIcons).toBeTruthy();
+  });

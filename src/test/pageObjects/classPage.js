@@ -73,5 +73,10 @@ export default class classPage{
         return await common.verifyPaginationTextAndIcons(items);
     }   
 
+    async verifySortIconDisplayInHeaderFields(){
+        let common = new commonTest(this.page);
+        return await common.verifyHeaderFieldsSortIcons();
+    }
+
 }
 
