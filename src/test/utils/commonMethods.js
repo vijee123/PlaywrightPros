@@ -34,21 +34,7 @@ export default class commonTest{
          }
     }    
     
-    // async verifySortIconDisplayInHeaderFields(){
-    //     const headersList = await this.pageHeaderColumns.all(); 
-
-    //     for (const header of headersList){
-    //         const headerText = await header.innerText(); 
-    //         console.log("Testing "+headerText +" column for sort icon...");
-    //         if(await this.sortIcon.isVisible()){
-    //             console.log(headerText+" sort icon is visible in the header." );
-    //             return true;
-    //         }
-    //         return false;
-    //     }
-    //  }
-
-
+  
     async verifyHeaderFieldsSortIcons() { 
         const headersList = await this.pageHeaderColumns.all(); 
         let results = [];
