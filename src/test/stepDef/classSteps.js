@@ -4,12 +4,9 @@ import { test, Given, Then, When } from '../../../fixture/customFixtures.js';
 const path = require('path');
 const { readCSV } = require('../utils/csvReader');
 
-const csvPath = path.resolve(__dirname, '../../../test-data/classTestData.csv'); // Adjust based on output from process.cwd()
-console.log("Resolved CSV Path:", csvPath);  // Debugging line
+const csvPath = path.resolve(__dirname, '../../../test-data/classTestData.csv'); 
 const testData = readCSV(csvPath);
-console.log("Loaded Test Data:", testData);
 
- 
  When('Admin clicks the Class Navigation bar in the Header', async ({classPageFixture}) => {
     console.log("Admin clicks the Class Navigation bar in the Header");
    await classPageFixture.clickClassMenu();
