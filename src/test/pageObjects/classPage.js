@@ -19,7 +19,25 @@ export default class classPage{
         this.staffNameHeader = this.page.locator("//th[normalize-space()='Staff Name']");   
         this.EditDeleteHeader = this.page.locator("//th[contains(text(), 'Edit / Delete')]");
         this.paginationText = this.page.getByText('Showing');
-    }
+        this.addNewClassButton = this.page.getByText('Add New Class');
+        this.selectBatchName = this.page.locator("//input[@placeholder='Select a Batch Name']");
+        this.classTopicTextbox = this.page.locator("#classTopic");  
+        this.classDescTextbox = this.page.locator("#classDescription");
+        this.classDate = this.page.locator("//p-calendar//input");
+        this.classDatePickerIcon = this.page.locator("//span[@class='p-button-icon pi pi-calendar']//parent::button");
+        this.staffNameDropdown = this.page.locator("//p-dropdown[@id='staffId']//div[@role='button']/span");
+        this.staffNameDropdownOptions = this.page.locator("//ul[@role='listbox']/p-dropdownitem");
+        this.statusActiveRadioBtn = this.page.locator("//p-radiobutton[@ng-reflect-input-id='Active']");
+        this.statusInactiveRadioBtn = this.page.locator("//p-radiobutton[@ng-reflect-input-id='Inactive']");
+        this.saveButton = this.page.locator("//button[normalize-space()='Save']");
+        this.commentsTextbox = this.page.locator("#classComments");
+        this.notesTextbox = this.page.locator("#classNotes");
+        this.recordingTextbox = this.page.locator("#classRecordingPath");
+        this.saveButton = this.page.locator("#saveClass");
+        this.cancelButton = this.page.locator('[label="Cancel"]');
+        this.classCreatedMsg = this.page.locator("//div[@class='p-toast-detail ng-tns-c91-12' and text()='Class Created']");
+        
+       }
 
     async clickClassMenu(){
         await this.classMenuLink.click();
@@ -77,6 +95,48 @@ export default class classPage{
         let common = new commonTest(this.page);
         return await common.verifyHeaderFieldsSortIcons();
     }
+
+    async clickAddNewClassButton(){
+        await this.addNewClassButton.click();
+    }
+
+    async clickSaveButton(){
+        await this.saveButton.click();
+    }
+
+    async classCreatedMsgDisplay(){
+        return await this.classCreatedMsg.isVisible();
+    }
+
+    async selectStaffByName(staffName) {
+        await this.staffNameDropdown.click();
+      //  await this.page.waitForSelector("//ul[@role='listbox']/p-dropdownitem");
+        await this.page.locator(`//p-dropdownitem[@ng-reflect-label='${staffName}']`).click();
+    }
+
+    async fillCreateClassForm({ batchName, classTopic, classDesc, classDates, staffName, status, comments,notes, recording}) {
+        await this.selectBatchName.fill(batchName); // Select the batch name
+        await this.classTopicTextbox.fill(classTopic); 
+        await this.classDescTextbox.fill(classDesc);
+        console.log("Class Dates sent are: ", classDates);
+        //await this.classDate.fill(classDates);
+        await this.selectStaffByName(staffName);
+      //  staffNameDropdown.fill(staffName); // Select the staff name
+        if (status === "Active") {
+            await this.statusActiveRadioBtn.click();
+        }
+        else if (status === "Inactive") {
+            await this.statusInactiveRadioBtn.click();
+        }
+        await this.commentsTextbox.fill(comments);
+        await this.notesTextbox.fill(notes);
+        await this.recordingTextbox.fill(recording);
+      
+    }
+
+
+
+
 
 }
 
