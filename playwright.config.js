@@ -10,7 +10,7 @@ const testDir = defineBddConfig({
     './fixture/customFixtures.js', 
     'src/test/stepDef/**/*.js', 
     'src/test/pageObjects/**/*.js' 
-  ],
+ ], 
 });
 
 
@@ -29,7 +29,7 @@ export default defineConfig({
   testDir,
 
   /* Run tests in files in parallel */
-  fullyParallel: false,
+  fullyParallel: true,
 
   //Global Setup and TearDown
    //  globalSetup: require.resolve('./src/test/global-setup.js'),
