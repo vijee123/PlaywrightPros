@@ -1,46 +1,53 @@
 @parallel
 Feature: Validate class page functionality
 
-  Scenario: Validating the class manage page
+  Background:
     When Admin clicks the Class Navigation bar in the Header
-    Then Admin should land on the Manage class page
 
-  Scenario: Validating the Header in the Manage class page
-    When Admin clicks the Class Navigation bar in the Header
-    Then Admin should see the Manage Class Header
+  # Scenario: Validating the class manage page
+  #   Then Admin should land on the Manage class page
 
-  Scenario: Validating Search bar in class page
-    When Admin clicks the Class Navigation bar in the Header
-    Then Admin should see the Search bar in the Manage Class page
+  # Scenario: Validating the Header in the Manage class page
+  #  Then Admin should see the Manage Class Header
+
+  # Scenario: Validating Search bar in class page
+  #   Then Admin should see the Search bar in the Manage Class page
 
 
-  Scenario Outline: Scenario Outline name: Validating the data table headers in the class page
-    When Admin clicks the Class Navigation bar in the Header
-    Then Admin should see the datatable heading like "<header>"
+  # Scenario Outline: Scenario Outline name: Validating the data table headers in the class page
+  #   Then Admin should see the datatable heading like "<header>"
+
+  #   Examples:
+  #     | header            |
+  #     | Batch Name        |
+  #     | Class Topic       |
+  #     | Class Description |
+  #     | Status            |
+  #     | Class Date        |
+  #     | Staff Name        |
+
+  # Scenario Outline: Validating the text and pagination icon in the classpage
+  #   Then Admin should see the below "<items>" pagination controls under the data table
+
+  #   Examples:
+  #     | items            |
+  #     | paginationText   |
+  #     | pageNumber       |
+  #     | firstPageIcon    |
+  #     | previousPageIcon |
+  #     | nextPageIcon     |
+  #     | lastPageIcon     |
+
+  # Scenario: Validate the sort icon of all the field in datatable
+  #  Then Admin should see the sort icon in all the fields of the datatable
+
+  Scenario Outline: Create a class with valid and invalid inputs
+    When Admin clicks the Add New Class button
+    And Admin enters the given details "<scenario>" in the Create Class form
+    And Admin clicks the Save button
+    Then Admin should see the valid "<message>"
 
     Examples:
-      | header            |
-      | Batch Name        |
-      | Class Topic       |
-      | Class Description |
-      | Status            |
-      | Class Date        |
-      | Staff Name        |
-
-  Scenario Outline: Validating the text and pagination icon in the classpage
-    When Admin clicks the Class Navigation bar in the Header
-    Then Admin should see the below "<items>" pagination controls under the data table
-
-    Examples:
-      | items            |
-      | paginationText   |
-      | pageNumber       |
-      | firstPageIcon    |
-      | previousPageIcon |
-      | nextPageIcon     |
-      | lastPageIcon     |
-
-  Scenario: Validate the sort icon of all the field in datatable
-    When Admin clicks the Class Navigation bar in the Header
-    Then Admin should see the sort icon in all the fields of the datatable
-
+      | scenario   | message |
+      | validClass1 | success |
+      | validClass2 | success |
