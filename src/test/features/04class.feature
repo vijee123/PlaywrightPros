@@ -42,12 +42,17 @@ Feature: Validate class page functionality
   #  Then Admin should see the sort icon in all the fields of the datatable
 
   Scenario Outline: Create a class with valid and invalid inputs
-    When Admin clicks the Add New Class button
-    And Admin enters the given details "<scenario>" in the Create Class form
+    When Admin clicks the Add New Class button and enters the details of "<scenario>" in the Create Class form
     And Admin clicks the Save button
     Then Admin should see the valid "<message>"
 
     Examples:
-      | scenario   | message |
-      | validClass1 | success |
-      | validClass2 | success |
+      | scenario          | message            |
+      | validClass        | success            |
+      | withoutStatus     | statusErrorMsg     |
+      | withoutStaffName  | staffNameErrorMsg  |
+      | withoutClassDate  | classDateErrorMsg  |
+      | withoutClassTopic | classTopicErrorMsg |
+      | withoutBatchName  | batchNameErrorMsg  |
+
+
