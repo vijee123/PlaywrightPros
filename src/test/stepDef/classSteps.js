@@ -53,21 +53,17 @@ const testData = readCSV(csvPath);
     await expect(allHaveIcons).toBeTruthy();
   });
 
-  When('Admin clicks the Add New Class button', async ({classPageFixture}) => {
+  When('Admin clicks the Add New Class button and enters the details of {string} in the Create Class form', async ({classPageFixture}, scenario) => {
     console.log("Admin clicks the Create Class button...");
     await classPageFixture.clickAddNewClassButton();
-  });
   
-  When('Admin enters the given details {string} in the Create Class form', async ({classPageFixture}, scenario) => {
     console.log("Admin enters the given details in the Create Class form");
-    // Find the matching row based on Scenario name
     const rowData = testData.find(row => row.Scenario === scenario);
     
     if (!rowData) {
         throw new Error(`No data found for scenario: ${scenario}`);
     }
 
-    // Fill the form using the fetched data
     await classPageFixture.fillCreateClassForm({
         batchName: rowData.batchName,
         classTopic: rowData.classTopic,
@@ -80,15 +76,21 @@ const testData = readCSV(csvPath);
         recording: rowData.recording
     });
 
+    if(rowData.scenario === "EmptyBatchName"){
+         classPageFixture.clickBatchNameDeleteIcon();
+    };
+
   });
+
   
   When('Admin clicks the Save button', async ({classPageFixture}) => {
     console.log("Admin clicks the Save button");
     await classPageFixture.clickSaveButton();
   });
   
-  Then('Admin should see the valid {string}', async ({classPageFixture}, arg) => {
-    console.log("Admin should see the valid message");
-    const isVisible = classPageFixture.classCreatedMsgDisplay();
-    await expect(isVisible).toBeTruthy();
+
+  Then('Admin should see the valid {string}', async ({classPageFixture}, message) => {
+      console.log("Admin should see the valid message displayed...");
+      const isVisible = classPageFixture.verifyMessageDisplay(message);
+      await expect(isVisible).toBeTruthy();
   })
