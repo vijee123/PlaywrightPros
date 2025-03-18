@@ -48,7 +48,11 @@ export default class classPage{
         this.batchNameErrorMsg = this.page.locator("//small[text()='Batch Name is required.']");
         this.batchNameDeleteIcon = this.page.locator("//input[@placeholder='Select a Batch Name']/parent::div/i[contains(@class,'p-dropdown-clear')]");
         this.staffNameDeleteIcon = this.page.locator("//input[@placeholder='Select a Staff Name']/parent::div/i[contains(@class,'p-dropdown-clear')]");
-        
+        this.headerDeleteIcon = this.page.locator("//mat-card-title[@class='mat-card-title']//button[@icon='pi pi-trash']");
+        this.saveButton = this.page.locator("//span[text()='Save']");
+        this.cancelButton = this.page.locator("//span[text()='Cancel']");
+        this.closeIcon = this.page.locator("//span[contains(@class,'p-dialog-header-close-icon')]");   
+             
        }
 
 
@@ -69,7 +73,21 @@ export default class classPage{
 
     async clickLMSTextClick(){
         await this.LMSDisplayHomePage.click();
-    }   
+    }  
+    
+    async clickHeaderDeleteIcon(){
+        await this.headerDeleteIcon.click();    
+    }
+
+    async verifyHeaderDeleteIconDisplay(){
+        return await this.headerDeleteIcon.isVisible();     
+    }
+
+    async verifyClassFooterMessage(moduleName){
+        let common = new commonTest(this.page);
+        return await common.verifyFooterMessage(moduleName);
+    }
+
 
     async verifyHeaderDisplay(header){
         console.log("Header is: " + header);
