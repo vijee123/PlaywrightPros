@@ -132,9 +132,9 @@ const testData = readCSV(csvPath);
     await expect(classPageFixture.closeIcon).toBeVisible();
   });
 
-  Then('Admin should see the below input fields and their text boxes in the class details form', async ({classPageFixture}) => {
-    console.log("Verify the display of all input fields and their text boxes in the class details form...");
-    // const isVisible = await classPageFixture.verifyClassDetailsFormFields();
-    // await expect(isVisible).toBeTruthy();
+  Then('Admin should see the below input fields {string} and their text boxes in the class details form', async ({classPageFixture}, fieldNameAndBox) => {
+    console.log("Verify the display of input fields and text boxes in the class details form...");
+    await expect(classPageFixture.verifyFieldNameDisplay(fieldNameAndBox)).toBeTruthy();
+    await expect(classPageFixture.verifyFieldBoxDisplay(fieldNameAndBox)).toBeTruthy();   
   });
   
