@@ -19,18 +19,15 @@ Feature: program Module
 #Scenario:Admin should see the Title as "Manage Program"
 #Then Admin should see the title "Manage Program"
 
-#Scenario:Admin should able to see Program name, description, and status for each program
-#Then Admin should able to see Program name, description, and status for each program
+#Scenario:Admin should see a Delete button in left top is disabled
+#Then Admin should see a Delete button in left top is disabled
 
-Scenario:Admin should see a Delete button in left top is disabled
-Then Admin should see a Delete button in left top is disabled
-
-Scenario:Verify the Search button 
-Then Admin should see Search bar with text as Search
+#Scenario:Verify the Search button 
+#Then Admin should see Search bar with text as Search
 
 #Scenario:Verify column header name of data table
-#Then Admin should see data table with column header on the Manage Program Page as  Program Name, Program Description, Program Status, Edit/Delete
-
+#Then Admin should see data table with column header on the Manage Program Page as  "program name program description program status  edit / delete"
+     
 #Scenario:Verify checkbox default state beside Program Name column header
 #Then Admin should see checkbox default state as unchecked beside Program Name column header 
 
@@ -40,10 +37,10 @@ Then Admin should see Search bar with text as Search
 #Scenario:Verify Sort icon in manage program
 #Then Admin should see the sort arrow icon beside to each column header except Edit and Delete 
 
-#Scenario Outline:Verify edit and delete icon in manage program
-#Then Admin should see the "<Options>" in each rows
-#Examples: 
- #   |Options|
- #   |Edit_Icon|
-  #  |Check_Box|
-   # | Delete_Icon |
+Scenario Outline:Verify edit and delete icon in manage program
+Then Admin should see the "<Options>" in each rows
+Examples: 
+   |Options|
+   |Edit_Icon|
+    |Check_Box|
+   | Delete_Icon |

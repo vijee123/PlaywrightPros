@@ -52,33 +52,40 @@ const ProgramPage  = require('../pageObjects/programPage.js');
   // Admin should able to see Program name, description, and status for each program
 
   Then('Admin should able to see Program name, description, and status for each program', async ({programPageFixture}) => {
-    const headerTexts=await programPageFixture.headerTextValidation();
-   const ExpTex="program name program description program status  edit / delete";
-    expect(headerTexts.trim().toLowerCase()).toContain(ExpTex.trim().toLowerCase());
+   // const headerTexts=await programPageFixture.headerTextValidation();
+  //   const ExpTex="program name program description program status  edit / delete";
+   // expect(headerTexts.trim().toLowerCase()).toContain(ExpTex.trim().toLowerCase());
   });
   
  //Admin should see a Delete button in left top is disabled
 
-  Then('Admin should see a Delete button in left top is disabled', async ({}) => {
-  
+  Then('Admin should see a Delete button in left top is disabled', async ({programPageFixture}) => {
+    const isDisabled = await programPageFixture.isDeleteButtonDisabled();    
+    expect(isDisabled).toBe(true); 
   });
 
   //Verify the Search button 
 
-  Then('Admin should see Search bar with text as Search', async ({}) => {
-    
+  Then('Admin should see Search bar with text as Search', async ({programPageFixture}) => {
+    const placeholderText = await programPageFixture.isSearchBarDisplayed();
+    expect(placeholderText).toBe("Search...");
+   
   });
 
-  // Verify column header name of data table
 
-  Then('Admin should see data table with column header on the Manage Program Page as  Program Name, Program Description, Program Status, Edit\\/Delete', async ({}) => {
-  
+  Then('Admin should see data table with column header on the Manage Program Page as  {string}', async ({programPageFixture}, ExpTex) => {
+    const headerTexts=await programPageFixture.headerTextValidation();
+    //const ExpTex="program name program description program status  edit / delete";
+    expect(headerTexts.trim().toLowerCase()).toContain(ExpTex.trim().toLowerCase());
   });
+
+ 
 
   // Verify checkbox default state beside Program Name column header
 
-  Then('Admin should see checkbox default state as unchecked beside Program Name column header', async ({}) => {
- 
+  Then('Admin should see checkbox default state as unchecked beside Program Name column header', async ({programPageFixture}) => {
+    const isUnchecked = await programPageFixture.validateHeaderCheckBoxUnchecked();
+    expect(isUnchecked).toBe(true);
   });
 
   // Verify checkboxes default state beside each Program names in the data table 
@@ -95,6 +102,7 @@ const ProgramPage  = require('../pageObjects/programPage.js');
   
   //Verify edit and delete icon in manage program
 
-  Then('Admin should see the {string} in each rows', async ({}, arg) => {
-   
+  Then('Admin should see the {string} in each rows', async ({programPageFixture}, option) => {
+    const areIconsVisible = await programPageFixture.batchAllRowOptions(option);
+    expect(areIconsVisible).toBe(true);
   });
