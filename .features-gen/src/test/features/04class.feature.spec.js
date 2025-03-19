@@ -7,6 +7,155 @@ test.describe('Validate class page functionality', () => {
     await When('Admin clicks the Class Navigation bar in the Header', null, { classPageFixture }); 
   });
   
+  test('Validating the class manage page', { tag: ['@parallel'] }, async ({ Then, classPageFixture }) => { 
+    await Then('Admin should land on the Manage class page', null, { classPageFixture }); 
+  });
+
+  test('Validating the Header in the Manage class page', { tag: ['@parallel'] }, async ({ Then, classPageFixture }) => { 
+    await Then('Admin should see the Manage Class Header', null, { classPageFixture }); 
+  });
+
+  test('Validating Search bar in class page', { tag: ['@parallel'] }, async ({ Then, classPageFixture }) => { 
+    await Then('Admin should see the Search bar in the Manage Class page', null, { classPageFixture }); 
+  });
+
+  test.describe('Scenario Outline name: Validating the data table headers in the class page', () => {
+
+    test('Example #1', { tag: ['@parallel'] }, async ({ Then, classPageFixture }) => { 
+      await Then('Admin should see the datatable heading like "Batch Name"', null, { classPageFixture }); 
+    });
+
+    test('Example #2', { tag: ['@parallel'] }, async ({ Then, classPageFixture }) => { 
+      await Then('Admin should see the datatable heading like "Class Topic"', null, { classPageFixture }); 
+    });
+
+    test('Example #3', { tag: ['@parallel'] }, async ({ Then, classPageFixture }) => { 
+      await Then('Admin should see the datatable heading like "Class Description"', null, { classPageFixture }); 
+    });
+
+    test('Example #4', { tag: ['@parallel'] }, async ({ Then, classPageFixture }) => { 
+      await Then('Admin should see the datatable heading like "Status"', null, { classPageFixture }); 
+    });
+
+    test('Example #5', { tag: ['@parallel'] }, async ({ Then, classPageFixture }) => { 
+      await Then('Admin should see the datatable heading like "Class Date"', null, { classPageFixture }); 
+    });
+
+    test('Example #6', { tag: ['@parallel'] }, async ({ Then, classPageFixture }) => { 
+      await Then('Admin should see the datatable heading like "Staff Name"', null, { classPageFixture }); 
+    });
+
+  });
+
+  test.describe('Validating the text and pagination icon in the classpage', () => {
+
+    test('Example #1', { tag: ['@parallel'] }, async ({ Then, classPageFixture }) => { 
+      await Then('Admin should see the below "paginationText" pagination controls under the data table', null, { classPageFixture }); 
+    });
+
+    test('Example #2', { tag: ['@parallel'] }, async ({ Then, classPageFixture }) => { 
+      await Then('Admin should see the below "pageNumber" pagination controls under the data table', null, { classPageFixture }); 
+    });
+
+    test('Example #3', { tag: ['@parallel'] }, async ({ Then, classPageFixture }) => { 
+      await Then('Admin should see the below "firstPageIcon" pagination controls under the data table', null, { classPageFixture }); 
+    });
+
+    test('Example #4', { tag: ['@parallel'] }, async ({ Then, classPageFixture }) => { 
+      await Then('Admin should see the below "previousPageIcon" pagination controls under the data table', null, { classPageFixture }); 
+    });
+
+    test('Example #5', { tag: ['@parallel'] }, async ({ Then, classPageFixture }) => { 
+      await Then('Admin should see the below "nextPageIcon" pagination controls under the data table', null, { classPageFixture }); 
+    });
+
+    test('Example #6', { tag: ['@parallel'] }, async ({ Then, classPageFixture }) => { 
+      await Then('Admin should see the below "lastPageIcon" pagination controls under the data table', null, { classPageFixture }); 
+    });
+
+  });
+
+  test('Validate the sort icon of all the field in datatable', { tag: ['@parallel'] }, async ({ Then, classPageFixture }) => { 
+    await Then('Admin should see the sort icon in all the fields of the datatable', null, { classPageFixture }); 
+  });
+
+  test('Validating the Delete button under the Manage class page', { tag: ['@parallel'] }, async ({ Then, classPageFixture }) => { 
+    await Then('Admin should see the Delete button under the Manage class page header.', null, { classPageFixture }); 
+  });
+
+  test('Validate the footer message at bottom of manage class page', { tag: ['@parallel'] }, async ({ Then, classPageFixture }) => { 
+    await Then('Admin should see footer message Total no of classes at the bottom of the Manage class page', null, { classPageFixture }); 
+  });
+
+  test.describe('Create a class with valid and invalid inputs', () => {
+
+    test('Example #1', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "validClass" in the Create Class form', null, { classPageFixture }); 
+      await And('Admin clicks the Save button', null, { classPageFixture }); 
+      await Then('Admin should see the valid "success"', null, { classPageFixture }); 
+    });
+
+    test('Example #2', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "withoutStatus" in the Create Class form', null, { classPageFixture }); 
+      await And('Admin clicks the Save button', null, { classPageFixture }); 
+      await Then('Admin should see the valid "statusErrorMsg"', null, { classPageFixture }); 
+    });
+
+    test('Example #3', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "withoutStaffName" in the Create Class form', null, { classPageFixture }); 
+      await And('Admin clicks the Save button', null, { classPageFixture }); 
+      await Then('Admin should see the valid "staffNameErrorMsg"', null, { classPageFixture }); 
+    });
+
+    test('Example #4', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "withoutClassDate" in the Create Class form', null, { classPageFixture }); 
+      await And('Admin clicks the Save button', null, { classPageFixture }); 
+      await Then('Admin should see the valid "classDateErrorMsg"', null, { classPageFixture }); 
+    });
+
+    test('Example #5', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "withoutClassTopic" in the Create Class form', null, { classPageFixture }); 
+      await And('Admin clicks the Save button', null, { classPageFixture }); 
+      await Then('Admin should see the valid "classTopicErrorMsg"', null, { classPageFixture }); 
+    });
+
+    test('Example #6', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "withoutBatchName" in the Create Class form', null, { classPageFixture }); 
+      await And('Admin clicks the Save button', null, { classPageFixture }); 
+      await Then('Admin should see the valid "batchNameErrorMsg"', null, { classPageFixture }); 
+    });
+
+    test('Example #7', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "withoutClassDesc" in the Create Class form', null, { classPageFixture }); 
+      await And('Admin clicks the Save button', null, { classPageFixture }); 
+      await Then('Admin should see the valid "success"', null, { classPageFixture }); 
+    });
+
+    test('Example #8', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "withoutComments" in the Create Class form', null, { classPageFixture }); 
+      await And('Admin clicks the Save button', null, { classPageFixture }); 
+      await Then('Admin should see the valid "success"', null, { classPageFixture }); 
+    });
+
+    test('Example #9', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "withoutNotes" in the Create Class form', null, { classPageFixture }); 
+      await And('Admin clicks the Save button', null, { classPageFixture }); 
+      await Then('Admin should see the valid "success"', null, { classPageFixture }); 
+    });
+
+    test('Example #10', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "withoutRec" in the Create Class form', null, { classPageFixture }); 
+      await And('Admin clicks the Save button', null, { classPageFixture }); 
+      await Then('Admin should see the valid "success"', null, { classPageFixture }); 
+    });
+
+  });
+
+  test('Validate Class Details Popup window', { tag: ['@parallel'] }, async ({ When, classPageFixture, Then }) => { 
+    await When('Admin clicks a add new class under the class menu bar', null, { classPageFixture }); 
+    await Then('Admin should see a popup open for class details with empty form along with SAVE and CANCEL button and Close(X) Icon', null, { classPageFixture }); 
+  });
+
   test('Validate input fields and their text boxes in Class details form', { tag: ['@parallel'] }, async ({ When, classPageFixture, Then }) => { 
     await When('Admin clicks a add new class under the class menu bar', null, { classPageFixture }); 
     await Then('Admin should see the below input fields and their text boxes in the class details form', null, { classPageFixture }); 
@@ -23,5 +172,34 @@ test.use({
 });
 
 const bddFileData = [ // bdd-data-start
-  {"pwTestLine":10,"pickleLine":73,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":11,"gherkinStepLine":74,"keywordType":"Action","textWithKeyword":"When Admin clicks a add new class under the class menu bar","stepMatchArguments":[]},{"pwStepLine":12,"gherkinStepLine":75,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the below input fields and their text boxes in the class details form","stepMatchArguments":[]}]},
+  {"pwTestLine":10,"pickleLine":7,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":11,"gherkinStepLine":8,"keywordType":"Outcome","textWithKeyword":"Then Admin should land on the Manage class page","stepMatchArguments":[]}]},
+  {"pwTestLine":14,"pickleLine":10,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":15,"gherkinStepLine":11,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the Manage Class Header","stepMatchArguments":[]}]},
+  {"pwTestLine":18,"pickleLine":13,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":19,"gherkinStepLine":14,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the Search bar in the Manage Class page","stepMatchArguments":[]}]},
+  {"pwTestLine":24,"pickleLine":22,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":25,"gherkinStepLine":18,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the datatable heading like \"Batch Name\"","stepMatchArguments":[{"group":{"start":44,"value":"\"Batch Name\"","children":[{"start":45,"value":"Batch Name","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":28,"pickleLine":23,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":29,"gherkinStepLine":18,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the datatable heading like \"Class Topic\"","stepMatchArguments":[{"group":{"start":44,"value":"\"Class Topic\"","children":[{"start":45,"value":"Class Topic","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":32,"pickleLine":24,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":33,"gherkinStepLine":18,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the datatable heading like \"Class Description\"","stepMatchArguments":[{"group":{"start":44,"value":"\"Class Description\"","children":[{"start":45,"value":"Class Description","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":36,"pickleLine":25,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":37,"gherkinStepLine":18,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the datatable heading like \"Status\"","stepMatchArguments":[{"group":{"start":44,"value":"\"Status\"","children":[{"start":45,"value":"Status","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":40,"pickleLine":26,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":41,"gherkinStepLine":18,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the datatable heading like \"Class Date\"","stepMatchArguments":[{"group":{"start":44,"value":"\"Class Date\"","children":[{"start":45,"value":"Class Date","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":44,"pickleLine":27,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":45,"gherkinStepLine":18,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the datatable heading like \"Staff Name\"","stepMatchArguments":[{"group":{"start":44,"value":"\"Staff Name\"","children":[{"start":45,"value":"Staff Name","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":52,"pickleLine":34,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":53,"gherkinStepLine":30,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the below \"paginationText\" pagination controls under the data table","stepMatchArguments":[{"group":{"start":27,"value":"\"paginationText\"","children":[{"start":28,"value":"paginationText","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":56,"pickleLine":35,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":57,"gherkinStepLine":30,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the below \"pageNumber\" pagination controls under the data table","stepMatchArguments":[{"group":{"start":27,"value":"\"pageNumber\"","children":[{"start":28,"value":"pageNumber","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":60,"pickleLine":36,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":61,"gherkinStepLine":30,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the below \"firstPageIcon\" pagination controls under the data table","stepMatchArguments":[{"group":{"start":27,"value":"\"firstPageIcon\"","children":[{"start":28,"value":"firstPageIcon","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":64,"pickleLine":37,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":65,"gherkinStepLine":30,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the below \"previousPageIcon\" pagination controls under the data table","stepMatchArguments":[{"group":{"start":27,"value":"\"previousPageIcon\"","children":[{"start":28,"value":"previousPageIcon","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":68,"pickleLine":38,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":69,"gherkinStepLine":30,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the below \"nextPageIcon\" pagination controls under the data table","stepMatchArguments":[{"group":{"start":27,"value":"\"nextPageIcon\"","children":[{"start":28,"value":"nextPageIcon","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":72,"pickleLine":39,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":73,"gherkinStepLine":30,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the below \"lastPageIcon\" pagination controls under the data table","stepMatchArguments":[{"group":{"start":27,"value":"\"lastPageIcon\"","children":[{"start":28,"value":"lastPageIcon","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":78,"pickleLine":41,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":79,"gherkinStepLine":42,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the sort icon in all the fields of the datatable","stepMatchArguments":[]}]},
+  {"pwTestLine":82,"pickleLine":44,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":83,"gherkinStepLine":45,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the Delete button under the Manage class page header.","stepMatchArguments":[]}]},
+  {"pwTestLine":86,"pickleLine":47,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":87,"gherkinStepLine":48,"keywordType":"Outcome","textWithKeyword":"Then Admin should see footer message Total no of classes at the bottom of the Manage class page","stepMatchArguments":[]}]},
+  {"pwTestLine":92,"pickleLine":57,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":93,"gherkinStepLine":51,"keywordType":"Action","textWithKeyword":"When Admin clicks the Add New Class button and enters the details of \"validClass\" in the Create Class form","stepMatchArguments":[{"group":{"start":64,"value":"\"validClass\"","children":[{"start":65,"value":"validClass","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":94,"gherkinStepLine":52,"keywordType":"Action","textWithKeyword":"And Admin clicks the Save button","stepMatchArguments":[]},{"pwStepLine":95,"gherkinStepLine":53,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the valid \"success\"","stepMatchArguments":[{"group":{"start":27,"value":"\"success\"","children":[{"start":28,"value":"success","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":98,"pickleLine":58,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":99,"gherkinStepLine":51,"keywordType":"Action","textWithKeyword":"When Admin clicks the Add New Class button and enters the details of \"withoutStatus\" in the Create Class form","stepMatchArguments":[{"group":{"start":64,"value":"\"withoutStatus\"","children":[{"start":65,"value":"withoutStatus","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":100,"gherkinStepLine":52,"keywordType":"Action","textWithKeyword":"And Admin clicks the Save button","stepMatchArguments":[]},{"pwStepLine":101,"gherkinStepLine":53,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the valid \"statusErrorMsg\"","stepMatchArguments":[{"group":{"start":27,"value":"\"statusErrorMsg\"","children":[{"start":28,"value":"statusErrorMsg","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":104,"pickleLine":59,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":105,"gherkinStepLine":51,"keywordType":"Action","textWithKeyword":"When Admin clicks the Add New Class button and enters the details of \"withoutStaffName\" in the Create Class form","stepMatchArguments":[{"group":{"start":64,"value":"\"withoutStaffName\"","children":[{"start":65,"value":"withoutStaffName","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":106,"gherkinStepLine":52,"keywordType":"Action","textWithKeyword":"And Admin clicks the Save button","stepMatchArguments":[]},{"pwStepLine":107,"gherkinStepLine":53,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the valid \"staffNameErrorMsg\"","stepMatchArguments":[{"group":{"start":27,"value":"\"staffNameErrorMsg\"","children":[{"start":28,"value":"staffNameErrorMsg","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":110,"pickleLine":60,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":111,"gherkinStepLine":51,"keywordType":"Action","textWithKeyword":"When Admin clicks the Add New Class button and enters the details of \"withoutClassDate\" in the Create Class form","stepMatchArguments":[{"group":{"start":64,"value":"\"withoutClassDate\"","children":[{"start":65,"value":"withoutClassDate","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":112,"gherkinStepLine":52,"keywordType":"Action","textWithKeyword":"And Admin clicks the Save button","stepMatchArguments":[]},{"pwStepLine":113,"gherkinStepLine":53,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the valid \"classDateErrorMsg\"","stepMatchArguments":[{"group":{"start":27,"value":"\"classDateErrorMsg\"","children":[{"start":28,"value":"classDateErrorMsg","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":116,"pickleLine":61,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":117,"gherkinStepLine":51,"keywordType":"Action","textWithKeyword":"When Admin clicks the Add New Class button and enters the details of \"withoutClassTopic\" in the Create Class form","stepMatchArguments":[{"group":{"start":64,"value":"\"withoutClassTopic\"","children":[{"start":65,"value":"withoutClassTopic","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":118,"gherkinStepLine":52,"keywordType":"Action","textWithKeyword":"And Admin clicks the Save button","stepMatchArguments":[]},{"pwStepLine":119,"gherkinStepLine":53,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the valid \"classTopicErrorMsg\"","stepMatchArguments":[{"group":{"start":27,"value":"\"classTopicErrorMsg\"","children":[{"start":28,"value":"classTopicErrorMsg","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":122,"pickleLine":62,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":123,"gherkinStepLine":51,"keywordType":"Action","textWithKeyword":"When Admin clicks the Add New Class button and enters the details of \"withoutBatchName\" in the Create Class form","stepMatchArguments":[{"group":{"start":64,"value":"\"withoutBatchName\"","children":[{"start":65,"value":"withoutBatchName","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":124,"gherkinStepLine":52,"keywordType":"Action","textWithKeyword":"And Admin clicks the Save button","stepMatchArguments":[]},{"pwStepLine":125,"gherkinStepLine":53,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the valid \"batchNameErrorMsg\"","stepMatchArguments":[{"group":{"start":27,"value":"\"batchNameErrorMsg\"","children":[{"start":28,"value":"batchNameErrorMsg","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":128,"pickleLine":63,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":129,"gherkinStepLine":51,"keywordType":"Action","textWithKeyword":"When Admin clicks the Add New Class button and enters the details of \"withoutClassDesc\" in the Create Class form","stepMatchArguments":[{"group":{"start":64,"value":"\"withoutClassDesc\"","children":[{"start":65,"value":"withoutClassDesc","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":130,"gherkinStepLine":52,"keywordType":"Action","textWithKeyword":"And Admin clicks the Save button","stepMatchArguments":[]},{"pwStepLine":131,"gherkinStepLine":53,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the valid \"success\"","stepMatchArguments":[{"group":{"start":27,"value":"\"success\"","children":[{"start":28,"value":"success","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":134,"pickleLine":64,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":135,"gherkinStepLine":51,"keywordType":"Action","textWithKeyword":"When Admin clicks the Add New Class button and enters the details of \"withoutComments\" in the Create Class form","stepMatchArguments":[{"group":{"start":64,"value":"\"withoutComments\"","children":[{"start":65,"value":"withoutComments","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":136,"gherkinStepLine":52,"keywordType":"Action","textWithKeyword":"And Admin clicks the Save button","stepMatchArguments":[]},{"pwStepLine":137,"gherkinStepLine":53,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the valid \"success\"","stepMatchArguments":[{"group":{"start":27,"value":"\"success\"","children":[{"start":28,"value":"success","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":140,"pickleLine":65,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":141,"gherkinStepLine":51,"keywordType":"Action","textWithKeyword":"When Admin clicks the Add New Class button and enters the details of \"withoutNotes\" in the Create Class form","stepMatchArguments":[{"group":{"start":64,"value":"\"withoutNotes\"","children":[{"start":65,"value":"withoutNotes","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":142,"gherkinStepLine":52,"keywordType":"Action","textWithKeyword":"And Admin clicks the Save button","stepMatchArguments":[]},{"pwStepLine":143,"gherkinStepLine":53,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the valid \"success\"","stepMatchArguments":[{"group":{"start":27,"value":"\"success\"","children":[{"start":28,"value":"success","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":146,"pickleLine":66,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":147,"gherkinStepLine":51,"keywordType":"Action","textWithKeyword":"When Admin clicks the Add New Class button and enters the details of \"withoutRec\" in the Create Class form","stepMatchArguments":[{"group":{"start":64,"value":"\"withoutRec\"","children":[{"start":65,"value":"withoutRec","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":148,"gherkinStepLine":52,"keywordType":"Action","textWithKeyword":"And Admin clicks the Save button","stepMatchArguments":[]},{"pwStepLine":149,"gherkinStepLine":53,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the valid \"success\"","stepMatchArguments":[{"group":{"start":27,"value":"\"success\"","children":[{"start":28,"value":"success","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":154,"pickleLine":69,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":155,"gherkinStepLine":70,"keywordType":"Action","textWithKeyword":"When Admin clicks a add new class under the class menu bar","stepMatchArguments":[]},{"pwStepLine":156,"gherkinStepLine":71,"keywordType":"Outcome","textWithKeyword":"Then Admin should see a popup open for class details with empty form along with SAVE and CANCEL button and Close(X) Icon","stepMatchArguments":[]}]},
+  {"pwTestLine":159,"pickleLine":73,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":160,"gherkinStepLine":74,"keywordType":"Action","textWithKeyword":"When Admin clicks a add new class under the class menu bar","stepMatchArguments":[]},{"pwStepLine":161,"gherkinStepLine":75,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the below input fields and their text boxes in the class details form","stepMatchArguments":[]}]},
 ]; // bdd-data-end
