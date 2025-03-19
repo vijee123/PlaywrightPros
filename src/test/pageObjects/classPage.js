@@ -2,6 +2,7 @@ import {expect} from "@playwright/test";
 
 import LoginPage from './loginPage';
 import commonTest from '../utils/commonMethods';
+import { th } from "@faker-js/faker";
 
 export default class classPage{
 
@@ -20,10 +21,12 @@ export default class classPage{
         this.EditDeleteHeader = this.page.locator("//th[contains(text(), 'Edit / Delete')]");
         this.paginationText = this.page.getByText('Showing');
         this.addNewClassButton = this.page.getByText('Add New Class');
+        this.labels =this.page.locator("//label");
         this.selectBatchName = this.page.locator("//input[@placeholder='Select a Batch Name']");
         this.classTopicTextbox = this.page.locator("#classTopic");  
         this.classDescTextbox = this.page.locator("#classDescription");
         this.classDate = this.page.locator("//p-calendar//input");
+        this.classNumber = this.page.locator("#classNo");
         this.classDatePickerBtn = this.page.locator("//span[@class='p-button-icon pi pi-calendar']//parent::button");
         this.datePickerYear = this.page.locator("//span[contains(@class, 'p-datepicker-year')]");
         this.datePickerMonth = this.page.locator("//span[contains(@class, 'p-datepicker-month')]");
@@ -88,6 +91,64 @@ export default class classPage{
         return await common.verifyFooterMessage(moduleName);
     }
 
+    async verifyFieldNameDisplay(fieldName){
+        console.log("Tested Field Name is: " + fieldName);
+        const fieldLabels = await this.page.locator("//label").allTextContents();
+        console.log("The labels of fields are: "+fieldLabels); 
+        switch(fieldName){
+            case "BatchName":  
+               return await fieldLabels.includes("Batch Name");
+            case "ClassTopic": 
+               return await fieldLabels.includes("Class Topic");
+            case "ClassDescription":
+                return  await fieldLabels.includes("Class Description");
+            case "ClassDates":
+                return await fieldLabels.includes(" Select Class Dates ");
+            case "ClassNo":
+                return await fieldLabels.includes("No of Classes");
+            case "StaffName":
+                return await fieldLabels.includes("Staff Name");
+            case "Status":
+                return await fieldLabels.includes("Status");
+            case "Comments":
+                return await fieldLabels.includes("Comments");
+            case "Notes":
+                return await fieldLabels.includes("Notes");
+            case "Recording":
+                return await fieldLabels.includes("Recording");
+        }
+
+    }
+
+
+    async verifyFieldBoxDisplay(fieldBox){
+         switch(fieldBox){
+            case "BatchName":  
+                {console.log("into bathc name..");return await this.selectBatchName.isVisible();}
+            case "ClassTopic": 
+              {console.log("into class topic..");return await this.classTopicTextbox.isVisible();}
+            case "ClassDescription":
+                return await this.classDescTextbox.isVisible();
+            case "ClassDates":
+                return await this.classDate.isVisible();
+            case "ClassNo":
+               return await this.classNumber.isVisible();
+            case "StaffName":
+                return await this.staffNameDropdown.isVisible();
+            case "Comments":
+                return await this.commentsTextbox.isVisible();
+            case "Notes":
+                return await this.notesTextbox.isVisible();
+            case "Recording":
+               return await this.recordingTextbox.isVisible();
+            case "Status":
+               return await this.statusActiveRadioBtn.isVisible();
+             
+        }
+
+    }
+            
+                
 
     async verifyHeaderDisplay(header){
         console.log("Header is: " + header);
