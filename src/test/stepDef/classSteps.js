@@ -1,11 +1,12 @@
 import { expect } from '@playwright/test';
 import { test, Given, Then, When } from '../../../fixture/customFixtures.js';
 
+const { faker } = require('@faker-js/faker');
 const path = require('path');
 const { readCSV } = require('../utils/csvReader');
 
-//const csvPath = path.resolve(__dirname, '../../../test-data/classTestData.csv'); 
-//const testData = readCSV(csvPath);
+const csvPath = path.resolve(__dirname, '../../../test-data/classTestData.csv'); 
+const testData = readCSV(csvPath);
 
  When('Admin clicks the Class Navigation bar in the Header', async ({classPageFixture}) => {
     console.log("Admin clicks the Class Navigation bar in the Header");
@@ -53,21 +54,27 @@ const { readCSV } = require('../utils/csvReader');
     await expect(allHaveIcons).toBeTruthy();
   });
 
-  When('Admin clicks the Add New Class button', async ({classPageFixture}) => {
+  When('Admin clicks the Add New Class button and enters the details of {string} in the Create Class form', async ({classPageFixture}, scenario) => {
     console.log("Admin clicks the Create Class button...");
     await classPageFixture.clickAddNewClassButton();
-  });
   
-  When('Admin enters the given details {string} in the Create Class form', async ({classPageFixture}, scenario) => {
     console.log("Admin enters the given details in the Create Class form");
-    // Find the matching row based on Scenario name
     const rowData = testData.find(row => row.Scenario === scenario);
     
     if (!rowData) {
         throw new Error(`No data found for scenario: ${scenario}`);
     }
 
-    // Fill the form using the fetched data
+    // Scenarios where we want a random alphanumeric value starting with "Playwright"
+    const randomClassScenarios = ["validClass", "withoutClassDesc", "withoutNotes", "withoutRec"];
+
+    // Generate classTopic only for specified scenarios
+    const classTopic = randomClassScenarios.includes(scenario) 
+        ? `Playwright_${faker.string.alphanumeric(3).toUpperCase()}`  
+        : rowData.classTopic;
+    
+     console.log("Class Topic generated is : ", classTopic);
+
     await classPageFixture.fillCreateClassForm({
         batchName: rowData.batchName,
         classTopic: rowData.classTopic,
@@ -80,15 +87,54 @@ const { readCSV } = require('../utils/csvReader');
         recording: rowData.recording
     });
 
+    if(rowData.scenario === "EmptyBatchName"){
+         classPageFixture.clickBatchNameDeleteIcon();
+    };
+
   });
+
   
   When('Admin clicks the Save button', async ({classPageFixture}) => {
     console.log("Admin clicks the Save button");
     await classPageFixture.clickSaveButton();
   });
   
-  Then('Admin should see the valid {string}', async ({classPageFixture}, arg) => {
-    console.log("Admin should see the valid message");
-    const isVisible = classPageFixture.classCreatedMsgDisplay();
-    await expect(isVisible).toBeTruthy();
+
+  Then('Admin should see the valid {string}', async ({classPageFixture}, message) => {
+      console.log("Admin should see the valid message displayed...");
+      const isVisible = classPageFixture.verifyMessageDisplay(message);
+      await expect(isVisible).toBeTruthy();
   })
+
+
+  Then('Admin should see the Delete button under the Manage class page header.', async ({classPageFixture}) => {
+    console.log("Verify the display of DELETE button under Manage Header...");
+    const isVisible = await classPageFixture.verifyHeaderDeleteIconDisplay();
+    await expect(isVisible).toBeTruthy();    
+  });
+
+
+  Then('Admin should see footer message Total no of classes at the bottom of the Manage class page', async ({classPageFixture}) => {
+    console.log("Verify the footer message at the bottom of the Manage class page...");
+    await classPageFixture.verifyClassFooterMessage("class");
+
+  });
+
+  When('Admin clicks a add new class under the class menu bar', async ({classPageFixture}) => {
+    console.log("Admin clicks the Save button");
+    await classPageFixture.clickAddNewClassButton();
+  });
+  
+  Then('Admin should see a popup open for class details with empty form along with SAVE and CANCEL button and Close\\(X) Icon', async ({classPageFixture}) => {
+    console.log("Verify whether popup opens with SAVE and CANCEL button and Close(X) Icon...");
+    await expect(classPageFixture.saveButton).toBeVisible();
+    await expect(classPageFixture.cancelButton).toBeVisible();  
+    await expect(classPageFixture.closeIcon).toBeVisible();
+  });
+
+  Then('Admin should see the below input fields {string} and their text boxes in the class details form', async ({classPageFixture}, fieldNameAndBox) => {
+    console.log("Verify the display of input fields and text boxes in the class details form...");
+    await expect(classPageFixture.verifyFieldNameDisplay(fieldNameAndBox)).toBeTruthy();
+    await expect(classPageFixture.verifyFieldBoxDisplay(fieldNameAndBox)).toBeTruthy();   
+  });
+  
