@@ -137,4 +137,18 @@ const testData = readCSV(csvPath);
     await expect(classPageFixture.verifyFieldNameDisplay(fieldNameAndBox)).toBeTruthy();
     await expect(classPageFixture.verifyFieldBoxDisplay(fieldNameAndBox)).toBeTruthy();   
   });
+
+  Given('Admin is on the Class Popup window', async ({classPageFixture}) => {
+    console.log("Admin is in the class pop up window...");
+    await classPageFixture.clickAddNewClassButton();
+  });
+  
+  When('Admin selects class date in date picker', async ({classPageFixture}) => {
+    await classPageFixture.selectDates("03/26/2025, 03/27/2025");
+  });
+  
+  Then('Admin should see no of class value is added automatically', async ({classPageFixture}) => {
+    console.log("Verify the No Of Classses displayed..");
+    await expect(this.page.locator('#classNo')).toHaveAttribute('ng-reflect-model', '2');
+  });
   
