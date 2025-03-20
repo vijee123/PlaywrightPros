@@ -12,6 +12,7 @@ export default class commonTest{
         this.PageNo = this.page.locator("//span[@class='p-paginator-pages ng-star-inserted']/button");
         this.pageHeaderColumns = this.page.locator("//thead[@class='p-datatable-thead']//th[@role='columnheader']");
         this.sortIcon = this.page.locator("//p-sorticon");
+        this.footerMessage = this.page.locator("//div[contains(@class,'p-datatable-footer')]/div");
     }
 
     async verifyPaginationTextAndIcons(item){
@@ -56,6 +57,22 @@ export default class commonTest{
         }
     
         return results; 
+    }
+
+
+    async verifyFooterMessage(moduleName){
+       const footerText = await this.footerMessage.innerText();
+       console.log("Footer message is: " + footerText);
+       switch(moduleName.toLowerCase()){
+           case "class":
+               return expect(footerText).toMatch(/In total there are .* classes/);
+           case "batch":
+               return expect(footerText).toMatch(/In total there are .* batches/);
+           case "program":
+               return expect(footerText).toMatch(/In total there are .* programs/);
+           default:
+               throw new Error(`Module "${moduleName}" not found!`);
+       }
     }
 
     
