@@ -127,6 +127,29 @@ When('Admin clicks the Batch Navigation bar in the Header', async ({batchPageFix
        }
     await expect(isVisible).toBeTruthy();
   });
+
+  Given('Admin is on the Batch Details Pop Up WIndow', async ({batchPageFixture}) => {
+    await batchPageFixture.batchMenuLink.click();
+    await batchPageFixture.addNewBatchMenuBtn.click();
+    await batchPageFixture.popUpDialog.click();
+  });
+  
+  When('Admin checks all the fields are enabled', async ({batchPageFixture}) => {
+    await batchPageFixture.popUpDialog.isVisible();
+    });
+  
+  Then('The pop up should include the fields {string} as type {string}', async ({batchPageFixture}, field, type) => {
+   
+    await expect(batchPageFixture.checkFieldsInPopUp(field,type)).toBeTruthy();
+  });
+
+  When('Admin selects program name present in the dropdown', async ({batchPageFixture}) => {
+    await batchPageFixture.selectRandomProgram();
+  });
+  
+  Then('Admin should see selected program name in the batch name prefix box', async ({batchPageFixture}) => {
+    await expect(batchPageFixture.VerifyBatchPrefixBox()).toBeTruthy;
+  });
    
 
 
