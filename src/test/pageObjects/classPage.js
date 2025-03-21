@@ -216,10 +216,22 @@ export default class classPage{
             return;
         }
         await this.staffNameDropdown.click();
-        await this.page.waitForTimeout(3000); 
+        await this.page.waitForTimeout(1500); 
         await this.page.waitForSelector("//ul[@role='listbox']/p-dropdownitem");
         await this.page.locator(`//p-dropdownitem[@ng-reflect-label='${staffName}']`).click();
     }
+
+    async checkNoOfClasses() {
+        try {
+            const value = await this.page.locator('#classNo').inputValue();
+            console.log("No of Classes value:", value);
+            return value;
+        } catch (error) {
+            console.error("Error getting class number:", error);
+            throw error; 
+        }
+    }
+
 
     async fillCreateClassForm({ batchName, classTopic, classDesc, classDates, staffName, status, comments,notes, recording}) {
         await this.selectBatchName.fill(batchName); 
@@ -243,11 +255,12 @@ export default class classPage{
 
         // Ensure classDates is always an array
        if (!Array.isArray(classDates)) {
-       classDates = [classDates]; 
+          classDates = classDates.split(",").map(date => date.trim()); 
         }
 
         // Filter out invalid or empty dates
         classDates = classDates.filter(date => date && typeof date === "string" && date.includes("/"));
+
 
         // If there are no valid dates, exit early
         if (classDates.length === 0) {
@@ -282,8 +295,7 @@ export default class classPage{
            const targetYear = parseInt(year, 10);
            const currentMonthIndex = monthNames.indexOf(displayedMonth);
            const targetMonthIndex = monthNames.indexOf(targetMonth);
-
-           if (currentYear < targetYear || (currentYear === targetYear && currentMonthIndex < targetMonthIndex)) {
+          if (currentYear < targetYear || (currentYear === targetYear && currentMonthIndex < targetMonthIndex)) {
                await this.datePickerNextArrowBtn.click(); 
            } else {
                await this.datePickerPrevArrowBtn.click(); 
@@ -300,10 +312,13 @@ export default class classPage{
        await this.page.locator(`//table[contains(@class,'p-datepicker-calendar')]/tbody/tr/td/span[text()='${parseInt(day, 10)}']`).click();
        console.log(`Selected date: ${targetDate}`);
 
-       await this.page.waitForTimeout(2000);
-      }
+         await this.page.waitForTimeout(2000);
+       }
 
-     await this.page.keyboard.press('Escape'); 
+        await this.page.click('body', { position: { x: 0, y: 0 } }); 
+        await this.page.keyboard.press('Escape'); 
+        await this.page.waitForTimeout(1000);
+     
     }
 
 
