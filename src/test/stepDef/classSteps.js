@@ -3,14 +3,17 @@ import { test, Given, Then, When } from '../../../fixture/customFixtures.js';
 
 const { faker } = require('@faker-js/faker');
 const path = require('path');
-const { readCSV } = require('../utils/csvReader');
+import { chainingData } from "../utils/chainingData.js";
+//console.log("Chaining batchName data into class Steps is: "+chainingData.getBatchName());
 
-const csvPath = path.resolve(__dirname, '../../../test-data/classTestData.csv'); 
-const testData = readCSV(csvPath);
+import { readExcelSheet } from '../utils/excelReader.js';
+const classTestData = readExcelSheet('classData');  
+
 
  When('Admin clicks the Class Navigation bar in the Header', async ({classPageFixture}) => {
     console.log("Admin clicks the Class Navigation bar in the Header");
    await classPageFixture.clickClassMenu();
+   
   });
   
   Then('Admin should land on the Manage class page', async ({classPageFixture}) => {
@@ -54,12 +57,16 @@ const testData = readCSV(csvPath);
     await expect(allHaveIcons).toBeTruthy();
   });
 
-  When('Admin clicks the Add New Class button and enters the details of {string} in the Create Class form', async ({classPageFixture}, scenario) => {
+  When('Admin clicks the Add New Class button and enters the details of {string} in the Create Class form', async ({classPageFixture, sharedData}, scenario) => {
     console.log("Admin clicks the Create Class button...");
+    //const batchName = sharedData.batchName;
+    //console.log("The batchName inside CLASS STEPS is: "+sharedData.batchName);
+    // const batchName = chainingData.getBatchName();
+    // console.log("Chaining data of batchName in classSTeps is: ",batchName);
     await classPageFixture.clickAddNewClassButton();
   
     console.log("Admin enters the given details in the Create Class form");
-    const rowData = testData.find(row => row.Scenario === scenario);
+    const rowData = classTestData.find(row => row.Scenario === scenario);
     
     if (!rowData) {
         throw new Error(`No data found for scenario: ${scenario}`);
@@ -136,5 +143,19 @@ const testData = readCSV(csvPath);
     console.log("Verify the display of input fields and text boxes in the class details form...");
     await expect(classPageFixture.verifyFieldNameDisplay(fieldNameAndBox)).toBeTruthy();
     await expect(classPageFixture.verifyFieldBoxDisplay(fieldNameAndBox)).toBeTruthy();   
+  });
+
+  Given('Admin is on the Class Popup window', async ({classPageFixture}) => {
+    console.log("Admin is in the class pop up window...");
+    await classPageFixture.clickAddNewClassButton();
+  });
+  
+  When('Admin selects class date in date picker', async ({classPageFixture}) => {
+    await classPageFixture.selectDates("03/26/2025, 03/27/2025");
+  });
+  
+  Then('Admin should see no of class value is added automatically', async ({classPageFixture}) => {
+    console.log("Verify the No Of Classses displayed..");
+    await expect(this.page.locator('#classNo')).toHaveAttribute('ng-reflect-model', '2');
   });
   
