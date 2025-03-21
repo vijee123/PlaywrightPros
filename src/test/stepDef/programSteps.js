@@ -4,6 +4,7 @@ import programPage from '../pageObjects/programPage.js';
 
 const ProgramPage  = require('../pageObjects/programPage.js');
 
+
   When('Admin clicks the program menu from the header', async ({programPageFixture}) => {  
      await programPageFixture.clickProgramBtn();
   });
@@ -74,8 +75,7 @@ const ProgramPage  = require('../pageObjects/programPage.js');
 
 
   Then('Admin should see data table with column header on the Manage Program Page as  {string}', async ({programPageFixture}, ExpTex) => {
-    const headerTexts=await programPageFixture.headerTextValidation();
-    //const ExpTex="program name program description program status  edit / delete";
+    const headerTexts=await programPageFixture.headerTextValidation();   
     expect(headerTexts.trim().toLowerCase()).toContain(ExpTex.trim().toLowerCase());
   });
 
@@ -96,13 +96,55 @@ const ProgramPage  = require('../pageObjects/programPage.js');
 
   //Verify Sort icon in manage program
 
-  Then('Admin should see the sort arrow icon beside to each column header except Edit and Delete', async ({}) => {
-   
+  Then('Admin should see the sort arrow icon beside to each column header except Edit and Delete', async ({programPageFixture}) => {
+    const sortIconResults = await programPageFixture.ProgramPageverifySortIconDisplayInHeaderFields();    
+    const allHaveIcons = sortIconResults.every(item => item.hasSortIcon);
+    await expect(allHaveIcons).toBeTruthy();
+
   });
   
   //Verify edit and delete icon in manage program
 
   Then('Admin should see the {string} in each rows', async ({programPageFixture}, option) => {
-    const areIconsVisible = await programPageFixture.batchAllRowOptions(option);
-    expect(areIconsVisible).toBe(true);
+    let results = await programPageFixture.programpageIconsValidations(option);     
+    expect(results.every(result => result === 'true')).toBe(true);
   });
+
+
+  // Add New Program
+
+
+    //Verify add New Program pop up window
+  
+    Then('Admin should see pop up window for program details after clicking the Add New Program button', async ({programPageFixture}) => {
+      const PopUpisvisible = await programPageFixture.addNewPopUpWindow();
+      expect(PopUpisvisible).toBe(true);
+    });
+
+    //Verify add New Program pop up window Title  
+
+    Then('Admin should see the pop up window title as {string} after clicking the Add New Program button', async ({programPageFixture}, popUpTile) => {
+     
+      const popUptext=await programPageFixture.popUpheadingValidation();   
+      expect(popUptext).toContain(popUpTile);
+    });
+
+  
+
+  //Verify Add New Program functionalities
+
+  
+  Then('Admin Adds new program and click on save button for the scenario {string} in program module', async ({programPageFixture}, Scenario) => {
+   
+    await programPageFixture.AddnewProgramValidation(Scenario);
+  });
+  
+  Then('Admin gets message for the scenario {string} for program Module', async ({programPageFixture}, scenario) => {
+    console.log("Admin should see the valid message displayed...");
+    const isVisible = await programPageFixture.validateCreateProgramMessage(scenario);
+    await expect(isVisible).toBeTruthy();
+  });
+
+
+
+    

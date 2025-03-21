@@ -1,0 +1,6 @@
+scenario,ProgramName,programDescription,Status
+onlyMandatoryfields,Testinmindseven,descriopt,Active
+withoutMandatoryfields,,,
+cancelwithValidData,Testinmindfive,fiveDescription,Active
+closewithValidData,Testinmindfive,fiveDescription,Active
+verifyAddedProgram,Testinmindsix,sixdescription,Active

@@ -37,10 +37,34 @@ Feature: program Module
 #Scenario:Verify Sort icon in manage program
 #Then Admin should see the sort arrow icon beside to each column header except Edit and Delete 
 
-Scenario Outline:Verify edit and delete icon in manage program
-Then Admin should see the "<Options>" in each rows
-Examples: 
-   |Options|
-   |Edit_Icon|
-    |Check_Box|
-   | Delete_Icon |
+#Scenario Outline:Verify edit and delete icon in manage program
+#Then Admin should see the "<Options>" in each rows
+#Examples: 
+  #|Options|
+  #|Edit_Icon|
+   #|Check_Box|
+  # |Delete_Icon |
+
+
+#Add New Program Scenarios
+
+#Scenario: Verify add New Program pop up window
+#Then Admin should see pop up window for program details after clicking the Add New Program button
+
+#Scenario: Verify title of the pop up window
+#Then Admin should see the pop up window title as "Program Details" after clicking the Add New Program button
+
+
+Scenario Outline: Verify Add New Program functionalities  
+    Then Admin Adds new program and click on save button for the scenario "<scenario>" in program module
+    Then Admin gets message for the scenario "<scenario>" for program Module
+
+    Examples: 
+      | scenario  |
+      |cancelwithValidData|
+      |closewithValidData|
+      |onlyMandatoryfields|
+      |withoutMandatoryfields|
+      |verifyAddedProgram|
+      
+      

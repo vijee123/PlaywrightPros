@@ -54,6 +54,9 @@ export default defineConfig({
     video: 'retain-on-failure',
     headless: false, 
     retries: 2, 
+    launchOptions:{
+      slowMo:1000,
+    }
   },
 
   

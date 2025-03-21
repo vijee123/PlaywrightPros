@@ -13,6 +13,9 @@ export default class commonTest{
         this.pageHeaderColumns = this.page.locator("//thead[@class='p-datatable-thead']//th[@role='columnheader']");
         this.sortIcon = this.page.locator("//p-sorticon");
         this.footerMessage = this.page.locator("//div[contains(@class,'p-datatable-footer')]/div");
+        this.allEditIcons = this.page.locator('//table/tbody/tr//button[contains(@icon, "pi-pencil")]');
+       this.allDelIcons = this.page.locator('//table/tbody/tr//button[contains(@icon, "pi-trash")]');
+       this.allCheckBoxes = this.page.locator('//div[@class="p-checkbox-box p-component"]');
     }
 
     async verifyPaginationTextAndIcons(item){
@@ -60,6 +63,7 @@ export default class commonTest{
     }
 
 
+
     async verifyFooterMessage(moduleName){
        const footerText = await this.footerMessage.innerText();
        console.log("Footer message is: " + footerText);
@@ -76,5 +80,55 @@ export default class commonTest{
     }
 
     
-    
+async CommonEditDelCheckboxValidation(option)
+{
+    let passinglocator;
+    await this.page.waitForTimeout(2000);      
+
+    switch (option) {
+        case "Edit_Icon":
+            passinglocator=await this.allEditIcons;
+            return await this.checkEditIconsVisibilityCommon(passinglocator);	    
+        case "Delete_Icon":
+            passinglocator=await this.allDelIcons;
+          return await this.checkEditIconsVisibilityCommon(passinglocator);
+  
+        case "Check_Box":
+            passinglocator=await this.allCheckBoxes;
+            return await this.checkEditIconsVisibilityCommon(passinglocator);
+  
+        default:
+          return false;
+      }
 }
+
+
+
+async checkEditIconsVisibilityCommon(locat) {
+    await this.page.waitForTimeout(2000);    
+    const count = await locat.count();   
+
+    let results = [];
+
+    for (let i = 0; i < count; i++) {
+        const optlist = await locat.nth(i); 
+        if (await optlist.isVisible()) {
+            results.push('true');
+        } else {
+            results.push( 'false'); 
+        }          
+        
+    }   
+    return results;
+
+}
+
+
+
+
+
+
+
+
+}
+    
