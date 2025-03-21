@@ -9,7 +9,7 @@ export default class programPage {
       this.userName = this.page.locator('//input[@id="username"]'); 
       this.password=this.page.locator('//input[@id="password"]');
       this.programBtn = this.page.locator('//button[@id="program"]');
-    }
+     }
   
      
       async clickProgramBtn() {    
