@@ -15,6 +15,7 @@ export default class batchPage{
         this.paginator = this.page.locator("//div[@class='p-paginator-bottom p-paginator p-component ng-star-inserted']");
         this.batchDataTable = this.page.locator("//tbody[@class='p-datatable-tbody']");
         this.addNewBatchMenuBtn = this.page.getByText('Add New Batch');
+        this.popUpDialog = this.page.locator("//div[@role='dialog']");
         this.programNameInput = this.page.locator("//input[@placeholder='Select a Program name']");
         this.batchNameFirstHalf = this.page.locator("//input[@id='batchProg']");
         this.batchNameInput = this.page.locator("//input[@id='batchName'][1]");
@@ -234,9 +235,76 @@ export default class batchPage{
     {
         await addNewBatchMenuBtn.click();
     }
-    // async clickAddNewBatchSaveBtn()
+
+        async checkFieldsInPopUp(field, type) {
+            console.log(`Checking field: ${field} for type: ${type}`);
+            const popUpContent = await this.popUpDialog.locator("//div[@ng-reflect-ng-class='p-dialog-content']");
+        
+            // Check for specific field names
+            switch(field) {
+                case 'programName':
+                    const programElt = await popUpContent.locator("//p-dropdown[@id='programName']");
+                    const programHandle = await programElt.elementHandle(); // Get the element handle
+                    const programTag = await programHandle?.tagName(); // Call getTagName() on the handle
+                    return programTag === type;
+        
+                case 'batchName':
+                    const batchNameElt = await popUpContent.locator("//input[@id='batchName']");
+                    const batchNameHandle = await batchNameElt.elementHandle(); // Get the element handle
+                    const batchNameTag = await batchNameHandle?.tagName(); // Call getTagName() on the handle
+                    return batchNameTag === type;
+        
+                case 'batchNoOfClasses':
+                    const batchNoOfClassesElt = await popUpContent.locator("//input[@id='batchNoOfClasses']");
+                    const batchNoOfClassesHandle = await batchNoOfClassesElt.elementHandle(); // Get the element handle
+                    const batchNoOfClassesTag = await batchNoOfClassesHandle?.tagName(); // Call getTagName() on the handle
+                    return batchNoOfClassesTag === type;
+        
+                case 'batchDescription':
+                    const batchDescriptionElt = await popUpContent.locator("//input[@id='batchDescription']");
+                    const batchDescriptionHandle = await batchDescriptionElt.elementHandle(); // Get the element handle
+                    const batchDescriptionTag = await batchDescriptionHandle?.tagName(); // Call getTagName() on the handle
+                    return batchDescriptionTag === type;
+        
+                case 'batchStatus':
+                    const batchStatusElt = await popUpContent.locator("//p-radiobutton[@id='batchStatus']");
+                    const batchStatusHandle = await batchStatusElt.elementHandle(); // Get the element handle
+                    const batchStatusTag = await batchStatusHandle.getTagName(); // Call getTagName() on the handle
+                    return batchStatusTag === type;
+        
+                default:
+                    console.log(`Field ${field} not recognized in the popup`);
+                    return false;
+            }
+        }
+         
+        async selectRandomProgram(){
+
+            await this.page.locator("//div[@role='button']").click();
+    
+            const prog = await this.page.locator("//*[@id='programName']/div/div[3]/div/ul/p-dropdownitem[1]/li");
+            const progNameelement =await  prog.textContent();
+            console.log(progNameelement);
+            await prog.waitFor({ state: 'visible' });   // Ensure the element is stable before interacting with it
+
+            await prog.click();
+            await this.page.locator("//input[@placeholder='Select a Program name']").waitFor({ state: 'attached' }); // Wait for the program name input to be attached
+
+            const progname = await this.programNameInput.inputValue();
+            console.log("program name from when: ",await progname)
+
+            
+        }
+        async VerifyBatchPrefixBox(){
+            const prog = await this.programNameInput.inputValue();
+            console.log("program name from then: ",prog);
+            const batchPrefix = await this.page.locator("//*[@id='batchProg']").inputValue();
+            console.log("batch prefix text: ",batchPrefix);
+            return batchPrefix === prog;
+        }
+s    // async clickAddNewBatchSaveBtn()
     // {
     //     await addNewBatchSaveBtn.click();
     // }
 
-}
+    }
