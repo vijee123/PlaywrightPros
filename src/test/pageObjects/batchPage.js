@@ -1,28 +1,242 @@
 import {expect} from "@playwright/test";
 
 import LoginPage from './loginPage';
+import commonTest from '../utils/commonMethods';
 
 export default class batchPage{
 
     constructor(page) {
         this.page = page;
-        this.batchMenuLink = this.page.locator("//span[text()='Batch']/parent::button");
+        this.batchMenuLink = this.page.locator("//span[normalize-space()='Batch']");
+        //this.overlay=this.page.locator("//div[@class='cdk-overlay-container']");
         this.manageBatchText = this.page.locator("//div[normalize-space()='Manage Batch']");
-        
+        this.LMSTitleBatch = this.page.locator("//span[normalize-space()='LMS - Learning Management System']");
+        this.multipleDeleteIcon = this.page.locator("//button[@class='p-button-danger p-button p-component p-button-icon-only']");
+        this.paginator = this.page.locator("//div[@class='p-paginator-bottom p-paginator p-component ng-star-inserted']");
+        this.batchDataTable = this.page.locator("//tbody[@class='p-datatable-tbody']");
+        this.addNewBatchMenuBtn = this.page.getByText('Add New Batch');
+        this.programNameInput = this.page.locator("//input[@placeholder='Select a Program name']");
+        this.batchNameFirstHalf = this.page.locator("//input[@id='batchProg']");
+        this.batchNameInput = this.page.locator("//input[@id='batchName'][1]");
+        this.batchDescription = this.page.locator("//input[@id='batchDescription']");
+        this.statusActiveRadioBtn = this.page.locator("//p-radiobutton[@ng-reflect-input-id='ACTIVE']");
+        this.statusInactiveRadioBtn = this.page.locator("//p-radiobutton[@ng-reflect-input-id='INACTIVE']");
+        this.NoOfClasses = this.page.locator("//input[@id='batchNoOfClasses']");
+        this.addNewBatchSaveBtn = this.page.locator("//span[normalize-space()='Save']");
+        this.batchCreatedMsg = this.page.locator("//div[@role='alert']");
+        this.successMsg = this.page.locator("//div[text()=' Batch Created Successfully']");
+       
     }
 
     async batchLogin(url, username, password){
         let loginPage = new LoginPage(this.page);
         await loginPage.launchApp(url);
         await loginPage.validLogin(username, password); 
-        await this.batchMenuLink.click();
-        await page.mouse.click(100, 200);
+        
+        //await this.page.mouse.click(100, 200);
      }   
+
+     async batchTabClick()
+     {
+        await this.batchMenuLink.click();
+        await this.page.evaluate(() => {
+            const overlay = document.querySelector('.cdk-overlay-container');
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        });
+     }
      
     
     async verifyManageBatchDisplay(){
         await this.manageBatchText.waitFor({timeout: 30000});
         return await this.manageBatchText.isVisible();
     }
+
+    async verifyLMSTitleDisplay(){
+        const titleText=await this.LMSTitleBatch.textContent();
+        console.log("title:" +titleText);
+        return await titleText;
+    }
+
+    async verifyMultipleDeleteDisabled(){
+         return this.multipleDeleteIcon.isDisabled();
+    }
+
+    async verifyPaginationEnabled(){
+        const buttons= await this.paginator.locator('button');
+        const count= await buttons.count();
+        for (let i = 0; i < count; i++) {
+            const button = buttons.nth(i);
+            const isDisabled = await button.isDisabled();
+
+            // Print button index and whether it's disabled
+            console.log(`Button ${i + 1} is ${isDisabled ? 'disabled' : 'enabled'}`);
+            expect(isDisabled).toBe(true);  // or false, depending on what you expect
+        }
+    }
+
+    async verifyEditIconVisibleInEachRow(){
+        const tableRows = await this.batchDataTable.locator('tr');
+        const noOfRows = await tableRows.count();
+        console.log("no. of rows:"+noOfRows);
+        const count=0;
+        for(let i = 0; i< noOfRows; i++){
+            const tabRow = tableRows.nth(i);
+            const editIcon = tabRow.locator("//button[@icon='pi pi-pencil']");
+            const editIsVisible = editIcon.isVisible();
+            if(!editIsVisible){
+                console.log("editIcon not present in row["+i+"]");
+               return false;
+            }
+        }
+        console.log("edit icon present in all rows");
+       return true;     
+    }
+
+    async verifyDeleteIconVisibleInEachRow(){
+        const tableRows = await this.batchDataTable.locator('tr');
+        const noOfRows = await tableRows.count();
+        console.log("no. of rows:"+noOfRows);
+        const count=0;
+        for(let i = 0; i< noOfRows; i++){
+            const tabRow = tableRows.nth(i);
+            const deleteIcon = tabRow.locator("//button[@icon='pi pi-trash']");
+            const deleteIsVisible = await deleteIcon.isVisible();
+            
+            if(!deleteIsVisible){
+                console.log("DeleteIcon not present in row["+i+"]");
+               return false;
+            }
+        }
+        console.log("delete icon present in all rows");
+       return true;     
+    }
+
+    async verifyCheckboxVisibleInEachRow(){
+        const tableRows = await this.batchDataTable.locator('tr');
+        const noOfRows = await tableRows.count();
+        console.log("no. of rows:"+noOfRows);
+        const count=0;
+        for(let i = 0; i< noOfRows; i++){
+            const tabRow = tableRows.nth(i);
+            const checkBox = tabRow.locator("//div[@class='p-checkbox p-component']");
+            const chkBoxIsVisible = await checkBox.isVisible();
+            
+            if(!chkBoxIsVisible){
+                console.log("Checkbox not present in row["+i+"]");
+                console.log(`Checkbox in row ${i} is ${chkBoxIsVisible ? 'visible' : 'not visible'}`);
+    
+               return false;
+            }
+        }
+        console.log("checkbox present in all rows");
+       return true;     
+    }
+    async verifyDatatableHeaders(testHeader) {
+        const expHeader = testHeader;
+        
+        // Get the header elements
+        const tabHeaders = await this.page.locator("thead tr");
+        const batchHeader = await tabHeaders.locator("th");
+    
+        // Get the count of headers in the table
+        const count = await batchHeader.count();
+        console.log(count + " count, expected header: " + expHeader);
+    
+        // Iterate over each header
+        for (let i = 0; i < count; i++) {
+            const header = await batchHeader.nth(i).textContent();
+            
+            // Handle potential null or empty value for textContent
+            if (header && header.trim() === expHeader) {
+                console.log(`${expHeader} found in Batch DataTable Header at index ${i}`);
+                return true;  // Header found
+            }
+        }
+    
+        console.log(`${expHeader} not found in the Batch DataTable Headers`);
+        return false;  // Header not found
+    }
+    
+    async verifyCheckBoxBatchHeader()
+    {
+        return this.page.locator("//p-tableheadercheckbox").isVisible();
+    }
+
+    async verifySortIconBatchHeader()
+    {
+        const tabHeaders = await this.page.locator("thead tr");
+        const batchHeader = await tabHeaders.locator("th");
+        const sortIcon = await batchHeader.locator(" //p-sorticon");
+        if(sortIcon.count()==5)
+        {
+            return true;
+        }
+        return false;
+       
+    }
+
+    async fillCreateBatchForm({ programName, batchName, batchDesc, status, noOfClasses}) {
+    
+    await this.page.locator("//div[@role='button']").click();
+    const prgName = programName;
+    const programField = await this.page.locator(`li[aria-label="${prgName}"]`);  // Replace "Item Text" with the text of the list item
+    await programField.waitFor({ state: 'visible' }); // Wait until the element is visible
+    
+    await programField.click();
+  
+     await this.batchNameInput.fill(batchName); 
+        await this.batchDescription.fill(batchDesc);
+        if (status === "Active") {
+            await this.statusActiveRadioBtn.click();
+        }
+        else if (status === "Inactive") {
+            await this.statusInactiveRadioBtn.click();
+        }
+      await this.NoOfClasses.fill(noOfClasses);
+    }
+    async verifyMessageDisplay(message){
+        console.log("Checking message visibility for:", message);
+      
+        if (this.page.isClosed()) {
+            console.error("Page is already closed. Cannot verify message.");
+            return false;
+        }
+
+        switch(message){
+            case "success":
+                console.log("Checking Valid Batch Created Message..");
+                //await successMsg.waitFor({ state: 'visible' });
+                console.log(await this.successMsg.textContent());
+                return await this.successMsg.isVisible();
+            case "statusErrorMsg":
+                console.log("Checking Status Error Message..");
+                return await this.statusErrorMsg.isVisible();
+            case "staffNameErrorMsg":
+                console.log("Checking Staff Name Error Message..");
+                return await this.staffNameErrorMsg.isVisible();
+            case "classDateErrorMsg":
+                console.log("Checking Class date Error Message..");
+                return await this.classDateErrorMsg.isVisible();
+            case "classTopicErrorMsg":
+                console.log("Checking Class Topic Message..");
+                return await this.classTopicErrorMsg.isVisible();
+            case "batchNameErrorMsg":
+                console.log("Checking Batch name Error Message..");
+                return await this.batchNameErrorMsg.isVisible();
+            default:
+                throw new Error(`Error message "${message}" not found!`);
+        }
+    }
+
+    async clickaddNewBatchMenuBtn()
+    {
+        await addNewBatchMenuBtn.click();
+    }
+    // async clickAddNewBatchSaveBtn()
+    // {
+    //     await addNewBatchSaveBtn.click();
+    // }
 
 }

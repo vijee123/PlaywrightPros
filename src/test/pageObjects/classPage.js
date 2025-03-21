@@ -69,6 +69,12 @@ export default class classPage{
         await loginPage.validLogin(username, password); 
     }
 
+    async classNoDisplayed(){
+        const classNo = await this.classNumber.getAttribute('ng-reflect-model');
+        console.log("class Count Displayed is ", classNo);
+        return classNo;
+    }
+
     async verifyManageClassDisplay(){
        // await this.manageClassText.waitFor({timeout: 3000});
         return await this.manageClassText.isVisible();
