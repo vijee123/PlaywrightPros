@@ -1,5 +1,5 @@
 # Playwright
-#/.features-gen/
+/.features-gen/
 /allure-results/
 /config/
 /fixture/
@@ -11,6 +11,6 @@
 package-lock.json
 package.json
 global-setup.js
-#/playwright.config.js
+/playwright.config.js
 
 
