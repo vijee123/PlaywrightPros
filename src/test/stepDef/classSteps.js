@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
-import { test, Given, Then, When } from '../../../fixture/customFixtures.js';
+//import { test, Given, Then, When } from '../../../fixture/customFixtures.js';
+import { Given, Then, When } from '../../../fixture/customFixtures.js';
 
 const { faker } = require('@faker-js/faker');
 const path = require('path');
