@@ -165,4 +165,14 @@ const classTestData = readCSV(csvPath);
     console.log("Verify the No Of Classses displayed..");
      await expect(classPageFixture.checkNoOfClasses()).resolves.toEqual('2');
   });
+
+  When('Admin clicks date picker', async ({classPageFixture}) => {
+    console.log("Clicking the Date Picker...")
+    await classPageFixture.clickDatePickerBtn();
+  });
+  
+  Then('Admin should see weekends dates are disabled to select', async ({classPageFixture}) => {
+    console.log("Checking whether all the weekends dates are disabled...")
+    await classPageFixture.verifyDisabledWeekendDates();
+  });
   

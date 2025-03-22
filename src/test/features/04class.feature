@@ -92,6 +92,12 @@ Feature: Validate class page functionality
     When Admin selects class date in date picker
     Then Admin should see no of class value is added automatically
 
+  Scenario: Check weekend dates are disabled in calendar
+    Given Admin is on the Class Popup window	
+    When Admin clicks date picker	
+    Then Admin should see weekends dates are disabled to select
+
+
 
 
 
