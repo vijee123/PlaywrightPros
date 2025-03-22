@@ -11,6 +11,6 @@
 package-lock.json
 package.json
 global-setup.js
-/playwright.config.js
+#playwright.config.js
 
 
