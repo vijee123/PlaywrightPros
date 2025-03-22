@@ -83,7 +83,7 @@ export default class classPage{
     async clickLMSTextClick(){
         await this.LMSDisplayHomePage.click();
     }  
-    
+
     async clickHeaderDeleteIcon(){
         await this.headerDeleteIcon.click();    
     }
@@ -230,6 +230,28 @@ export default class classPage{
             console.error("Error getting class number:", error);
             throw error; 
         }
+    }
+
+    async clickDatePickerBtn(){
+       await this.classDatePickerBtn.click();
+    }
+    
+    async verifyDisabledWeekendDates(){
+        const weekendDates = await this.page.$$("//div[contains(@class,'p-datepicker-calendar-container')]//tbody//td[position()=1 or position()=7]");
+        for (const date of weekendDates) {
+            const isDisabled = await date.$('span.p-disabled') !== null;
+            const dateText = await date.innerText();
+            
+            if (!isDisabled) {
+                console.log(`Weekend date ${dateText} is enabled`);
+                return false; 
+            }
+            
+            console.log(`Weekend date ${dateText} is disabled`);
+        }
+        
+        console.log("All the week end dates are disabled....")
+        return true;
     }
 
 

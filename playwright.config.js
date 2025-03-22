@@ -3,7 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 import { defineBddConfig } from 'playwright-bdd';
 
 const testDir = defineBddConfig({
-  features: ['src/test/features/04class.feature'], 
+  features: ['src/test/features/*.feature'], 
   steps: [
     './fixture/customFixtures.js', 
     'src/test/stepDef/**/*.js', 
@@ -27,7 +27,7 @@ export default defineConfig({
   testDir,
 
   /* Run tests in files in parallel */
-  fullyParallel: true,
+  fullyParallel: false,
 
   // Limits the number of parallel workers
   workers: 3,
