@@ -175,4 +175,16 @@ const classTestData = readCSV(csvPath);
     console.log("Checking whether all the weekends dates are disabled...")
     await classPageFixture.verifyDisabledWeekendDates();
   });
+
+  When('Admin clicks Cancel button OR Close Icon {string}', async ({classPageFixture}, Icon) => {
+    console.log("Clicking Cancel Button OR the Close Icon.....")
+    await classPageFixture.clickCancelOrClose(Icon);
+  });
+  
+  Then('Class Details popup window should be closed without saving', async ({classPageFixture}) => {
+    console.log("Checking whether class details form is closed...")
+    const isVisible = await classPageFixture.classDetailsFormVisibility(); 
+    console.log(`Class Details Form is Visible: ${isVisible}`); 
+    expect(isVisible).toBe(false); 
+  });
   

@@ -55,6 +55,7 @@ export default class classPage{
         this.saveButton = this.page.locator("//span[text()='Save']");
         this.cancelButton = this.page.locator("//span[text()='Cancel']");
         this.closeIcon = this.page.locator("//span[contains(@class,'p-dialog-header-close-icon')]");   
+        this.classDetailsFormTitle = this.page.locator("//span[text()='Class Details']");
              
        }
 
@@ -95,6 +96,27 @@ export default class classPage{
     async verifyClassFooterMessage(moduleName){
         let common = new commonTest(this.page);
         return await common.verifyFooterMessage(moduleName);
+    }
+
+    async clickCancelOrClose(Icon){
+        switch(Icon){
+            case "CancelBtn":
+                console.log("Clicking Cancel Button...");
+                await this.cancelButton.click();
+                break;
+            case "CloseIcon":
+                console.log("Clicking Close Icon...");
+                await this.closeIcon.click();
+                break;
+            default: 
+               console("No Such buttons or Icons are available...");
+        }
+        
+    }
+
+    async classDetailsFormVisibility(){
+        await this.page.waitForTimeout(2000); 
+        return await this.classDetailsFormTitle.isVisible();
     }
 
     async verifyFieldNameDisplay(fieldName){
@@ -371,6 +393,16 @@ export default class classPage{
             case "batchNameErrorMsg":
                 console.log("Checking Batch name Error Message..");
                 return await this.batchNameErrorMsg.isVisible();
+            case "allErrorMsg":
+                console.log("Verifying the display of all Error Messages..");
+                const results = await Promise.all([
+                    this.statusErrorMsg.isVisible(),
+                    this.staffNameErrorMsg.isVisible(),
+                    this.classDateErrorMsg.isVisible(),
+                    this.classTopicErrorMsg.isVisible(),
+                    this.batchNameErrorMsg.isVisible()
+                ]);        
+                return results.every(isVisible => isVisible);
             default:
                 throw new Error(`Error message "${message}" not found!`);
         }
