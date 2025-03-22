@@ -57,7 +57,7 @@ const classTestData = readCSV(csvPath);
     await expect(allHaveIcons).toBeTruthy();
   });
 
-  When('Admin clicks the Add New Class button and enters the details of {string} in the Create Class form', async ({classPageFixture, sharedData}, scenario) => {
+  When('Admin clicks the Add New Class button and enters the details of {string} in the Create Class form', async ({classPageFixture}, scenario) => {
     console.log("Admin clicks the Create Class button...");
     //const batchName = sharedData.batchName;
     //console.log("The batchName inside CLASS STEPS is: "+sharedData.batchName);
