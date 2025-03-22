@@ -89,62 +89,62 @@ test.describe('Validate class page functionality', () => {
 
   test.describe('Create a class with valid and invalid inputs', () => {
 
-    test('Example #1', { tag: ['@parallel'] }, async ({ When, classPageFixture, sharedData, And, Then }) => { 
-      await When('Admin clicks the Add New Class button and enters the details of "validClass" in the Create Class form', null, { classPageFixture, sharedData }); 
+    test('Example #1', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "validClass" in the Create Class form', null, { classPageFixture }); 
       await And('Admin clicks the Save button', null, { classPageFixture }); 
       await Then('Admin should see the valid "success"', null, { classPageFixture }); 
     });
 
-    test('Example #2', { tag: ['@parallel'] }, async ({ When, classPageFixture, sharedData, And, Then }) => { 
-      await When('Admin clicks the Add New Class button and enters the details of "withoutStatus" in the Create Class form', null, { classPageFixture, sharedData }); 
+    test('Example #2', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "withoutStatus" in the Create Class form', null, { classPageFixture }); 
       await And('Admin clicks the Save button', null, { classPageFixture }); 
       await Then('Admin should see the valid "statusErrorMsg"', null, { classPageFixture }); 
     });
 
-    test('Example #3', { tag: ['@parallel'] }, async ({ When, classPageFixture, sharedData, And, Then }) => { 
-      await When('Admin clicks the Add New Class button and enters the details of "withoutStaffName" in the Create Class form', null, { classPageFixture, sharedData }); 
+    test('Example #3', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "withoutStaffName" in the Create Class form', null, { classPageFixture }); 
       await And('Admin clicks the Save button', null, { classPageFixture }); 
       await Then('Admin should see the valid "staffNameErrorMsg"', null, { classPageFixture }); 
     });
 
-    test('Example #4', { tag: ['@parallel'] }, async ({ When, classPageFixture, sharedData, And, Then }) => { 
-      await When('Admin clicks the Add New Class button and enters the details of "withoutClassDate" in the Create Class form', null, { classPageFixture, sharedData }); 
+    test('Example #4', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "withoutClassDate" in the Create Class form', null, { classPageFixture }); 
       await And('Admin clicks the Save button', null, { classPageFixture }); 
       await Then('Admin should see the valid "classDateErrorMsg"', null, { classPageFixture }); 
     });
 
-    test('Example #5', { tag: ['@parallel'] }, async ({ When, classPageFixture, sharedData, And, Then }) => { 
-      await When('Admin clicks the Add New Class button and enters the details of "withoutClassTopic" in the Create Class form', null, { classPageFixture, sharedData }); 
+    test('Example #5', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "withoutClassTopic" in the Create Class form', null, { classPageFixture }); 
       await And('Admin clicks the Save button', null, { classPageFixture }); 
       await Then('Admin should see the valid "classTopicErrorMsg"', null, { classPageFixture }); 
     });
 
-    test('Example #6', { tag: ['@parallel'] }, async ({ When, classPageFixture, sharedData, And, Then }) => { 
-      await When('Admin clicks the Add New Class button and enters the details of "withoutBatchName" in the Create Class form', null, { classPageFixture, sharedData }); 
+    test('Example #6', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "withoutBatchName" in the Create Class form', null, { classPageFixture }); 
       await And('Admin clicks the Save button', null, { classPageFixture }); 
       await Then('Admin should see the valid "batchNameErrorMsg"', null, { classPageFixture }); 
     });
 
-    test('Example #7', { tag: ['@parallel'] }, async ({ When, classPageFixture, sharedData, And, Then }) => { 
-      await When('Admin clicks the Add New Class button and enters the details of "withoutClassDesc" in the Create Class form', null, { classPageFixture, sharedData }); 
+    test('Example #7', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "withoutClassDesc" in the Create Class form', null, { classPageFixture }); 
       await And('Admin clicks the Save button', null, { classPageFixture }); 
       await Then('Admin should see the valid "success"', null, { classPageFixture }); 
     });
 
-    test('Example #8', { tag: ['@parallel'] }, async ({ When, classPageFixture, sharedData, And, Then }) => { 
-      await When('Admin clicks the Add New Class button and enters the details of "withoutComments" in the Create Class form', null, { classPageFixture, sharedData }); 
+    test('Example #8', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "withoutComments" in the Create Class form', null, { classPageFixture }); 
       await And('Admin clicks the Save button', null, { classPageFixture }); 
       await Then('Admin should see the valid "success"', null, { classPageFixture }); 
     });
 
-    test('Example #9', { tag: ['@parallel'] }, async ({ When, classPageFixture, sharedData, And, Then }) => { 
-      await When('Admin clicks the Add New Class button and enters the details of "withoutNotes" in the Create Class form', null, { classPageFixture, sharedData }); 
+    test('Example #9', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "withoutNotes" in the Create Class form', null, { classPageFixture }); 
       await And('Admin clicks the Save button', null, { classPageFixture }); 
       await Then('Admin should see the valid "success"', null, { classPageFixture }); 
     });
 
-    test('Example #10', { tag: ['@parallel'] }, async ({ When, classPageFixture, sharedData, And, Then }) => { 
-      await When('Admin clicks the Add New Class button and enters the details of "withoutRec" in the Create Class form', null, { classPageFixture, sharedData }); 
+    test('Example #10', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+      await When('Admin clicks the Add New Class button and enters the details of "withoutRec" in the Create Class form', null, { classPageFixture }); 
       await And('Admin clicks the Save button', null, { classPageFixture }); 
       await Then('Admin should see the valid "success"', null, { classPageFixture }); 
     });
