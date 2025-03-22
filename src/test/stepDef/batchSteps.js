@@ -1,10 +1,11 @@
 import { expect } from '@playwright/test';
 import { test, Given, Then, When } from '../../../fixture/customFixtures.js';
 const path = require('path');
-const { readCSV } = require('../utils/csvReader');
-const csvPath = path.resolve(__dirname, '../../../test-data/batchTestData.csv'); 
-const testData = readCSV(csvPath);
 import { chainingData } from "../utils/chainingData.js";
+const { readCSV } = require('../utils/csvReader');
+const csvPath = path.resolve(__dirname, '../../../test-data/batchTestData.csv');
+const testData = readCSV(csvPath);
+
 //let batch;
 When('Admin clicks the Batch Navigation bar in the Header', async ({batchPageFixture}) => {
     console.log("Admin clicks the Batch Navigation bar...");
@@ -89,22 +90,15 @@ When('Admin clicks the Batch Navigation bar in the Header', async ({batchPageFix
   });
 
   When('Admin enters the input with {string} and clicks save button', async ({batchPageFixture}, scenario) => {
-    
-    await batchPageFixture.batchMenuLink.click();
-    console.log("Admin clicks the Create batch button...");
-    //await batchPageFixture.clickaddNewBatchMenuBtn();
-  await batchPageFixture.addNewBatchMenuBtn.click();
     console.log("Admin enters the given details in the Create batch form");
     const rowData = testData.find(row => row.scenario === scenario);
-    // const batch = rowData.programName + rowData.batchName;
-    // console.log("my batch name is from when: "+batch);
-    if (!rowData) {
+if (!rowData) {
         throw new Error(`No data found for scenario: ${scenario}`);
     }
 
     await batchPageFixture.fillCreateBatchForm({
       programName: rowData.programName,  
-      batchName: rowData.batchName,
+      batchId: rowData.batchId,
         batchDesc: rowData.batchDesc,
         status: rowData.status,
        noOfClasses: rowData.noOfClasses
@@ -116,15 +110,15 @@ When('Admin clicks the Batch Navigation bar in the Header', async ({batchPageFix
   });
   Then('Admin should get a valid message {string} for this {string}', async ({batchPageFixture}, message, scenario) => {
     console.log("Admin should see the valid message displayed...");
-    const isVisible = await batchPageFixture.verifyMessageDisplay(message);
-    if(isVisible){
-      const rowData = testData.find(row => row.scenario === scenario);
-     const batchNew = rowData.programName + rowData.batchName;
-     console.log("newly created batch: ",batchNew );
-     chainingData.setBatchName(batchNew);
+    const isVisible = await batchPageFixture.verifyMessageDisplay(message,scenario);
+    // if(isVisible){
+    //   const rowData = batchTestData.find(row => row.scenario === scenario);
+    //  const batchNew = rowData.programName + rowData.batchName;
+    //  console.log("newly created batch: ",batchNew );
+    //  //chainingData.setBatchName(batchNew);
     
-    console.log("my batch name is from then: " + chainingData.getBatchName());
-       }
+    // //console.log("my batch name is from then: " + chainingData.getBatchName());
+    //    }
     await expect(isVisible).toBeTruthy();
   });
 
@@ -149,6 +143,36 @@ When('Admin clicks the Batch Navigation bar in the Header', async ({batchPageFix
   
   Then('Admin should see selected program name in the batch name prefix box', async ({batchPageFixture}) => {
     await expect(batchPageFixture.VerifyBatchPrefixBox()).toBeTruthy;
+  });
+
+  When('Admin enters the valid data to all the mandatory fields and click cancel button', async ({batchPageFixture}) => {
+    const scenario = "ValidInput_BatchData";
+    const rowData = testData.find(row => row.scenario === scenario);
+    if (!rowData) {
+            throw new Error(`No data found for scenario: ${scenario}`);
+        }
+    
+        await batchPageFixture.fillCreateBatchForm({
+          programName: rowData.programName,  
+          batchId: rowData.batchId,
+            batchDesc: rowData.batchDesc,
+            status: rowData.status,
+           noOfClasses: rowData.noOfClasses
+        });
+    await batchPageFixture.cancelBtn.click();
+    
+  });
+  
+  Then('Admin can see the batch details popup closes without creating any batch', async ({batchPageFixture}) => {
+    await expect(batchPageFixture.popUpClosedWithoutSaving()).toBeTruthy();
+  });
+  
+  When('Admin clicks on the close icon', async ({batchPageFixture}) => {
+    await batchPageFixture.closeBtn.click();
+  });
+  
+  Then('batch details pop up closes', async ({batchPageFixture}) => {
+    await expect(batchPageFixture.popUpClosed()).toBeTruthy();
   });
    
 

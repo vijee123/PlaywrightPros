@@ -26,6 +26,18 @@ export default class batchPage{
         this.addNewBatchSaveBtn = this.page.locator("//span[normalize-space()='Save']");
         this.batchCreatedMsg = this.page.locator("//div[@role='alert']");
         this.successMsg = this.page.locator("//div[text()=' Batch Created Successfully']");
+        this.errorMsglocator = this.page.locator(".p-invalid.ng-star-inserted");
+        this.cancelBtn = this.page.locator("//span[normalize-space()='Cancel']");
+        this.closeBtn = this.page.locator(".p-dialog-header-close-icon.ng-tns-c168-6.pi.pi-times");
+        
+        this.batchIdAlphabetErrorMsg = this.page.locator("//small[text()='This field accept only numbers and max 5 count. ']");
+        this.batchIdEmptyErrorMsg = this.page.locator("//small[text()='Batch Name is required.']");
+        this.progNameEmptyErrorMsg = this.page.locator("//small[text()='Program Name is required.']");
+        this.batchDescEmptyErrorMsg = this.page.locator("//small[text()='Batch Description is required.']");
+        this.batchDescFormatErrorMsg = this.page.locator("//small[text()='This field should start with an alphabet and min 2 character.']");
+        this.batchStatusEmptyErrorMsg = this.page.locator("//small[text()='Status is required.']");
+        this.noOfClassesEmptyErrorMsg = this.page.locator("//small[text()='Number of classes is required.']");
+        
        
     }
 
@@ -178,16 +190,16 @@ export default class batchPage{
        
     }
 
-    async fillCreateBatchForm({ programName, batchName, batchDesc, status, noOfClasses}) {
-    
+    async fillCreateBatchForm({ programName, batchId, batchDesc, status, noOfClasses}) {
+        const prgName = programName;
+     
     await this.page.locator("//div[@role='button']").click();
-    const prgName = programName;
     const programField = await this.page.locator(`li[aria-label="${prgName}"]`);  // Replace "Item Text" with the text of the list item
+    if(!prgName){
     await programField.waitFor({ state: 'visible' }); // Wait until the element is visible
-    
+    }
     await programField.click();
-  
-     await this.batchNameInput.fill(batchName); 
+     await this.batchNameInput.fill(String(batchId)); 
         await this.batchDescription.fill(batchDesc);
         if (status === "Active") {
             await this.statusActiveRadioBtn.click();
@@ -197,7 +209,7 @@ export default class batchPage{
         }
       await this.NoOfClasses.fill(noOfClasses);
     }
-    async verifyMessageDisplay(message){
+    async verifyMessageDisplay(message,scenario){
         console.log("Checking message visibility for:", message);
       
         if (this.page.isClosed()) {
@@ -205,28 +217,39 @@ export default class batchPage{
             return false;
         }
 
-        switch(message){
-            case "success":
+        switch(scenario){
+            case "ValidInput_BatchData":
                 console.log("Checking Valid Batch Created Message..");
                 //await successMsg.waitFor({ state: 'visible' });
                 console.log(await this.successMsg.textContent());
                 return await this.successMsg.isVisible();
-            case "statusErrorMsg":
-                console.log("Checking Status Error Message..");
-                return await this.statusErrorMsg.isVisible();
-            case "staffNameErrorMsg":
-                console.log("Checking Staff Name Error Message..");
-                return await this.staffNameErrorMsg.isVisible();
-            case "classDateErrorMsg":
-                console.log("Checking Class date Error Message..");
-                return await this.classDateErrorMsg.isVisible();
-            case "classTopicErrorMsg":
-                console.log("Checking Class Topic Message..");
-                return await this.classTopicErrorMsg.isVisible();
-            case "batchNameErrorMsg":
-                console.log("Checking Batch name Error Message..");
-                return await this.batchNameErrorMsg.isVisible();
-            default:
+
+            case "InvalidInput_AlphabetsInBatchID":
+                return await this.batchIdAlphabetErrorMsg.isVisible();
+               // return await this.statusErrorMsg.isVisible();
+
+            case "InvalidInput_BatchEmptyDescription":
+                return await this.batchDescEmptyErrorMsg.isVisible();
+
+            case "InvalidInput_BatchEmptyProgramName":
+                return await this.progNameEmptyErrorMsg.isVisible();
+
+            case "InvalidInput_BatchEmptyBatchID":
+                return await this.batchIdEmptyErrorMsg.isVisible();
+
+            case "InvalidInput_BatchEmptyStatus":
+                return await this.batchStatusEmptyErrorMsg.isVisible();
+
+            case "InvalidInput_BatchEmptyNoOfClasses":
+                return await this.noOfClassesEmptyErrorMsg.isVisible();
+
+            case "ValidInpu_VerifyBatchCloseButton":
+                console.log("ValidInpu_VerifyBatchCloseButton...");
+                await this.page.locator("//span[@class='p-dialog-header-close-icon ng-tns-c168-6 pi pi-times']").click();
+
+                return await this.batchNameInput.isVisible();
+               
+                default:
                 throw new Error(`Error message "${message}" not found!`);
         }
     }
@@ -302,7 +325,19 @@ export default class batchPage{
             console.log("batch prefix text: ",batchPrefix);
             return batchPrefix === prog;
         }
-s    // async clickAddNewBatchSaveBtn()
+
+        async popUpClosedWithoutSaving(){
+            const open =await this.popUpDialog.isVisible();
+            const Saved = await this.successMsg.isVisible();
+            return !open===!Saved;
+        }
+
+        async popUpClosed(){
+            const open = await this.popUpDialog.isVisible();
+            console.log(!open);    
+            return !open;
+        }
+        // async clickAddNewBatchSaveBtn()
     // {
     //     await addNewBatchSaveBtn.click();
     // }

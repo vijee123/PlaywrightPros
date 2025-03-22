@@ -3,64 +3,81 @@ Feature: Validate Batch page functionality
   Background:
     Given Admin logged into the application successfully and in home page
 
-  # Scenario: Validating the batch manage page
-  #  When Admin clicks the Batch Navigation bar in the Header
-  #  Then Admin should land on the Manage batch page
+  Scenario: Validating the batch manage page
+   When Admin clicks the Batch Navigation bar in the Header
+   Then Admin should land on the Manage batch page
 
-  # Scenario: Validating Title in Batch Page
-  #  When Admin clicks the Batch Navigation bar in the Header
-  #  Then Admin should see the "LMS - Learning Management System" Title
+  Scenario: Validating Title in Batch Page
+   When Admin clicks the Batch Navigation bar in the Header
+   Then Admin should see the "LMS - Learning Management System" Title
 
-  # Scenario: Validating heading in the Batch Page
-  #  When Admin clicks the Batch Navigation bar in the Header
-  #  Then Admin should see the "Manage Batch" Heading
+  Scenario: Validating heading in the Batch Page
+   When Admin clicks the Batch Navigation bar in the Header
+   Then Admin should see the "Manage Batch" Heading
 
-  # Scenario: Validating disabled Delete Icon under the header in the Batch Page
-  #  When Admin clicks the Batch Navigation bar in the Header
-  #  Then Admin should see the disabled Delete Icon under the header
+  Scenario: Validating disabled Delete Icon under the header in the Batch Page
+   When Admin clicks the Batch Navigation bar in the Header
+   Then Admin should see the disabled Delete Icon under the header
 
-  # Scenario: Validating pagination in the Batch Page
-  #  When Admin clicks the Batch Navigation bar in the Header
-  #  Then Admin should see the enabled pagination controls under the data table
+  Scenario: Validating pagination in the Batch Page
+   When Admin clicks the Batch Navigation bar in the Header
+   Then Admin should see the enabled pagination controls under the data table
 
-  # Scenario: Validating edit icon in each data rows
-  #  When Admin clicks the Batch Navigation bar in the Header
-  #  Then Admin should see the edit icon in each row
+  Scenario: Validating edit icon in each data rows
+   When Admin clicks the Batch Navigation bar in the Header
+   Then Admin should see the edit icon in each row
 
-  # Scenario: validating delete icon in each data rows
-  #  When Admin clicks the Batch Navigation bar in the Header
-  #  Then Admin should see the delete icon in each row
+  Scenario: validating delete icon in each data rows
+   When Admin clicks the Batch Navigation bar in the Header
+   Then Admin should see the delete icon in each row
 
-  # Scenario: validating checkbox in each data rows
-  #  When Admin clicks the Batch Navigation bar in the Header
-  #  Then Admin should see the checkbox in each row
+  Scenario: validating checkbox in each data rows
+   When Admin clicks the Batch Navigation bar in the Header
+   Then Admin should see the checkbox in each row
 
-  # Scenario Outline: Scenario Outline name: Validating Datatable headers
-  #  When Admin clicks the Batch Navigation bar in the Header
-  #  Then Admin should see the datatable header "<headers>"
-  #    Examples:
-  #   |headers|
-  #   |Batch Name|
-  #   |Batch Description|
-  #   |Batch Status|
-  #   |No Of Classes|
-  #   |Program Name|
-  #   |Edit / Delete|
+  Scenario Outline: Scenario Outline name: Validating Datatable headers
+   When Admin clicks the Batch Navigation bar in the Header
+   Then Admin should see the datatable header "<headers>"
+     Examples:
+    |headers|
+    |Batch Name|
+    |Batch Description|
+    |Batch Status|
+    |No Of Classes|
+    |Program Name|
+    |Edit / Delete|
 
-  # Scenario: Validating "Checkbox" in the Datatable header row
-  #  When Admin clicks the Batch Navigation bar in the Header
-  #  Then Admin should see the checkbox  in the datatable header row
+  Scenario: Validating "Checkbox" in the Datatable header row
+   When Admin clicks the Batch Navigation bar in the Header
+   Then Admin should see the checkbox  in the datatable header row
 
-  # Scenario: Validating "sort icon" next to all the datatable header
-  #  When Admin clicks the Batch Navigation bar in the Header
-  #  Then Admin should see the sort icon next to all Datatable headers
+  Scenario: Validating "sort icon" next to all the datatable header
+   When Admin clicks the Batch Navigation bar in the Header
+   Then Admin should see the sort icon next to all Datatable headers
 
-  # Scenario Outline: Validating input data only for mandatory fields
-  #   When Admin enters the input with "<scenario>" and clicks save button
-  #   Then Admin should get a valid message "<message>" for this "<scenario>"
-  #   Examples:
-  #     | scenario                | message |
-  #     | AllValid_BatchInputData | success |
+  Scenario Outline: Validating input data only for mandatory fields
+  Given   Admin is on the Batch Details Pop Up WIndow
+    When Admin enters the input with "<scenario>" and clicks save button
+    Then Admin should get a valid message "<message>" for this "<scenario>"
+    Examples:
+      | scenario                           | message                                         |
+      # | ValidInput_BatchData               | success                                         |
+      | InvalidInput_AlphabetsInBatchID    | This field accept only numbers and max 5 count. |
+      | InvalidInput_BatchEmptyDescription | Batch Description is required.                  |
+      #  | InvalidInput_BatchEmptyProgramName | Program Name is required.                       |
+      | InvalidInput_BatchEmptyBatchID     | Batch Name is required.                         |
+      | InvalidInput_BatchEmptyStatus      | Status is required.                             |
+      | InvalidInput_BatchEmptyNoOfClasses | Number of classes is required                   |
+  
+  Scenario: Validating cancel button in pop up window
+  Given   Admin is on the Batch Details Pop Up WIndow
+  When Admin enters the valid data to all the mandatory fields and click cancel button 
+  Then Admin can see the batch details popup closes without creating any batch
+
+  Scenario: validate close icon on the batch details pop up
+  Given Admin is on the Batch Details Pop Up WIndow
+  When Admin clicks on the close icon
+  Then batch details pop up closes
 
   # Scenario Outline: Validating all the fields exist in pop up
   #   Given Admin is on the Batch Details Pop Up WIndow
@@ -75,6 +92,6 @@ Feature: Validate Batch page functionality
   #     | batchStatus      | p-radiobutton |
 
   Scenario: Validating batchname prefix selected program name
-  Given Admin is on the Batch Details Pop Up WIndow
-  When Admin selects program name present in the dropdown
-  Then Admin should see selected program name in the batch name prefix box
+    Given Admin is on the Batch Details Pop Up WIndow
+    When Admin selects program name present in the dropdown
+    Then Admin should see selected program name in the batch name prefix box
