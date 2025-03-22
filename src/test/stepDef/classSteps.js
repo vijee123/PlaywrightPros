@@ -5,13 +5,16 @@ import { Given, Then, When } from '../../../fixture/customFixtures.js';
 const { faker } = require('@faker-js/faker');
 const path = require('path');
 const { readCSV } = require('../utils/csvReader');
-
 const csvPath = path.resolve(__dirname, '../../../test-data/classTestData.csv'); 
-const testData = readCSV(csvPath);
+const classTestData = readCSV(csvPath);
+
+//import { chainingData } from "../utils/chainingData.js";
+//console.log("Chaining batchName data into class Steps is: "+chainingData.getBatchName());
+
 
  When('Admin clicks the Class Navigation bar in the Header', async ({classPageFixture}) => {
     console.log("Admin clicks the Class Navigation bar in the Header");
-   await classPageFixture.clickClassMenu();
+   await classPageFixture.clickClassMenu();   
   });
   
   Then('Admin should land on the Manage class page', async ({classPageFixture}) => {
@@ -57,10 +60,14 @@ const testData = readCSV(csvPath);
 
   When('Admin clicks the Add New Class button and enters the details of {string} in the Create Class form', async ({classPageFixture}, scenario) => {
     console.log("Admin clicks the Create Class button...");
+    //const batchName = sharedData.batchName;
+    //console.log("The batchName inside CLASS STEPS is: "+sharedData.batchName);
+    // const batchName = chainingData.getBatchName();
+    // console.log("Chaining data of batchName in classSTeps is: ",batchName);
     await classPageFixture.clickAddNewClassButton();
   
     console.log("Admin enters the given details in the Create Class form");
-    const rowData = testData.find(row => row.Scenario === scenario);
+    const rowData = classTestData.find(row => row.Scenario === scenario);
     
     if (!rowData) {
         throw new Error(`No data found for scenario: ${scenario}`);
@@ -73,9 +80,16 @@ const testData = readCSV(csvPath);
     const classTopic = randomClassScenarios.includes(scenario) 
         ? `Playwright_${faker.string.alphanumeric(3).toUpperCase()}`  
         : rowData.classTopic;
+
+    //convert dates from string to date format and remove
+    const classDates = typeof rowData.classDates === 'string'
+       ? rowData.classDates.replace(/^"|"$/g, '').split(',').map(date => date.trim())
+       : rowData.classDates;
+    
+    console.log("Processed classDates:", classDates);
     
      console.log("Class Topic generated is : ", classTopic);
-
+    console.log("The dates sent are: "+rowData.classDates);
     await classPageFixture.fillCreateClassForm({
         batchName: rowData.batchName,
         classTopic: rowData.classTopic,
@@ -133,9 +147,45 @@ const testData = readCSV(csvPath);
     await expect(classPageFixture.closeIcon).toBeVisible();
   });
 
-  Then('Admin should see the below input fields and their text boxes in the class details form', async ({classPageFixture}) => {
-    console.log("Verify the display of all input fields and their text boxes in the class details form...");
-    // const isVisible = await classPageFixture.verifyClassDetailsFormFields();
-    // await expect(isVisible).toBeTruthy();
+  Then('Admin should see the below input fields {string} and their text boxes in the class details form', async ({classPageFixture}, fieldNameAndBox) => {
+    console.log("Verify the display of input fields and text boxes in the class details form...");
+    await expect(classPageFixture.verifyFieldNameDisplay(fieldNameAndBox)).toBeTruthy();
+    await expect(classPageFixture.verifyFieldBoxDisplay(fieldNameAndBox)).toBeTruthy();   
+  });
+
+  Given('Admin is on the Class Popup window', async ({classPageFixture}) => {
+    console.log("Admin is in the class pop up window...");
+    await classPageFixture.clickAddNewClassButton();
+  });
+  
+  When('Admin selects class date in date picker', async ({classPageFixture}) => {
+    await classPageFixture.selectDates("04/07/2025, 04/08/2025");
+  });
+  
+  Then('Admin should see no of class value is added automatically', async ({classPageFixture}) => {
+    console.log("Verify the No Of Classses displayed..");
+     await expect(classPageFixture.checkNoOfClasses()).resolves.toEqual('2');
+  });
+
+  When('Admin clicks date picker', async ({classPageFixture}) => {
+    console.log("Clicking the Date Picker...")
+    await classPageFixture.clickDatePickerBtn();
+  });
+  
+  Then('Admin should see weekends dates are disabled to select', async ({classPageFixture}) => {
+    console.log("Checking whether all the weekends dates are disabled...")
+    await classPageFixture.verifyDisabledWeekendDates();
+  });
+
+  When('Admin clicks Cancel button OR Close Icon {string}', async ({classPageFixture}, Icon) => {
+    console.log("Clicking Cancel Button OR the Close Icon.....")
+    await classPageFixture.clickCancelOrClose(Icon);
+  });
+  
+  Then('Class Details popup window should be closed without saving', async ({classPageFixture}) => {
+    console.log("Checking whether class details form is closed...")
+    const isVisible = await classPageFixture.classDetailsFormVisibility(); 
+    console.log(`Class Details Form is Visible: ${isVisible}`); 
+    expect(isVisible).toBe(false); 
   });
   

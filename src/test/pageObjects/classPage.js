@@ -2,6 +2,7 @@ import {expect} from "@playwright/test";
 
 import LoginPage from './loginPage';
 import commonTest from '../utils/commonMethods';
+import { th } from "@faker-js/faker";
 
 export default class classPage{
 
@@ -20,10 +21,12 @@ export default class classPage{
         this.EditDeleteHeader = this.page.locator("//th[contains(text(), 'Edit / Delete')]");
         this.paginationText = this.page.getByText('Showing');
         this.addNewClassButton = this.page.getByText('Add New Class');
+        this.labels =this.page.locator("//label");
         this.selectBatchName = this.page.locator("//input[@placeholder='Select a Batch Name']");
         this.classTopicTextbox = this.page.locator("#classTopic");  
         this.classDescTextbox = this.page.locator("#classDescription");
         this.classDate = this.page.locator("//p-calendar//input");
+        this.classNumber = this.page.locator("#classNo");
         this.classDatePickerBtn = this.page.locator("//span[@class='p-button-icon pi pi-calendar']//parent::button");
         this.datePickerYear = this.page.locator("//span[contains(@class, 'p-datepicker-year')]");
         this.datePickerMonth = this.page.locator("//span[contains(@class, 'p-datepicker-month')]");
@@ -52,6 +55,7 @@ export default class classPage{
         this.saveButton = this.page.locator("//span[text()='Save']");
         this.cancelButton = this.page.locator("//span[text()='Cancel']");
         this.closeIcon = this.page.locator("//span[contains(@class,'p-dialog-header-close-icon')]");   
+        this.classDetailsFormTitle = this.page.locator("//span[text()='Class Details']");
              
        }
 
@@ -66,6 +70,12 @@ export default class classPage{
         await loginPage.validLogin(username, password); 
     }
 
+    async classNoDisplayed(){
+        const classNo = await this.classNumber.getAttribute('ng-reflect-model');
+        console.log("class Count Displayed is ", classNo);
+        return classNo;
+    }
+
     async verifyManageClassDisplay(){
        // await this.manageClassText.waitFor({timeout: 3000});
         return await this.manageClassText.isVisible();
@@ -74,7 +84,7 @@ export default class classPage{
     async clickLMSTextClick(){
         await this.LMSDisplayHomePage.click();
     }  
-    
+
     async clickHeaderDeleteIcon(){
         await this.headerDeleteIcon.click();    
     }
@@ -88,6 +98,85 @@ export default class classPage{
         return await common.verifyFooterMessage(moduleName);
     }
 
+    async clickCancelOrClose(Icon){
+        switch(Icon){
+            case "CancelBtn":
+                console.log("Clicking Cancel Button...");
+                await this.cancelButton.click();
+                break;
+            case "CloseIcon":
+                console.log("Clicking Close Icon...");
+                await this.closeIcon.click();
+                break;
+            default: 
+               console("No Such buttons or Icons are available...");
+        }
+        
+    }
+
+    async classDetailsFormVisibility(){
+        await this.page.waitForTimeout(2000); 
+        return await this.classDetailsFormTitle.isVisible();
+    }
+
+    async verifyFieldNameDisplay(fieldName){
+        console.log("Tested Field Name is: " + fieldName);
+        const fieldLabels = await this.page.locator("//label").allTextContents();
+        console.log("The labels of fields are: "+fieldLabels); 
+        switch(fieldName){
+            case "BatchName":  
+               return await fieldLabels.includes("Batch Name");
+            case "ClassTopic": 
+               return await fieldLabels.includes("Class Topic");
+            case "ClassDescription":
+                return  await fieldLabels.includes("Class Description");
+            case "ClassDates":
+                return await fieldLabels.includes(" Select Class Dates ");
+            case "ClassNo":
+                return await fieldLabels.includes("No of Classes");
+            case "StaffName":
+                return await fieldLabels.includes("Staff Name");
+            case "Status":
+                return await fieldLabels.includes("Status");
+            case "Comments":
+                return await fieldLabels.includes("Comments");
+            case "Notes":
+                return await fieldLabels.includes("Notes");
+            case "Recording":
+                return await fieldLabels.includes("Recording");
+        }
+
+    }
+
+
+    async verifyFieldBoxDisplay(fieldBox){
+         switch(fieldBox){
+            case "BatchName":  
+                {console.log("into bathc name..");return await this.selectBatchName.isVisible();}
+            case "ClassTopic": 
+              {console.log("into class topic..");return await this.classTopicTextbox.isVisible();}
+            case "ClassDescription":
+                return await this.classDescTextbox.isVisible();
+            case "ClassDates":
+                return await this.classDate.isVisible();
+            case "ClassNo":
+               return await this.classNumber.isVisible();
+            case "StaffName":
+                return await this.staffNameDropdown.isVisible();
+            case "Comments":
+                return await this.commentsTextbox.isVisible();
+            case "Notes":
+                return await this.notesTextbox.isVisible();
+            case "Recording":
+               return await this.recordingTextbox.isVisible();
+            case "Status":
+               return await this.statusActiveRadioBtn.isVisible();
+             
+        }
+
+    }
+            
+                
 
     async verifyHeaderDisplay(header){
         console.log("Header is: " + header);
@@ -149,10 +238,44 @@ export default class classPage{
             return;
         }
         await this.staffNameDropdown.click();
-        await this.page.waitForTimeout(3000); 
+        await this.page.waitForTimeout(1500); 
         await this.page.waitForSelector("//ul[@role='listbox']/p-dropdownitem");
         await this.page.locator(`//p-dropdownitem[@ng-reflect-label='${staffName}']`).click();
     }
+
+    async checkNoOfClasses() {
+        try {
+            const value = await this.page.locator('#classNo').inputValue();
+            console.log("No of Classes value:", value);
+            return value;
+        } catch (error) {
+            console.error("Error getting class number:", error);
+            throw error; 
+        }
+    }
+
+    async clickDatePickerBtn(){
+       await this.classDatePickerBtn.click();
+    }
+    
+    async verifyDisabledWeekendDates(){
+        const weekendDates = await this.page.$$("//div[contains(@class,'p-datepicker-calendar-container')]//tbody//td[position()=1 or position()=7]");
+        for (const date of weekendDates) {
+            const isDisabled = await date.$('span.p-disabled') !== null;
+            const dateText = await date.innerText();
+            
+            if (!isDisabled) {
+                console.log(`Weekend date ${dateText} is enabled`);
+                return false; 
+            }
+            
+            console.log(`Weekend date ${dateText} is disabled`);
+        }
+        
+        console.log("All the week end dates are disabled....")
+        return true;
+    }
+
 
     async fillCreateClassForm({ batchName, classTopic, classDesc, classDates, staffName, status, comments,notes, recording}) {
         await this.selectBatchName.fill(batchName); 
@@ -176,11 +299,12 @@ export default class classPage{
 
         // Ensure classDates is always an array
        if (!Array.isArray(classDates)) {
-       classDates = [classDates]; 
+          classDates = classDates.split(",").map(date => date.trim()); 
         }
 
         // Filter out invalid or empty dates
         classDates = classDates.filter(date => date && typeof date === "string" && date.includes("/"));
+
 
         // If there are no valid dates, exit early
         if (classDates.length === 0) {
@@ -215,8 +339,7 @@ export default class classPage{
            const targetYear = parseInt(year, 10);
            const currentMonthIndex = monthNames.indexOf(displayedMonth);
            const targetMonthIndex = monthNames.indexOf(targetMonth);
-
-           if (currentYear < targetYear || (currentYear === targetYear && currentMonthIndex < targetMonthIndex)) {
+          if (currentYear < targetYear || (currentYear === targetYear && currentMonthIndex < targetMonthIndex)) {
                await this.datePickerNextArrowBtn.click(); 
            } else {
                await this.datePickerPrevArrowBtn.click(); 
@@ -233,10 +356,13 @@ export default class classPage{
        await this.page.locator(`//table[contains(@class,'p-datepicker-calendar')]/tbody/tr/td/span[text()='${parseInt(day, 10)}']`).click();
        console.log(`Selected date: ${targetDate}`);
 
-       await this.page.waitForTimeout(2000);
-      }
+         await this.page.waitForTimeout(2000);
+       }
 
-     await this.page.keyboard.press('Escape'); 
+        await this.page.click('body', { position: { x: 0, y: 0 } }); 
+        await this.page.keyboard.press('Escape'); 
+        await this.page.waitForTimeout(1000);
+     
     }
 
 
@@ -267,6 +393,16 @@ export default class classPage{
             case "batchNameErrorMsg":
                 console.log("Checking Batch name Error Message..");
                 return await this.batchNameErrorMsg.isVisible();
+            case "allErrorMsg":
+                console.log("Verifying the display of all Error Messages..");
+                const results = await Promise.all([
+                    this.statusErrorMsg.isVisible(),
+                    this.staffNameErrorMsg.isVisible(),
+                    this.classDateErrorMsg.isVisible(),
+                    this.classTopicErrorMsg.isVisible(),
+                    this.batchNameErrorMsg.isVisible()
+                ]);        
+                return results.every(isVisible => isVisible);
             default:
                 throw new Error(`Error message "${message}" not found!`);
         }

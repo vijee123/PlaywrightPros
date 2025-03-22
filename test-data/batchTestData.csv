@@ -1,0 +1,9 @@
+scenario,programName,batchId,batchDesc,status,noOfClasses
+ValidInput_BatchData,createdata,2000,description,Active,2
+InvalidInput_AlphabetsInBatchID,createdata,asdfg,dsc,Active,2
+InvalidInput_BatchEmptyDescription,createdata,2001,,Active,2
+InvalidInput_BatchEmptyProgramName,,2002,desc,Active,1
+InvalidInput_BatchEmptyBatchID,createdata,,dsc,Active,1
+InvalidInput_BatchEmptyStatus,createdata,2003,dsc,,1
+InvalidInput_BatchEmptyNoOfClasses,createdata,2004,dsc,Active,
+ValidInpu_VerifyBatchCloseButton,createdata,2005,descvrh,Active,1

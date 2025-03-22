@@ -9,7 +9,6 @@ export default class LoginPage{
     this.password = this.page.locator('//input[@id="password"]');
     this.loginButton = this.page.locator('//button[@id="login"]');
     this.LMSDisplayHomePage = this.page.locator("//span[normalize-space()='LMS - Learning Management System']");
-    this.URL = "https://playwright-frontend-app-a9ea85794ad9.herokuapp.com/login";
 }
 
 async launchApp(url) {
