@@ -54,16 +54,17 @@ Feature: Validate class page functionality
 
     Examples:
       | scenario          | message            |
-      | validClass        | success            |
-      | withoutStatus     | statusErrorMsg     |
-      | withoutStaffName  | staffNameErrorMsg  |
-      | withoutClassDate  | classDateErrorMsg  |
-      | withoutClassTopic | classTopicErrorMsg |
-      | withoutBatchName  | batchNameErrorMsg  |
-      | withoutClassDesc  | success            |
-      | withoutComments   | success            |
-      | withoutNotes      | success            |
-      | withoutRec        | success            |
+  | validClass        | success            |
+  | withoutStatus     | statusErrorMsg     |
+  | withoutStaffName  | staffNameErrorMsg  |
+  | withoutClassDate  | classDateErrorMsg  |
+  | withoutClassTopic | classTopicErrorMsg |
+  | withoutBatchName  | batchNameErrorMsg  |
+  | withoutClassDesc  | success            |
+  | withoutComments   | success            |
+  | withoutNotes      | success            |
+  | withoutRec        | success            |
+  | emptyForm         | allErrorMsg        |
 
 
   Scenario Outline: Validate Class Details Popup window
@@ -93,10 +94,19 @@ Feature: Validate class page functionality
     Then Admin should see no of class value is added automatically
 
   Scenario: Check weekend dates are disabled in calendar
-    Given Admin is on the Class Popup window	
-    When Admin clicks date picker	
+    Given Admin is on the Class Popup window
+    When Admin clicks date picker
     Then Admin should see weekends dates are disabled to select
 
+  Scenario Outline: Validate Cancel/Close(X) icon on class Details form
+    Given Admin clicks the Add New Class button and enters the details of "<scenario>" in the Create Class form
+    When Admin clicks Cancel button OR Close Icon "<Icon>"
+    Then Class Details popup window should be closed without saving
+ 
+    Examples:
+      | scenario   | Icon      |
+      | validClass | CancelBtn |
+      | validClass | CloseIcon |
 
 
 
