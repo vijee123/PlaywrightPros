@@ -68,10 +68,10 @@ Feature: Validate Batch page functionality
       | InvalidInput_BatchEmptyBatchID     | Batch Name is required.                         |
       | InvalidInput_BatchEmptyStatus      | Status is required.                             |
       | InvalidInput_BatchEmptyNoOfClasses | Number of classes is required                   |
-  
+
   Scenario: Validating cancel button in pop up window
   Given   Admin is on the Batch Details Pop Up WIndow
-  When Admin enters the valid data to all the mandatory fields and click cancel button 
+  When Admin enters the valid data to all the mandatory fields and click cancel button
   Then Admin can see the batch details popup closes without creating any batch
 
   Scenario: validate close icon on the batch details pop up
@@ -95,3 +95,40 @@ Feature: Validate Batch page functionality
     Given Admin is on the Batch Details Pop Up WIndow
     When Admin selects program name present in the dropdown
     Then Admin should see selected program name in the batch name prefix box
+
+  Scenario: Validating batch name prefix box is not editable
+    Given Admin is on the Batch Details Pop Up WIndow
+    When Admin enters alphabets in batch name prefix box
+    Then Admin should see empty text box
+
+  Scenario: Validating Edit icon feature in any row
+    Given Admin is on the Batch page
+    When Admin clicks the edit icon
+    Then Admin should see the Batch details pop up window
+
+  Scenario: Validate program name  value is disabled to edit
+    Given Admin is on the Batch page
+    When Admin clicks the edit icon
+    Then Admin should see Program name value field is disabled for editing
+
+  Scenario: Validate batch name  value is disabled to edit
+    Given Admin is on the Batch page
+    When Admin clicks the edit icon
+    Then Admin should see batch name value field is disabled for editing
+
+  Scenario: Validate editing description and No. of classes fields with invalid data in the pop up
+    Given Admin is on the Batch Details Page
+    When Admin Updates any fields with invalid data "Invalid_EditErrorMsg" and click save button
+    Then Admin should get a error message under the respective field
+
+  Scenario: validate save button in Edit Batch details pop up
+    Given Admin is on the Batch Details Page
+    When Admin enters the valid data "ValidInput_EditSaveBtn" to all the mandatory fields and click save button
+    Then Admin should get a successful message for editing the batch
+
+  Scenario: validate cancel button in Batch details pop up
+    Given Admin is on the Batch Details Page
+    When Admin enters the valid data "ValidInput_EditCancelBtn" to all the mandatory fields and click cancel button
+    Then Admin can see the batch details popup closes without editing the batch
+
+
