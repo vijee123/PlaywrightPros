@@ -174,6 +174,74 @@ if (!rowData) {
   Then('batch details pop up closes', async ({batchPageFixture}) => {
     await expect(batchPageFixture.popUpClosed()).toBeTruthy();
   });
+
+
+  When('Admin enters alphabets in batch name prefix box', async ({batchPageFixture}) => {
+    
+   console.log("checking if the batch name prefix box is editable");
+  });
+  
+  Then('Admin should see empty text box', async ({batchPageFixture}) => {
+    await expect(batchPageFixture.emptyBatchPrefix()).toBeTruthy();
+  });
+  
+  Given('Admin is on the Batch page', async ({batchPageFixture}) => {
+   await batchPageFixture.batchTabClick();
+  });
+  
+  When('Admin clicks the edit icon', async ({batchPageFixture}) => {
+    await batchPageFixture.EditIconClick();
+  });
+  
+  Then('Admin should see the Batch details pop up window', async ({batchPageFixture}) => {
+    await expect(batchPageFixture.editPopUpDisplayed()).toBeTruthy();
+  });
+  
+  Then('Admin should see Program name value field is disabled for editing', async ({batchPageFixture}) => {
+   await expect(batchPageFixture.ProgramNameNotEditable()).toBeTruthy();
+  });
+  
+  Then('Admin should see batch name value field is disabled for editing', async ({batchPageFixture}) => {
+    await expect(batchPageFixture.BatchNameNotEditable()).toBeTruthy();
+  });
+  
+  Given('Admin is on the Batch Details Page', async ({batchPageFixture}) => {
+    await batchPageFixture.batchTabClick();
+    await batchPageFixture.EditIconClick();
+
+  });
+  
+  When('Admin Updates any fields with invalid data {string} and click save button', async ({batchPageFixture},scenario) => {
+    await batchPageFixture.DataInEdit(scenario);
+    
+  });
+
+  Then('Admin should get a error message under the respective field', async ({batchPageFixture}) => {
+    await expect(batchPageFixture.invalidEditDataErrorMsgDisplayed()).toBeTruthy();
+  });
+  
+  When('Admin enters the valid data {string} to all the mandatory fields and click save button', async ({batchPageFixture},scenario) => {
+    await batchPageFixture.DataInEdit(scenario);
+
+    
+  });
+  
+  Then('Admin should get a successful message for editing the batch', async ({batchPageFixture}) => {
+    
+    await expect(batchPageFixture.editSuccessMsgDisplayed()).toBeTruthy();
+  });
+
+  When('Admin enters the valid data {string} to all the mandatory fields and click cancel button', async ({batchPageFixture},scenario) => {
+    await batchPageFixture.DataInEdit(scenario);
+
+  });
+  
+  
+  Then('Admin can see the batch details popup closes without editing the batch', async ({batchPageFixture}) => {
+
+    await expect(batchPageFixture.editCancelBtnValidation()).toBeTruthy();
+  });
+  
    
 
 
