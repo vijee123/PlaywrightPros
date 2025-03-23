@@ -31,9 +31,6 @@ Feature: program Module
 #Scenario:Verify checkbox default state beside Program Name column header
 #Then Admin should see checkbox default state as unchecked beside Program Name column header 
 
-#Scenario:Verify checkboxes default state beside each Program names in the data table 
-#Then Admin should see check box default state as unchecked on the left side in all rows against program name 
-
 #Scenario:Verify Sort icon in manage program
 #Then Admin should see the sort arrow icon beside to each column header except Edit and Delete 
 
@@ -55,16 +52,76 @@ Feature: program Module
 #Then Admin should see the pop up window title as "Program Details" after clicking the Add New Program button
 
 
-Scenario Outline: Verify Add New Program functionalities  
-    Then Admin Adds new program and click on save button for the scenario "<scenario>" in program module
-    Then Admin gets message for the scenario "<scenario>" for program Module
+# Scenario Outline: Verify Add New Program functionalities  
+#    Then Admin Adds new program and click on save button for the scenario "<scenario>" in program module
+#    Then Admin gets message for the scenario "<scenario>" for program Module
 
-    Examples: 
-      | scenario  |
-      |cancelwithValidData|
-      |closewithValidData|
-      |onlyMandatoryfields|
-      |withoutMandatoryfields|
-      |verifyAddedProgram|
+#    Examples: 
+#      | scenario  |
+#      |cancelwithValidData|
+#      |closewithValidData|
+#      |onlyMandatoryfields|
+#      |withoutMandatoryfields|
+#      |verifyAddedProgram|
       
-      
+#   Scenario Outline: Scenario Outline name: Verify mandatory fields with red asterisk mark 
+#   Then Admin should see the  mandatory fields "<Fields>" with asterisk mark in the pop Up window
+# Examples:
+# |Fields|
+# |Program Name|
+# |Program Description|
+# |Program Status|
+
+
+# Scenario Outline: Validate the pop up window field Validation
+# Then Admin see the entered text in the fields "<TextFiled>" in the add new program pop up window 
+
+# Examples:
+# |TextFiled|
+# |Program Name|
+# |Program Description|
+# |Program Status|
+
+
+# Manage Program Sorting 
+
+# Scenario Outline: Manage Program - Sorting Program by Program Name/Program Description
+
+# Then Admin sees the program name or description sorted by ascennding or decending order after clicking the sort icon "<ProgramHeader>"
+
+# Examples:
+# |ProgramHeader|
+# |programName_AscendingOrder|
+# |programName_DecendingOrder|
+# |programDescription_AscendingOrder|
+# |ProgramDescription_DecendingOrder|
+
+
+# Program Pagination
+
+# Scenario Outline: Validating the text and pagination icon in the programPage
+#       Then Admin should see the below "<items>" pagination controls under the data table in the programPage
+
+#       Examples:
+#         | items            |
+#         | paginationText   |
+#         | firstPageIcon    |
+#         | previousPageIcon |
+#         | nextPageIcon     |
+#         | lastPageIcon     |
+
+
+
+#   Manage Program - Search bar
+
+Scenario Outline: Verify Admin is able to search results found for valid Program fields
+
+When Admin searches by valid program name,program description "<scenarioName>" in the Program module
+
+Examples:
+|scenarioName|
+|searchBy_ValidProgramName|
+|searchBy_ProgramDescription|
+|searchBy_InValidProgramName|
+# |searchBy_PartialProgramName|
+

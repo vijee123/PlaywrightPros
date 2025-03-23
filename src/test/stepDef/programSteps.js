@@ -4,7 +4,6 @@ import programPage from '../pageObjects/programPage.js';
 
 const ProgramPage  = require('../pageObjects/programPage.js');
 
-
   When('Admin clicks the program menu from the header', async ({programPageFixture}) => {  
      await programPageFixture.clickProgramBtn();
   });
@@ -87,12 +86,7 @@ const ProgramPage  = require('../pageObjects/programPage.js');
     const isUnchecked = await programPageFixture.validateHeaderCheckBoxUnchecked();
     expect(isUnchecked).toBe(true);
   });
-
-  // Verify checkboxes default state beside each Program names in the data table 
-
-  Then('Admin should see check box default state as unchecked on the left side in all rows against program name', async ({}) => {
-   
-  });
+  
 
   //Verify Sort icon in manage program
 
@@ -146,5 +140,40 @@ const ProgramPage  = require('../pageObjects/programPage.js');
   });
 
 
+// Verify mandatory fields with red asterisk mark 
+ 
+Then('Admin should see the  mandatory fields {string} with asterisk mark in the pop Up window', async ({programPageFixture}, fields) => {
+  const madatoryfieldsText = await programPageFixture.mandatoryFieldRedmaekValidation(fields);    
+  expect(madatoryfieldsText).toBe(true);
+});
+  
 
-    
+// Validate the pop up window field Validation
+
+Then('Admin see the entered text in the fields {string} in the add new program pop up window', async ({programPageFixture}, testField) => {
+  const TextFieldValidation = await programPageFixture.popUpTextFieldValidation(testField);
+  expect(TextFieldValidation).toBe(true);
+});
+
+
+// Program Sorting 
+
+Then('Admin sees the program name or description sorted by ascennding or decending order after clicking the sort icon {string}', async ({programPageFixture}, headerName) => {
+  const result= await programPageFixture.ProgramSorting(headerName);
+  expect(result).toBe(true);
+});
+
+
+// Program Pagination
+
+Then('Admin should see the below {string} pagination controls under the data table in the programPage', async ({programPageFixture}, items) => {
+  await programPageFixture.programPageverifyPaginationTextAndIcons(items); 
+
+});
+
+// Program Search
+
+When('Admin searches by valid program name,program description {string} in the Program module', async ({programPageFixture}, programSearch) => {
+  await programPageFixture.programSearch(programSearch);
+});
+

@@ -4,3 +4,7 @@ withoutMandatoryfields,,,
 cancelwithValidData,Testinmindfive,fiveDescription,Active
 closewithValidData,Testinmindfive,fiveDescription,Active
 verifyAddedProgram,Testinmindsix,sixdescription,Active
+searchBy_ValidProgramName,Testinmindsix,,
+searchBy_ProgramDescription,,searchTesting,
+searchBy_InValidProgramName,ten,,
+searchBy_PartialProgramName,mindsix,,
