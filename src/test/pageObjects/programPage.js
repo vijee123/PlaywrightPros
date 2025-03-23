@@ -341,6 +341,7 @@ async programPageverifyPaginationTextAndIcons(items){
 async programSearch(scenario)
 {
    await this.page.keyboard.press('Escape');
+
   const rowData = testData.find(row => row.scenario === scenario);
 
   if (!rowData) {
@@ -353,14 +354,21 @@ switch (scenario){
             await this.page.keyboard.press('Enter');
             const namelist=await this.pgmNameslist.textContent();           
             return expect(namelist).toContain(rowData.ProgramName);
-    case 'searchBy_ProgramDescription':
-           await this.searchBox.fill(rowData.ProgramName);
+
+    case 'searchBy_ProgramDescription':      
+           await this.searchBox.fill(rowData.programDescription);
            await this.page.keyboard.press('Enter');
-           const pgmDeslist=await this.pgmDescriptionlist.textContent();           
+           const pgmDeslist=await this.pgmDescriptionlist.textContent();   
+           console.log(pgmDeslist);      
            return expect(pgmDeslist).toContain(rowData.programDescription);
+
       case 'searchBy_InValidProgramName':
-         await this.searchBox.fill(rowData.ProgramName);
-         await this.page.keyboard.press('Enter');
+        
+        await this.searchBox.fill(rowData.ProgramName); 
+        await this.page.keyboard.press('Enter'); 
+
+
+         
          const name=await this.pgmNameslist.textContent();
          return expect(name).toContain(rowData.programDescription);
 
