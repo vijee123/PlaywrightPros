@@ -1,8 +1,4 @@
-Feature: program Module
-  
- Scenario:Navigating to the program module
-    When Admin clicks the program menu from the header
-   Then Admin should land on the program page
+Feature: program Module  
 
 Scenario:Verify Logout displayed in menu bar
 Then Admin should see Logout in menu bar
@@ -58,7 +54,7 @@ Scenario Outline: Verify Add New Program functionalities
 
    Examples: 
      | scenario  |
-     |cancelwithValidData|
+      |cancelwithValidData|
      |closewithValidData|
      |onlyMandatoryfields|
      |withoutMandatoryfields|
@@ -123,5 +119,5 @@ Examples:
 |searchBy_ValidProgramName|
 |searchBy_ProgramDescription|
 |searchBy_InValidProgramName|
-# |searchBy_PartialProgramName|
+|searchBy_PartialProgramName|
 

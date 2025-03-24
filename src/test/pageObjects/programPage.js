@@ -4,9 +4,7 @@ import LoginPage from './loginPage';
 import commonTest from '../utils/commonMethods';
 const path = require('path');
 const { readCSV } = require('../utils/csvReader');
-
 import { readExcelSheet } from '../utils/excelReader.js';
-
 const csvPath = path.resolve(__dirname, '../../../test-data/programTestData.csv');
 const testData = readCSV(csvPath);
 
@@ -45,19 +43,20 @@ export default class programPage {
     this.pgmStatusErrMesg = this.page.locator('//*[text()="Status is required."]');
     this.popUpheading = this.page.locator('//span[text()="Program Details"]');
     this.popUpCloseBtn = this.page.locator('//span[contains(@class, "p-dialog-header-close-icon")]');
-    this.pgmLabelName=this.page.locator('//label[text()="Name"]');
-    this.prgdescriptionlabelName=this.page.locator('//label[text()="Description"]');
-    this.prgmStatuslabelName=this.page.locator('//lable[text()="Status"]');
-    this.pgmNameSortIcon=this.page.locator('//th[@ng-reflect-field="programName"]');
-    this.pgmDescriptionSortIcon=this.page.locator('//th[@ng-reflect-field="programDescription"]');
-    this.pgmNameslist=this.page.locator('//tr/td[2]');
-    this.pgmDescriptionlist=this.page.locator('//tr/td[3]');
+    this.pgmLabelName = this.page.locator('//label[text()="Name"]');
+    this.prgdescriptionlabelName = this.page.locator('//label[text()="Description"]');
+    this.prgmStatuslabelName = this.page.locator('//lable[text()="Status"]');
+    this.pgmNameSortIcon = this.page.locator('//th[@ng-reflect-field="programName"]');
+    this.pgmDescriptionSortIcon = this.page.locator('//th[@ng-reflect-field="programDescription"]');
+    this.pgmNameslist = this.page.locator('//tr/td[2]');
+    this.pgmDescriptionlist = this.page.locator('//tr/td[3]');
 
   }
 
 
   async clickProgramBtn() {
     await this.programBtn.click();
+    await this.page.keyboard.press('Escape');
 
   }
 
@@ -157,7 +156,7 @@ export default class programPage {
   }
 
   async ProgramPageverifySortIconDisplayInHeaderFields() {
-    let common = new commonTest(this.page);    
+    let common = new commonTest(this.page);
     return await common.verifyHeaderFieldsSortIcons();
   }
 
@@ -165,12 +164,12 @@ export default class programPage {
 
 
   async newProgramEnterDetails(scenario) {
-    console.log(scenario);
+   
     const rowData = testData.find(row => row.scenario === scenario);
     if (!rowData) {
       throw new Error(`No data found for scenario: ${scenario}`);
     }
-    console.log(rowData);
+ 
     await this.programName.fill(rowData.ProgramName);
     await this.prgDescription.fill(rowData.programDescription);
     if (rowData.Status == 'Active') {
@@ -199,7 +198,7 @@ export default class programPage {
         await this.newProgramEnterDetails(scenario);
         await this.saveBtn.click();
         break;
-     case "verifyAddedProgram":
+      case "verifyAddedProgram":
         await this.newProgramEnterDetails(scenario);
         await this.saveBtn.click();
         break;
@@ -212,14 +211,18 @@ export default class programPage {
 
 
 
-  async validateCreateProgramMessage(scenario) {
-    console.log('scenario::' + scenario);
+  async validateCreateProgramMessage(scenario) {   
+
+    const rowData = testData.find(row => row.scenario === scenario);
+    if (!rowData) {
+      throw new Error(`No data found for scenario: ${scenario}`);
+    }
+
     if (this.page.isClosed()) {
       console.error("Page is already closed. Cannot verify message.");
       return false;
     }
     switch (scenario) {
-
       case "onlyMandatoryfields":
         console.log("Checking Valid Program Created Message..");
 
@@ -240,9 +243,21 @@ export default class programPage {
           return false;
         else
           return true;
-    case "verifyAddedProgram":
-          console.log('into verify added pgm')
+
+      case "verifyAddedProgram":
+        await this.page.waitForTimeout(2000);
+        await this.searchBox.fill(rowData.ProgramName);
+        await this.page.keyboard.press('Enter');
+        await this.page.waitForTimeout(1000);
+        const namelist = await this.pgmNameslist.textContent();
+        console.log('Namelist:', namelist); // Debugging log
+      
+        if(namelist === rowData.ProgramName) {
           return true;
+      } else {
+          throw new Error('No programs found in the list.');
+      }
+                           
       default:
         throw new Error(`Error message "${message}" not found!`);
 
@@ -250,139 +265,135 @@ export default class programPage {
   }
 
 
-  async mandatoryFieldRedmaekValidation(Fields) {  
+  async mandatoryFieldRedmaekValidation(Fields) {
     await this.AddNewpgmBtn.click();
     let text;
     switch (Fields) {
-        case "Program Name":
-            text = await this.pgmLabelName.textContent(); 
-            break;
-        case "Program Description":
-            text = await this.prgdescriptionlabelName.textContent(); 
-            break;
-        case "Program Status":
-            text = await this.prgmStatuslabelName.textContent(); 
-            break;
-        default:
-            throw new Error(`Error field "${Fields}" not found!`);         
+      case "Program Name":
+        text = await this.pgmLabelName.textContent();
+        break;
+      case "Program Description":
+        text = await this.prgdescriptionlabelName.textContent();
+        break;
+      case "Program Status":
+        text = await this.prgmStatuslabelName.textContent();
+        break;
+      default:
+        throw new Error(`Error field "${Fields}" not found!`);
     }
     if (!text.includes("*")) {
       throw new Error(`The field "${fieldName}" is not marked as mandatory.`);
+    }
+
+    return true;
   }
 
-  return true; 
-}
 
+  async popUpTextFieldValidation(textField) {
+    await this.AddNewpgmBtn.click();
+    const prgName = 'programName';
+    const prgmDescrip = 'pgm Description';
+    textField = textField.trim();
 
-async popUpTextFieldValidation(textField) {
-  await this.AddNewpgmBtn.click();
-  const prgName = 'programName';
-  const prgmDescrip = 'pgm Description'; 
-  textField = textField.trim();
+    switch (textField) {
+      case "Program Name":
+        await this.programName.fill(prgName);
+        await this.prgDescription.click();
+        const nameActText = await this.programName.inputValue();
+        return nameActText.trim() === prgName;
 
-  switch (textField) {
-    case "Program Name":
-      await this.programName.fill(prgName);
-      await this.prgDescription.click();
-      const nameActText = await this.programName.inputValue();     
-      return nameActText.trim() === prgName;
+      case "Program Description":
+        await this.prgDescription.fill(prgmDescrip);
+        await this.programName.click();
+        const descrpActText = await this.prgDescription.inputValue();
+        return descrpActText.trim() === prgmDescrip;
 
-    case "Program Description":
-      await this.prgDescription.fill(prgmDescrip);
-      await this.programName.click();
-      const descrpActText = await this.prgDescription.inputValue();      
-      return descrpActText.trim() === prgmDescrip;
+      case "Program Status":
+        await this.pgmActiveBtn.click();
+        const ariaChecked = await this.pgmActiveBtn.getAttribute('aria-checked');
+        if (ariaChecked === 'true');
+        return true;
 
-    case "Program Status":
-      await this.pgmActiveBtn.click(); 
-      const ariaChecked = await this.pgmActiveBtn.getAttribute('aria-checked'); 
-      if( ariaChecked === 'true');            
-      return true;
-
-    default:
-      throw new Error(`Error: field "${textField}" not found!`);
-  }
-}
-
-
-
-async ProgramSorting(programHeader){
-   await this.page.keyboard.press('Escape');
-     let common = new commonTest(this.page);
-     let isSorted ;
-switch(programHeader)
-{
-  case "programName_AscendingOrder":    
-       isSorted = await  common.verifyingColumnSorting(this.page,'Program Name','Ascending');
-      return isSorted;   
-  case "programName_DecendingOrder": 
-       isSorted = await  common.verifyingColumnSorting(this.page,'Program Name','Descending');
-      return isSorted;   
-  case "programDescription_AscendingOrder":
-    isSorted = await  common.verifyingColumnSorting(this.page,'Program Description','Ascending');
-    return isSorted; 
- 
-  case "ProgramDescription_DecendingOrder":
-    isSorted = await  common.verifyingColumnSorting(this.page,'Program Description','Descending');
-    return isSorted; 
-   
- default:
-      throw new Error(`Error: field "${programHeader}" not found!`);
-}
-
-}
-async programPageverifyPaginationTextAndIcons(items){
-     await this.page.keyboard.press('Escape');
-        let common = new commonTest(this.page);
-        return await common.verifyPaginationTextAndIcons(items);
-    }   
-
-
-async programSearch(scenario)
-{
-   await this.page.keyboard.press('Escape');
-
-  const rowData = testData.find(row => row.scenario === scenario);
-
-  if (!rowData) {
-    throw new Error(`No data found for scenario: ${scenario}`);
+      default:
+        throw new Error(`Error: field "${textField}" not found!`);
+    }
   }
 
-switch (scenario){ 
-  case 'searchBy_ValidProgramName':
-            await this.searchBox.fill(rowData.ProgramName);
-            await this.page.keyboard.press('Enter');
-            const namelist=await this.pgmNameslist.textContent();           
-            return expect(namelist).toContain(rowData.ProgramName);
 
-    case 'searchBy_ProgramDescription':      
-           await this.searchBox.fill(rowData.programDescription);
-           await this.page.keyboard.press('Enter');
-           const pgmDeslist=await this.pgmDescriptionlist.textContent();   
-           console.log(pgmDeslist);      
-           return expect(pgmDeslist).toContain(rowData.programDescription);
+
+  async ProgramSorting(programHeader) {
+    await this.page.keyboard.press('Escape');
+    let common = new commonTest(this.page);
+    let isSorted;
+    switch (programHeader) {
+      case "programName_AscendingOrder":
+        isSorted = await common.verifyingColumnSorting(this.page, 'Program Name', 'Ascending');
+        return isSorted;
+      case "programName_DecendingOrder":
+        isSorted = await common.verifyingColumnSorting(this.page, 'Program Name', 'Descending');
+        return isSorted;
+      case "programDescription_AscendingOrder":
+        isSorted = await common.verifyingColumnSorting(this.page, 'Program Description', 'Ascending');
+        return isSorted;
+
+      case "ProgramDescription_DecendingOrder":
+        isSorted = await common.verifyingColumnSorting(this.page, 'Program Description', 'Descending');
+        return isSorted;
+
+      default:
+        throw new Error(`Error: field "${programHeader}" not found!`);
+    }
+
+  }
+  async programPageverifyPaginationTextAndIcons(items) {
+    await this.page.keyboard.press('Escape');
+    let common = new commonTest(this.page);
+    return await common.verifyPaginationTextAndIcons(items);
+  }
+
+
+  async programSearch(scenario) {
+    await this.page.keyboard.press('Escape');
+
+    const rowData = testData.find(row => row.scenario === scenario);
+
+    if (!rowData) {
+      throw new Error(`No data found for scenario: ${scenario}`);
+    }
+
+    switch (scenario) {
+      case 'searchBy_ValidProgramName':
+        await this.searchBox.fill(rowData.ProgramName);
+        await this.page.keyboard.press('Enter');
+        const namelist = await this.pgmNameslist.textContent();
+        return expect(namelist).toContain(rowData.ProgramName);
+
+      case 'searchBy_ProgramDescription':
+        await this.searchBox.fill(rowData.programDescription);
+        await this.page.keyboard.press('Enter');
+        const pgmDeslist = await this.pgmDescriptionlist.textContent();
+        return expect(pgmDeslist).toContain(rowData.programDescription);
 
       case 'searchBy_InValidProgramName':
-        
-        await this.searchBox.fill(rowData.ProgramName); 
-        await this.page.keyboard.press('Enter'); 
+        await this.searchBox.fill(rowData.ProgramName);
+        await this.page.keyboard.press('Enter');
+        const lent = await this.pgmNameslist.count();
+        return expect(lent).toBe(0);
+
+      case 'searchBy_PartialProgramName':
+        await this.searchBox.fill(rowData.ProgramName);
+        await this.page.keyboard.press('Enter');
+        const name = await this.pgmNameslist.textContent();
+        return expect(name).toContain(rowData.ProgramName);
+
+      default:
+        throw new Error(`Error: field "${programHeader}" not found!`);
 
 
-         
-         const name=await this.pgmNameslist.textContent();
-         return expect(name).toContain(rowData.programDescription);
-
-        case 'searchBy_PartialProgramName':
-
-          break
- default:
-      throw new Error(`Error: field "${programHeader}" not found!`);
+    }
 
 
-}
-
-
-}
+  }
 
 
 }
