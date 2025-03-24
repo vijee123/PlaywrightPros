@@ -55,6 +55,7 @@ export default class classPage{
         this.saveButton = this.page.locator("//span[text()='Save']");
         this.cancelButton = this.page.locator("//span[text()='Cancel']");
         this.closeIcon = this.page.locator("//span[contains(@class,'p-dialog-header-close-icon')]");   
+        this.classDetailsFormTitle = this.page.locator("//span[text()='Class Details']");
              
        }
 
@@ -83,7 +84,7 @@ export default class classPage{
     async clickLMSTextClick(){
         await this.LMSDisplayHomePage.click();
     }  
-    
+
     async clickHeaderDeleteIcon(){
         await this.headerDeleteIcon.click();    
     }
@@ -95,6 +96,27 @@ export default class classPage{
     async verifyClassFooterMessage(moduleName){
         let common = new commonTest(this.page);
         return await common.verifyFooterMessage(moduleName);
+    }
+
+    async clickCancelOrClose(Icon){
+        switch(Icon){
+            case "CancelBtn":
+                console.log("Clicking Cancel Button...");
+                await this.cancelButton.click();
+                break;
+            case "CloseIcon":
+                console.log("Clicking Close Icon...");
+                await this.closeIcon.click();
+                break;
+            default: 
+               console("No Such buttons or Icons are available...");
+        }
+        
+    }
+
+    async classDetailsFormVisibility(){
+        await this.page.waitForTimeout(2000); 
+        return await this.classDetailsFormTitle.isVisible();
     }
 
     async verifyFieldNameDisplay(fieldName){
@@ -216,10 +238,44 @@ export default class classPage{
             return;
         }
         await this.staffNameDropdown.click();
-        await this.page.waitForTimeout(3000); 
+        await this.page.waitForTimeout(1500); 
         await this.page.waitForSelector("//ul[@role='listbox']/p-dropdownitem");
         await this.page.locator(`//p-dropdownitem[@ng-reflect-label='${staffName}']`).click();
     }
+
+    async checkNoOfClasses() {
+        try {
+            const value = await this.page.locator('#classNo').inputValue();
+            console.log("No of Classes value:", value);
+            return value;
+        } catch (error) {
+            console.error("Error getting class number:", error);
+            throw error; 
+        }
+    }
+
+    async clickDatePickerBtn(){
+       await this.classDatePickerBtn.click();
+    }
+    
+    async verifyDisabledWeekendDates(){
+        const weekendDates = await this.page.$$("//div[contains(@class,'p-datepicker-calendar-container')]//tbody//td[position()=1 or position()=7]");
+        for (const date of weekendDates) {
+            const isDisabled = await date.$('span.p-disabled') !== null;
+            const dateText = await date.innerText();
+            
+            if (!isDisabled) {
+                console.log(`Weekend date ${dateText} is enabled`);
+                return false; 
+            }
+            
+            console.log(`Weekend date ${dateText} is disabled`);
+        }
+        
+        console.log("All the week end dates are disabled....")
+        return true;
+    }
+
 
     async fillCreateClassForm({ batchName, classTopic, classDesc, classDates, staffName, status, comments,notes, recording}) {
         await this.selectBatchName.fill(batchName); 
@@ -243,11 +299,12 @@ export default class classPage{
 
         // Ensure classDates is always an array
        if (!Array.isArray(classDates)) {
-       classDates = [classDates]; 
+          classDates = classDates.split(",").map(date => date.trim()); 
         }
 
         // Filter out invalid or empty dates
         classDates = classDates.filter(date => date && typeof date === "string" && date.includes("/"));
+
 
         // If there are no valid dates, exit early
         if (classDates.length === 0) {
@@ -282,8 +339,7 @@ export default class classPage{
            const targetYear = parseInt(year, 10);
            const currentMonthIndex = monthNames.indexOf(displayedMonth);
            const targetMonthIndex = monthNames.indexOf(targetMonth);
-
-           if (currentYear < targetYear || (currentYear === targetYear && currentMonthIndex < targetMonthIndex)) {
+          if (currentYear < targetYear || (currentYear === targetYear && currentMonthIndex < targetMonthIndex)) {
                await this.datePickerNextArrowBtn.click(); 
            } else {
                await this.datePickerPrevArrowBtn.click(); 
@@ -300,10 +356,13 @@ export default class classPage{
        await this.page.locator(`//table[contains(@class,'p-datepicker-calendar')]/tbody/tr/td/span[text()='${parseInt(day, 10)}']`).click();
        console.log(`Selected date: ${targetDate}`);
 
-       await this.page.waitForTimeout(2000);
-      }
+         await this.page.waitForTimeout(2000);
+       }
 
-     await this.page.keyboard.press('Escape'); 
+        await this.page.click('body', { position: { x: 0, y: 0 } }); 
+        await this.page.keyboard.press('Escape'); 
+        await this.page.waitForTimeout(1000);
+     
     }
 
 
@@ -334,6 +393,16 @@ export default class classPage{
             case "batchNameErrorMsg":
                 console.log("Checking Batch name Error Message..");
                 return await this.batchNameErrorMsg.isVisible();
+            case "allErrorMsg":
+                console.log("Verifying the display of all Error Messages..");
+                const results = await Promise.all([
+                    this.statusErrorMsg.isVisible(),
+                    this.staffNameErrorMsg.isVisible(),
+                    this.classDateErrorMsg.isVisible(),
+                    this.classTopicErrorMsg.isVisible(),
+                    this.batchNameErrorMsg.isVisible()
+                ]);        
+                return results.every(isVisible => isVisible);
             default:
                 throw new Error(`Error message "${message}" not found!`);
         }

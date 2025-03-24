@@ -3,17 +3,17 @@ import { test, Given, Then, When } from '../../../fixture/customFixtures.js';
 
 const { faker } = require('@faker-js/faker');
 const path = require('path');
-import { chainingData } from "../utils/chainingData.js";
-//console.log("Chaining batchName data into class Steps is: "+chainingData.getBatchName());
+const { readCSV } = require('../utils/csvReader');
+const csvPath = path.resolve(__dirname, '../../../test-data/classTestData.csv'); 
+const classTestData = readCSV(csvPath);
 
-import { readExcelSheet } from '../utils/excelReader.js';
-const classTestData = readExcelSheet('classData');  
+//import { chainingData } from "../utils/chainingData.js";
+//console.log("Chaining batchName data into class Steps is: "+chainingData.getBatchName());
 
 
  When('Admin clicks the Class Navigation bar in the Header', async ({classPageFixture}) => {
     console.log("Admin clicks the Class Navigation bar in the Header");
-   await classPageFixture.clickClassMenu();
-   
+   await classPageFixture.clickClassMenu();   
   });
   
   Then('Admin should land on the Manage class page', async ({classPageFixture}) => {
@@ -57,7 +57,7 @@ const classTestData = readExcelSheet('classData');
     await expect(allHaveIcons).toBeTruthy();
   });
 
-  When('Admin clicks the Add New Class button and enters the details of {string} in the Create Class form', async ({classPageFixture, sharedData}, scenario) => {
+  When('Admin clicks the Add New Class button and enters the details of {string} in the Create Class form', async ({classPageFixture}, scenario) => {
     console.log("Admin clicks the Create Class button...");
     //const batchName = sharedData.batchName;
     //console.log("The batchName inside CLASS STEPS is: "+sharedData.batchName);
@@ -79,9 +79,16 @@ const classTestData = readExcelSheet('classData');
     const classTopic = randomClassScenarios.includes(scenario) 
         ? `Playwright_${faker.string.alphanumeric(3).toUpperCase()}`  
         : rowData.classTopic;
+
+    //convert dates from string to date format and remove
+    const classDates = typeof rowData.classDates === 'string'
+       ? rowData.classDates.replace(/^"|"$/g, '').split(',').map(date => date.trim())
+       : rowData.classDates;
+    
+    console.log("Processed classDates:", classDates);
     
      console.log("Class Topic generated is : ", classTopic);
-
+    console.log("The dates sent are: "+rowData.classDates);
     await classPageFixture.fillCreateClassForm({
         batchName: rowData.batchName,
         classTopic: rowData.classTopic,
@@ -151,11 +158,33 @@ const classTestData = readExcelSheet('classData');
   });
   
   When('Admin selects class date in date picker', async ({classPageFixture}) => {
-    await classPageFixture.selectDates("03/26/2025, 03/27/2025");
+    await classPageFixture.selectDates("04/07/2025, 04/08/2025");
   });
   
   Then('Admin should see no of class value is added automatically', async ({classPageFixture}) => {
     console.log("Verify the No Of Classses displayed..");
-    await expect(this.page.locator('#classNo')).toHaveAttribute('ng-reflect-model', '2');
+     await expect(classPageFixture.checkNoOfClasses()).resolves.toEqual('2');
+  });
+
+  When('Admin clicks date picker', async ({classPageFixture}) => {
+    console.log("Clicking the Date Picker...")
+    await classPageFixture.clickDatePickerBtn();
+  });
+  
+  Then('Admin should see weekends dates are disabled to select', async ({classPageFixture}) => {
+    console.log("Checking whether all the weekends dates are disabled...")
+    await classPageFixture.verifyDisabledWeekendDates();
+  });
+
+  When('Admin clicks Cancel button OR Close Icon {string}', async ({classPageFixture}, Icon) => {
+    console.log("Clicking Cancel Button OR the Close Icon.....")
+    await classPageFixture.clickCancelOrClose(Icon);
+  });
+  
+  Then('Class Details popup window should be closed without saving', async ({classPageFixture}) => {
+    console.log("Checking whether class details form is closed...")
+    const isVisible = await classPageFixture.classDetailsFormVisibility(); 
+    console.log(`Class Details Form is Visible: ${isVisible}`); 
+    expect(isVisible).toBe(false); 
   });
   
