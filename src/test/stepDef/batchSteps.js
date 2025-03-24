@@ -241,6 +241,75 @@ if (!rowData) {
 
     await expect(batchPageFixture.editCancelBtnValidation()).toBeTruthy();
   });
+
+  When('Admin clicks the delete Icon on any row', async ({batchPageFixture}) => {
+    await batchPageFixture.deleteIcon.click();
+  });
+  
+  Then('Admin should see the confirm alert box with yes and no button', async ({batchPageFixture}) => {
+    await expect(batchPageFixture.deleteConfirmBox.isVisible()).toBeTruthy();
+  });
+  
+  Given('Admin is on the batch confirm popup page', async ({batchPageFixture}) => {
+    await batchPageFixture.batchTabClick();
+    await batchPageFixture.deleteIcon.click();
+
+  });
+  
+  When('Admin clicks on the delete icon and click yes button', async ({batchPageFixture}) => {
+   await batchPageFixture.deleteYes.click();
+  });
+  
+  Then('Admin should see the successful message and the batch should be deleted', async ({batchPageFixture}) => {
+   await expect(batchPageFixture.deleteSuccessMSg.isVisible()).toBeTruthy();
+  });
+  
+  When('Admin clicks on the delete icon and click no button', async ({batchPageFixture}) => {
+    await batchPageFixture.deleteNo.click();
+  });
+  
+  Then('Admin should see the alert box closed and the batch is not deleted', async ({batchPageFixture}) => {
+    await expect(batchPageFixture.VerifyDeleteNoBtn()).toBeTruthy();
+  });
+
+  When('Admin clicks on the delete close icon', async ({batchPageFixture}) => {
+    await batchPageFixture.deleteCloseBtn.click();
+  });
+  
+  
+  Then('Admin should see the alert box closed', async ({batchPageFixture}) => {
+    
+    await expect(batchPageFixture.deleteConfirmBoxClosed()).toBeTruthy();
+  });
+
+  Given('Admin is on the batch page', async ({batchPageFixture}) => {
+    await batchPageFixture.batchTabClick();
+   
+  });
+  
+  When('Admin clicks on the delete icon under the Manage batch header', async ({batchPageFixture}) => {
+   await batchPageFixture.selectBatchRowforDelete(1);
+   await batchPageFixture.deleteYes.click();
+  });
+  
+  Then('The respective row in the table should be deleted', async ({batchPageFixture}) => {
+   await expect(batchPageFixture.VerifyBatchRowDeleted()).toBeTruthy();
+  });
+  
+  When('Admin clicks more than one delete icons under the Manage batch header', async ({batchPageFixture}) => {
+    await batchPageFixture.selectBatchRowforDelete(3);
+    await batchPageFixture.deleteYes.click();
+  });
+  
+  When('Admin enters the batch name {string} in the search text box', async ({batchPageFixture},text) => {
+    await batchPageFixture.enterSearchBox(text);
+  });
+  
+  Then('Admin should see the filtered batches {string} in the data table', async ({batchPageFixture},text) => {
+    await expect(batchPageFixture.BatchNameHasSearchText(text)).toBeTruthy();
+  });
+  
+  
   
    
 

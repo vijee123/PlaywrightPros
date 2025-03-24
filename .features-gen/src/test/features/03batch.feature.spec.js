@@ -185,6 +185,58 @@ test.describe('Validate Batch page functionality', () => {
     await Then('Admin can see the batch details popup closes without editing the batch', null, { batchPageFixture }); 
   });
 
+  test('validate delete Icon on any row', async ({ Given, batchPageFixture, When, Then }) => { 
+    await Given('Admin is on the Batch page', null, { batchPageFixture }); 
+    await When('Admin clicks the delete Icon on any row', null, { batchPageFixture }); 
+    await Then('Admin should see the confirm alert box with yes and no button', null, { batchPageFixture }); 
+  });
+
+  test('Validate yes button on the confirm alert box', async ({ Given, batchPageFixture, When, Then }) => { 
+    await Given('Admin is on the batch confirm popup page', null, { batchPageFixture }); 
+    await When('Admin clicks on the delete icon and click yes button', null, { batchPageFixture }); 
+    await Then('Admin should see the successful message and the batch should be deleted', null, { batchPageFixture }); 
+  });
+
+  test('validate no button on the confirm alert box', async ({ Given, batchPageFixture, When, Then }) => { 
+    await Given('Admin is on the batch confirm popup page', null, { batchPageFixture }); 
+    await When('Admin clicks on the delete icon and click no button', null, { batchPageFixture }); 
+    await Then('Admin should see the alert box closed and the batch is not deleted', null, { batchPageFixture }); 
+  });
+
+  test('validate close Icon on the alert box', async ({ Given, batchPageFixture, When, Then }) => { 
+    await Given('Admin is on the batch confirm popup page', null, { batchPageFixture }); 
+    await When('Admin clicks on the delete close icon', null, { batchPageFixture }); 
+    await Then('Admin should see the alert box closed', null, { batchPageFixture }); 
+  });
+
+  test('Validate single row delete with checkbox', async ({ Given, batchPageFixture, When, Then }) => { 
+    await Given('Admin is on the batch page', null, { batchPageFixture }); 
+    await When('Admin clicks on the delete icon under the Manage batch header', null, { batchPageFixture }); 
+    await Then('The respective row in the table should be deleted', null, { batchPageFixture }); 
+  });
+
+  test('Validate multiple row delete with checkbox', async ({ Given, batchPageFixture, When, Then }) => { 
+    await Given('Admin is on the batch page', null, { batchPageFixture }); 
+    await When('Admin clicks more than one delete icons under the Manage batch header', null, { batchPageFixture }); 
+    await Then('The respective row in the table should be deleted', null, { batchPageFixture }); 
+  });
+
+  test.describe('validate search box functionality', () => {
+
+    test('Example #1', async ({ Given, batchPageFixture, When, Then }) => { 
+      await Given('Admin is on the batch page', null, { batchPageFixture }); 
+      await When('Admin enters the batch name "Name" in the search text box', null, { batchPageFixture }); 
+      await Then('Admin should see the filtered batches "Name" in the data table', null, { batchPageFixture }); 
+    });
+
+    test('Example #2', async ({ Given, batchPageFixture, When, Then }) => { 
+      await Given('Admin is on the batch page', null, { batchPageFixture }); 
+      await When('Admin enters the batch name "abc" in the search text box', null, { batchPageFixture }); 
+      await Then('Admin should see the filtered batches "abc" in the data table', null, { batchPageFixture }); 
+    });
+
+  });
+
 });
 
 // == technical section ==
@@ -227,4 +279,12 @@ const bddFileData = [ // bdd-data-start
   {"pwTestLine":170,"pickleLine":119,"tags":[],"steps":[{"pwStepLine":7,"gherkinStepLine":4,"keywordType":"Context","textWithKeyword":"Given Admin logged into the application successfully and in home page","isBg":true,"stepMatchArguments":[]},{"pwStepLine":171,"gherkinStepLine":120,"keywordType":"Context","textWithKeyword":"Given Admin is on the Batch Details Page","stepMatchArguments":[]},{"pwStepLine":172,"gherkinStepLine":121,"keywordType":"Action","textWithKeyword":"When Admin Updates any fields with invalid data \"Invalid_EditErrorMsg\" and click save button","stepMatchArguments":[{"group":{"start":43,"value":"\"Invalid_EditErrorMsg\"","children":[{"start":44,"value":"Invalid_EditErrorMsg","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":173,"gherkinStepLine":122,"keywordType":"Outcome","textWithKeyword":"Then Admin should get a error message under the respective field","stepMatchArguments":[]}]},
   {"pwTestLine":176,"pickleLine":124,"tags":[],"steps":[{"pwStepLine":7,"gherkinStepLine":4,"keywordType":"Context","textWithKeyword":"Given Admin logged into the application successfully and in home page","isBg":true,"stepMatchArguments":[]},{"pwStepLine":177,"gherkinStepLine":125,"keywordType":"Context","textWithKeyword":"Given Admin is on the Batch Details Page","stepMatchArguments":[]},{"pwStepLine":178,"gherkinStepLine":126,"keywordType":"Action","textWithKeyword":"When Admin enters the valid data \"ValidInput_EditSaveBtn\" to all the mandatory fields and click save button","stepMatchArguments":[{"group":{"start":28,"value":"\"ValidInput_EditSaveBtn\"","children":[{"start":29,"value":"ValidInput_EditSaveBtn","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":179,"gherkinStepLine":127,"keywordType":"Outcome","textWithKeyword":"Then Admin should get a successful message for editing the batch","stepMatchArguments":[]}]},
   {"pwTestLine":182,"pickleLine":129,"tags":[],"steps":[{"pwStepLine":7,"gherkinStepLine":4,"keywordType":"Context","textWithKeyword":"Given Admin logged into the application successfully and in home page","isBg":true,"stepMatchArguments":[]},{"pwStepLine":183,"gherkinStepLine":130,"keywordType":"Context","textWithKeyword":"Given Admin is on the Batch Details Page","stepMatchArguments":[]},{"pwStepLine":184,"gherkinStepLine":131,"keywordType":"Action","textWithKeyword":"When Admin enters the valid data \"ValidInput_EditCancelBtn\" to all the mandatory fields and click cancel button","stepMatchArguments":[{"group":{"start":28,"value":"\"ValidInput_EditCancelBtn\"","children":[{"start":29,"value":"ValidInput_EditCancelBtn","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":185,"gherkinStepLine":132,"keywordType":"Outcome","textWithKeyword":"Then Admin can see the batch details popup closes without editing the batch","stepMatchArguments":[]}]},
+  {"pwTestLine":188,"pickleLine":134,"tags":[],"steps":[{"pwStepLine":7,"gherkinStepLine":4,"keywordType":"Context","textWithKeyword":"Given Admin logged into the application successfully and in home page","isBg":true,"stepMatchArguments":[]},{"pwStepLine":189,"gherkinStepLine":135,"keywordType":"Context","textWithKeyword":"Given Admin is on the Batch page","stepMatchArguments":[]},{"pwStepLine":190,"gherkinStepLine":136,"keywordType":"Action","textWithKeyword":"When Admin clicks the delete Icon on any row","stepMatchArguments":[]},{"pwStepLine":191,"gherkinStepLine":137,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the confirm alert box with yes and no button","stepMatchArguments":[]}]},
+  {"pwTestLine":194,"pickleLine":139,"tags":[],"steps":[{"pwStepLine":7,"gherkinStepLine":4,"keywordType":"Context","textWithKeyword":"Given Admin logged into the application successfully and in home page","isBg":true,"stepMatchArguments":[]},{"pwStepLine":195,"gherkinStepLine":140,"keywordType":"Context","textWithKeyword":"Given Admin is on the batch confirm popup page","stepMatchArguments":[]},{"pwStepLine":196,"gherkinStepLine":141,"keywordType":"Action","textWithKeyword":"When Admin clicks on the delete icon and click yes button","stepMatchArguments":[]},{"pwStepLine":197,"gherkinStepLine":142,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the successful message and the batch should be deleted","stepMatchArguments":[]}]},
+  {"pwTestLine":200,"pickleLine":144,"tags":[],"steps":[{"pwStepLine":7,"gherkinStepLine":4,"keywordType":"Context","textWithKeyword":"Given Admin logged into the application successfully and in home page","isBg":true,"stepMatchArguments":[]},{"pwStepLine":201,"gherkinStepLine":145,"keywordType":"Context","textWithKeyword":"Given Admin is on the batch confirm popup page","stepMatchArguments":[]},{"pwStepLine":202,"gherkinStepLine":146,"keywordType":"Action","textWithKeyword":"When Admin clicks on the delete icon and click no button","stepMatchArguments":[]},{"pwStepLine":203,"gherkinStepLine":147,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the alert box closed and the batch is not deleted","stepMatchArguments":[]}]},
+  {"pwTestLine":206,"pickleLine":149,"tags":[],"steps":[{"pwStepLine":7,"gherkinStepLine":4,"keywordType":"Context","textWithKeyword":"Given Admin logged into the application successfully and in home page","isBg":true,"stepMatchArguments":[]},{"pwStepLine":207,"gherkinStepLine":150,"keywordType":"Context","textWithKeyword":"Given Admin is on the batch confirm popup page","stepMatchArguments":[]},{"pwStepLine":208,"gherkinStepLine":151,"keywordType":"Action","textWithKeyword":"When Admin clicks on the delete close icon","stepMatchArguments":[]},{"pwStepLine":209,"gherkinStepLine":152,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the alert box closed","stepMatchArguments":[]}]},
+  {"pwTestLine":212,"pickleLine":154,"tags":[],"steps":[{"pwStepLine":7,"gherkinStepLine":4,"keywordType":"Context","textWithKeyword":"Given Admin logged into the application successfully and in home page","isBg":true,"stepMatchArguments":[]},{"pwStepLine":213,"gherkinStepLine":155,"keywordType":"Context","textWithKeyword":"Given Admin is on the batch page","stepMatchArguments":[]},{"pwStepLine":214,"gherkinStepLine":156,"keywordType":"Action","textWithKeyword":"When Admin clicks on the delete icon under the Manage batch header","stepMatchArguments":[]},{"pwStepLine":215,"gherkinStepLine":157,"keywordType":"Outcome","textWithKeyword":"Then The respective row in the table should be deleted","stepMatchArguments":[]}]},
+  {"pwTestLine":218,"pickleLine":159,"tags":[],"steps":[{"pwStepLine":7,"gherkinStepLine":4,"keywordType":"Context","textWithKeyword":"Given Admin logged into the application successfully and in home page","isBg":true,"stepMatchArguments":[]},{"pwStepLine":219,"gherkinStepLine":160,"keywordType":"Context","textWithKeyword":"Given Admin is on the batch page","stepMatchArguments":[]},{"pwStepLine":220,"gherkinStepLine":161,"keywordType":"Action","textWithKeyword":"When Admin clicks more than one delete icons under the Manage batch header","stepMatchArguments":[]},{"pwStepLine":221,"gherkinStepLine":162,"keywordType":"Outcome","textWithKeyword":"Then The respective row in the table should be deleted","stepMatchArguments":[]}]},
+  {"pwTestLine":226,"pickleLine":170,"tags":[],"steps":[{"pwStepLine":7,"gherkinStepLine":4,"keywordType":"Context","textWithKeyword":"Given Admin logged into the application successfully and in home page","isBg":true,"stepMatchArguments":[]},{"pwStepLine":227,"gherkinStepLine":165,"keywordType":"Context","textWithKeyword":"Given Admin is on the batch page","stepMatchArguments":[]},{"pwStepLine":228,"gherkinStepLine":166,"keywordType":"Action","textWithKeyword":"When Admin enters the batch name \"Name\" in the search text box","stepMatchArguments":[{"group":{"start":28,"value":"\"Name\"","children":[{"start":29,"value":"Name","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":229,"gherkinStepLine":167,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the filtered batches \"Name\" in the data table","stepMatchArguments":[{"group":{"start":38,"value":"\"Name\"","children":[{"start":39,"value":"Name","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":232,"pickleLine":171,"tags":[],"steps":[{"pwStepLine":7,"gherkinStepLine":4,"keywordType":"Context","textWithKeyword":"Given Admin logged into the application successfully and in home page","isBg":true,"stepMatchArguments":[]},{"pwStepLine":233,"gherkinStepLine":165,"keywordType":"Context","textWithKeyword":"Given Admin is on the batch page","stepMatchArguments":[]},{"pwStepLine":234,"gherkinStepLine":166,"keywordType":"Action","textWithKeyword":"When Admin enters the batch name \"abc\" in the search text box","stepMatchArguments":[{"group":{"start":28,"value":"\"abc\"","children":[{"start":29,"value":"abc","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":235,"gherkinStepLine":167,"keywordType":"Outcome","textWithKeyword":"Then Admin should see the filtered batches \"abc\" in the data table","stepMatchArguments":[{"group":{"start":38,"value":"\"abc\"","children":[{"start":39,"value":"abc","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
 ]; // bdd-data-end
