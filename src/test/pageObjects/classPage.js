@@ -65,6 +65,7 @@ export default class classPage {
         this.YesDeleteButtonConfirm = this.page.locator("//div[contains(@class,'p-dialog-footer')]/button[@ng-reflect-label='Yes']");
         this.deleteConfirmCloseIcon = this.page.locator("//button[contains(@class,'dialog-header-icon')]");
         this.classDeletedMessage = this.page.locator("//div[text()='Class Deleted']");
+        this.classesDeletedMessage = this.page.locator("//div[text()='Classes Deleted']");
         this.topRowClassTopic = this.page.locator("(//tbody[@class='p-datatable-tbody']/tr[1])/td[3]");
         this.topRowCheckBox = this.page.locator("(//tbody//div[@role='checkbox'])[1]");
 
@@ -107,13 +108,7 @@ export default class classPage {
     //     await this.searchTextbox.fill()
     // }
 
-    async clickYesDeleteOnConfirm(){
-        await this.YesDeleteButtonConfirm.click();
-    }
-
-    async clickNoDeleteOnConfirm(){
-        await this.NoDeleteButtonConfirm.click();
-    }
+  
 
     async verifyHeaderDeleteIconDisplay() {
         return await this.headerDeleteIcon.isVisible();
@@ -138,47 +133,77 @@ export default class classPage {
         }
     }
 
-    async clickTopRowDeleteIcon() {
-        const deleteIcon = this.topRowDeleteIcon;
-
-        if (await deleteIcon.count() === 0) {
-            throw new Error("Delete icon is not present in the DOM.");
-        }
-
-        if (await deleteIcon.isVisible()) {
-            await deleteIcon.click();
-        } else {
-            throw new Error("Delete icon is present but not visible to click.");
-        }
-    }
-
-    async getTopRowClassTopic(){
-        const classTopic = await this.topRowClassTopic.textContent();
-        console.log("Top Row Class Topic Text:", classTopic);
-        return classTopic;
-    }
-
-    async clickTopRowCheckBox(){
-        await this.topRowCheckBox.click();
-    }
-
-    async checkMultiDeleteIconStatus(){
-        return await this.multiDeleteIcon.isEnabled();
-    }
     
+    
+    // Delete Methods
+    async getTopRowData(module){
+        let common = new commonTest(this.page);
+        return await common.getTopRowData(module);
+    }
+
+    async clickTopRowDeleteIcon() {
+        let common = new commonTest(this.page);
+        await common.clickTopRowDeleteIcon();
+    }
+
     async deleteConfirmPopupVisibility() {
-        return this.deleteConfirmPopup.isVisible();
+        let common = new commonTest(this.page);
+        return await common.deleteConfirmPopup.isVisible();
+    }
+
+    async clickYesDeleteOnConfirm(){
+        let common = new commonTest(this.page);
+        await common.YesDeleteButtonConfirm.click();
+    }
+
+    async clickNoDeleteOnConfirm(){
+        let common = new commonTest(this.page);
+        await common.NoDeleteButtonConfirm.click();
+    }
+
+    async singleDeleteMessageVisible(){
+        let common = new commonTest(this.page);
+        return await common.classDeletedMessage.isVisible();
+    }
+
+    async multiDeleteMessageVisible(module){
+        let common = new commonTest(this.page);
+        return await common.multiDeleteMessageVisible(module);
     }
 
     async clickCloseIconDeleteConfirm(){
-        await this.deleteConfirmCloseIcon.click();
+        let common = new commonTest(this.page);
+        await common.deleteConfirmCloseIcon.click();
     }
 
-    async classDeletedMessageVisible(){
-        return this.classDeletedMessage.isVisible();
+    async clickTopRowCheckBox(){
+        let common = new commonTest(this.page);
+        await common.topRowCheckBox.click();
     }
 
+    async clickMultipleCheckBoxes(){
+        let common = new commonTest(this.page);
+        await common.clickTopTwoCheckBox();
+    }
 
+    async checkMultiDeleteIconStatus(){
+        let common = new commonTest(this.page);
+        return await common.multiDeleteIcon.isEnabled();
+    }
+
+    async clickMultiDeleteIcon(){
+        let common = new commonTest(this.page);
+        await common.multiDeleteIcon.click();
+    }
+
+    async getTopTwoRowData(module){
+        let common = new commonTest(this.page);
+        return await common.getTopTwoRowData(module);
+    }
+
+    // ---------Other---------
+
+    
     async classDetailsFormVisibility() {
         return this.classDetailsFormTitle.isVisible();
     }

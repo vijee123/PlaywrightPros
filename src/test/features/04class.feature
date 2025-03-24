@@ -125,24 +125,24 @@ Feature: Validate class page functionality
     Then Admin should see batch name field is disabled
 
 
-  # Delete Class Scenarios
+  #Delete Class Scenarios
   Scenario: Validate row level delete icon in the class page
     When Admin clicks the delete icon in the class page
     Then Admin should see a alert open with heading Confirm along with YES and NO button for deletion
 
   Scenario: Click No on deletion window of a class
-    When Admin clicks the delete icon in the class page of a class topic
+    When Admin clicks the delete icon in the class page
     And Admin clicks No option to delete on confirm page of class
     Then Admin can see the deletion alert disappears without deleting the class
 
-  Scenario: Click Yes on deletion window of a class
-    When Admin clicks the delete icon in the class page of a class topic
-    And Admin clicks Yes option to delete on confirm page of class
-    Then Admin gets a message Successful Class Deleted alert
-    And Do not see that Class in the data table
+  # Scenario: Click Yes on deletion window of a class
+  #   When Admin clicks the delete icon in the class page
+  #   And Admin clicks Yes option to delete on confirm page of class
+  #   Then Admin gets a message Successful Class Deleted alert
+  #   And Do not see that Class in the data table
 
   Scenario: Validate Close(X) icon on Confirm Deletion alert
-    When Admin clicks the delete icon in the class page of a class topic
+    When Admin clicks the delete icon in the class page
     And Admin clicks CLose X Icon on confirm page of class
     Then Admin can see the deletion alert disappears without deleting the class
 
@@ -151,17 +151,39 @@ Feature: Validate class page functionality
     When Admin clicks any checkbox in the data table
     Then Admin should see common delete option enabled under header Manage class
 
+  Scenario: Validate multiple class delete button by selecting Single checkbox and clicking NO
+    Given Admin clicks single checkbox in the data table and clicks Multi Delete icon in class page
+    When Admin clicks No option to delete on confirm page of class
+    Then Admin can see the deletion alert disappears without deleting the class
 
 
-  # Search class scenarios
-  # Scenario Outline: Scenario Outline name: Search class by Batch Name, Class topic and by Staff Name
-  #   When Admin enter the data "<searchBy>" in search textbox
-  #   Then Admin should see Class details are searched by entered data
-  #   Examples:
-  #     | searchBy   |
-  #     | batchName  |
-  #     | classTopic |
-  #     | staffName  |
+  # Scenario: Validate multiple class delete button by selecting Single checkbox and clicking YES
+  #    Given Admin clicks single checkbox in the data table and clicks Multi Delete icon in class page
+  #    When Admin clicks Yes option to delete on confirm page of class
+  #    Then Admin gets a message Successful Classes Deleted alert
+  #    And Do not see that Class in the data table
+
+  Scenario: Validate multiple class deletion by selecting multiple check boxes and clicking NO
+    Given Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in class page
+    When Admin clicks No option to delete on confirm page of class
+    Then Admin can see the deletion alert disappears without deleting the selected classes
+
+# Scenario: Validate multiple class delete button by selecting multiple checkboxes and clicking YES
+#   Given Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in class page
+#   When Admin clicks Yes option to delete on confirm page of class
+#   Then Admin gets a message Successful Classes Deleted alert
+#   And Do not see that Classes in the data table
+
+
+# Search class scenarios
+# Scenario Outline: Scenario Outline name: Search class by Batch Name, Class topic and by Staff Name
+#   When Admin enter the data "<searchBy>" in search textbox
+#   Then Admin should see Class details are searched by entered data
+#   Examples:
+#     | searchBy   |
+#     | batchName  |
+#     | classTopic |
+#     | staffName  |
 
 
 

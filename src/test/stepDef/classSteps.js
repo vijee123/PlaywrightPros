@@ -214,22 +214,17 @@ const classTestData = readCSV(csvPath);
   });
   
   When('Admin clicks the delete icon in the class page', async ({classPageFixture}) => {
-    console.log("Admin clicks the delete icon");
+    console.log('Admin clicks delete icon of a class');
+    const topRowClass1 = await classPageFixture.getTopRowData("class");
+    console.log("Top Row Class Topic before Delete is: ", topRowClass1);
     await classPageFixture.clickTopRowDeleteIcon();
+    classPageFixture.topRowClassBeforeDelete = topRowClass1;
   });
   
   Then('Admin should see a alert open with heading Confirm along with YES and NO button for deletion', async ({classPageFixture}) => {
     console.log("verify delete confirm pops-up....")
     const isVisible = await classPageFixture.deleteConfirmPopupVisibility();
     await expect(isVisible).toBe(true);
-  });
-
-  When('Admin clicks the delete icon in the class page of a class topic', async ({classPageFixture}) => {
-    console.log('Admin clicks delete icon of particular class Topic');
-    const topRowClassTopic1 = await classPageFixture.getTopRowClassTopic();
-    console.log("Top Row Class Topic before Delete is: ", topRowClassTopic1);
-    await classPageFixture.clickTopRowDeleteIcon();
-    classPageFixture.topRowClassTopicBeforeDelete = topRowClassTopic1;
   });
 
   When('Admin clicks No option to delete on confirm page of class', async ({classPageFixture}) => {
@@ -239,9 +234,9 @@ const classTestData = readCSV(csvPath);
   
   Then('Admin can see the deletion alert disappears without deleting the class', async ({classPageFixture}) => {
     console.log("Verify whether the confirm pop-up disappears without deleting...")
-    const topRowClassTopic2 = await classPageFixture.getTopRowClassTopic();
-    console.log("Top Row Class Topic after Canceling Delete is: ", topRowClassTopic2);
-    await expect(topRowClassTopic2).toEqual(classPageFixture.topRowClassTopicBeforeDelete);
+    const topRowClass2 = await classPageFixture.getTopRowData("class");
+    console.log("Top Row Class Topic after Canceling Delete is: ", topRowClass2);
+    await expect(topRowClass2).toEqual(classPageFixture.topRowClassBeforeDelete);
     const isVisible= await classPageFixture.verifyManageClassDisplay();
     await expect(isVisible).toBe(true);
   });
@@ -253,7 +248,7 @@ const classTestData = readCSV(csvPath);
   
   Then('Admin gets a message Successful Class Deleted alert', async ({classPageFixture}) => {
     console.log("Verify whether the Admin gets a message Successful Class Deleted alert");
-    const isVisible = await classPageFixture.classDeletedMessageVisible();
+    const isVisible = await classPageFixture.singleDeleteMessageVisible("class");
     expect(isVisible).toBe(true);    
   });
 
@@ -264,16 +259,43 @@ const classTestData = readCSV(csvPath);
   
   Then('Do not see that Class in the data table', async ({classPageFixture}) => {
     console.log("Verify that the selected class Topic is deleted...")
-    const topRowClassTopic2 = await classPageFixture.getTopRowClassTopic();
-    console.log("Top Row Class Topic after Delete is: ", topRowClassTopic2);
-    await expect(topRowClassTopic2).not.toBe(classPageFixture.topRowClassTopicBeforeDelete);
+    const topRowClass2 = await classPageFixture.getTopRowData("class");
+    console.log("Top Row Class Topic after Delete is: ", topRowClass2);
+    await expect(topRowClass2).not.toBe(classPageFixture.topRowClassBeforeDelete);
     const isVisible= await classPageFixture.verifyManageClassDisplay();
     await expect(isVisible).toBe(true);
   });
 
-  When('Admin clicks any checkbox in the data table', async ({classPageFixture}) => {
+   When('Admin clicks any checkbox in the data table', async ({classPageFixture}) => {
     console.log("Admin clicks any check box...");
     await classPageFixture.clickTopRowCheckBox();
+    const topRowClass1 = await classPageFixture.getTopRowData("class");
+    console.log("Class checked to Delete is: ", topRowClass1);
+    await classPageFixture.clickTopRowDeleteIcon();
+    classPageFixture.topRowClassBeforeDelete = topRowClass1;
+  });
+
+
+  Given('Admin clicks single checkbox in the data table and clicks Multi Delete icon in class page', async ({classPageFixture}) => {
+    console.log("Admin clicks any check box...");
+    await classPageFixture.clickTopRowCheckBox();
+    const topRowClass1 = await classPageFixture.getTopRowData("class");
+    console.log("Class checked to Delete is: ", topRowClass1);
+    classPageFixture.topRowClassBeforeDelete = topRowClass1;
+    await classPageFixture.clickMultiDeleteIcon();
+  });
+
+
+  Given('Admin clicks the Multi Delete icon in the class page', async ({classPageFixture}) => {
+    console.log("Admin clicks Multi Delete Icon on the table header......");
+    await classPageFixture.clickMultiDeleteIcon();
+  });
+
+  Then('Admin gets a message Successful Classes Deleted alert', async ({classPageFixture}) => {
+    console.log("Verify whether the Admin gets a Classes Deleted alert....");
+    const isVisible = await classPageFixture.multiDeleteMessageVisible("class");
+    console.log("is Classes Deleted Alert Visible: "+isVisible);
+    expect(isVisible).toBe(true);
   });
   
   Then('Admin should see common delete option enabled under header Manage class', async ({classPageFixture}) => {
@@ -283,50 +305,30 @@ const classTestData = readCSV(csvPath);
     expect(isEnabled).toBe(true);
   });
 
-  // When('Admin enter the data {string} in search textbox', async ({classPageFixture}, searchBy) => {
-  //   console.log("Admin searches the class by entering the "+searchBy);
-
-  //   await classPageFixture.clickAddNewClassButton();
+  Given('Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in class page', async ({classPageFixture}) => {
+    console.log("Admin clicks on more than one check box...");
+    await classPageFixture.clickMultipleCheckBoxes();
+    const topTwoRowClasses1 = await classPageFixture.getTopTwoRowData("class");
+    console.log("Classes checked for Multiple Delete are: ", topTwoRowClasses1);
+    classPageFixture.topTwoRowClassesBeforeDelete = topTwoRowClasses1;
+    await classPageFixture.clickMultiDeleteIcon();
+  });
   
-  //   console.log("Admin enters the given details in the Create Class form");
-  //   const rowData = classTestData.find(row => row.Scenario === scenario);
-    
-  //   if (!rowData) {
-  //       throw new Error(`No data found for scenario: ${scenario}`);
-  //   }
+  Then('Admin can see the deletion alert disappears without deleting the selected classes', async ({classPageFixture}) => {
+    console.log("Verify whether the confirm pop-up disappears without deleting...")
+    const topTwoRowClasses2 = await classPageFixture.getTopTwoRowData("class");
+    console.log("Top Row Class Topic after Canceling Delete are: ", topTwoRowClasses2);
+    await expect(topTwoRowClasses2).toEqual(classPageFixture.topTwoRowClassesBeforeDelete);
+    const isVisible= await classPageFixture.verifyManageClassDisplay();
+    await expect(isVisible).toBe(true);
+  });
 
-  //   // Scenarios where we want a random alphanumeric value starting with "Playwright"
-  //   const randomClassScenarios = ["validClass"];
-
-  //   // Generate classTopic only for specified scenarios
-  //   const classTopic = randomClassScenarios.includes(scenario) 
-  //       ? `Playwright_${faker.string.alphanumeric(3).toUpperCase()}`  
-  //       : rowData.classTopic;
-
-  //   //convert dates from string to date format and remove
-  //   const classDates = typeof rowData.classDates === 'string'
-  //      ? rowData.classDates.replace(/^"|"$/g, '').split(',').map(date => date.trim())
-  //      : rowData.classDates;
-        
-  //    console.log("Class Topic generated is : ", classTopic);
-   
-  //    await classPageFixture.fillCreateClassForm({
-  //       batchName: rowData.batchName,
-  //       classTopic: rowData.classTopic,
-  //       classDesc: rowData.classDesc,
-  //       classDates: rowData.classDates,
-  //       staffName: rowData.staffName,
-  //       status: rowData.status,
-  //       comments: rowData.comments,
-  //       notes: rowData.notes,
-  //       recording: rowData.recording
-  //   });
-
-  // });
-  
-  // Then('Admin should see Class details are searched by entered data', async ({}) => {
-  //   // Step: Then Admin should see Class details are searched by entered data
-  //   // From: src\test\features\04class.feature:159:5
-  // });
-
+  Then('Do not see that Classes in the data table', async ({classPageFixture}) => {
+    console.log("Verify that the selected classes are deleted...")
+    const topTwoRowClasses2 = await classPageFixture.getTopTwoRowData("class");
+    console.log("Top Row Class Topic after Delete are: ", topTwoRowClasses2);
+    await expect(topTwoRowClasses2).not.toBe(classPageFixture.topTwoRowClassesBeforeDelete);
+    const isVisible= await classPageFixture.verifyManageClassDisplay();
+    await expect(isVisible).toBe(true);
+  });
 
