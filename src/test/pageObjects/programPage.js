@@ -1,11 +1,9 @@
-
 const { expect } = require('@playwright/test');
 import LoginPage from './loginPage';
 import commonTest from '../utils/commonMethods';
 const path = require('path');
 const { readCSV } = require('../utils/csvReader');
 
-import { readExcelSheet } from '../utils/excelReader.js';
 
 const csvPath = path.resolve(__dirname, '../../../test-data/programTestData.csv');
 const testData = readCSV(csvPath);
@@ -386,6 +384,4 @@ switch (scenario){
 
 
 }
-
-
 
