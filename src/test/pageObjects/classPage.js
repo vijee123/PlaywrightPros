@@ -59,12 +59,15 @@ export default class classPage {
         this.classDetailsFormTitle = this.page.locator("//span[text()='Class Details']");
         this.topRowEditIcon = this.page.locator("((//div[@class='action'])[1]/span/button)[1]");
         this.topRowDeleteIcon = this.page.locator("(//div[@class='action'])[1]//button[@icon='pi pi-trash']");
+        this.multiDeleteIcon = this.page.locator("//mat-card-title[@class='mat-card-title']//button[@icon='pi pi-trash']");
         this.deleteConfirmPopup = this.page.locator("//span[text()='Confirm']");
         this.NoDeleteButtonConfirm = this.page.locator("//div[contains(@class,'p-dialog-footer')]/button[@ng-reflect-label='No']");
         this.YesDeleteButtonConfirm = this.page.locator("//div[contains(@class,'p-dialog-footer')]/button[@ng-reflect-label='Yes']");
         this.deleteConfirmCloseIcon = this.page.locator("//button[contains(@class,'dialog-header-icon')]");
         this.classDeletedMessage = this.page.locator("//div[text()='Class Deleted']");
         this.topRowClassTopic = this.page.locator("(//tbody[@class='p-datatable-tbody']/tr[1])/td[3]");
+        this.topRowCheckBox = this.page.locator("(//tbody//div[@role='checkbox'])[1]");
+
     }
 
 
@@ -98,6 +101,11 @@ export default class classPage {
     async clickHeaderDeleteIcon() {
         await this.headerDeleteIcon.click();
     }
+
+    // async fillSearchTextbox(searchBy){
+
+    //     await this.searchTextbox.fill()
+    // }
 
     async clickYesDeleteOnConfirm(){
         await this.YesDeleteButtonConfirm.click();
@@ -150,6 +158,13 @@ export default class classPage {
         return classTopic;
     }
 
+    async clickTopRowCheckBox(){
+        await this.topRowCheckBox.click();
+    }
+
+    async checkMultiDeleteIconStatus(){
+        return await this.multiDeleteIcon.isEnabled();
+    }
     
     async deleteConfirmPopupVisibility() {
         return this.deleteConfirmPopup.isVisible();

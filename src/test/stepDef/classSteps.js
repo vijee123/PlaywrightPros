@@ -271,4 +271,62 @@ const classTestData = readCSV(csvPath);
     await expect(isVisible).toBe(true);
   });
 
+  When('Admin clicks any checkbox in the data table', async ({classPageFixture}) => {
+    console.log("Admin clicks any check box...");
+    await classPageFixture.clickTopRowCheckBox();
+  });
+  
+  Then('Admin should see common delete option enabled under header Manage class', async ({classPageFixture}) => {
+    console.log("Verify whether the common delete option enabled under header Manage class..");
+    const isEnabled = await classPageFixture.checkMultiDeleteIconStatus();
+    console.log("Is multi-delete icon enabled?:", isEnabled);
+    expect(isEnabled).toBe(true);
+  });
+
+  // When('Admin enter the data {string} in search textbox', async ({classPageFixture}, searchBy) => {
+  //   console.log("Admin searches the class by entering the "+searchBy);
+
+  //   await classPageFixture.clickAddNewClassButton();
+  
+  //   console.log("Admin enters the given details in the Create Class form");
+  //   const rowData = classTestData.find(row => row.Scenario === scenario);
+    
+  //   if (!rowData) {
+  //       throw new Error(`No data found for scenario: ${scenario}`);
+  //   }
+
+  //   // Scenarios where we want a random alphanumeric value starting with "Playwright"
+  //   const randomClassScenarios = ["validClass"];
+
+  //   // Generate classTopic only for specified scenarios
+  //   const classTopic = randomClassScenarios.includes(scenario) 
+  //       ? `Playwright_${faker.string.alphanumeric(3).toUpperCase()}`  
+  //       : rowData.classTopic;
+
+  //   //convert dates from string to date format and remove
+  //   const classDates = typeof rowData.classDates === 'string'
+  //      ? rowData.classDates.replace(/^"|"$/g, '').split(',').map(date => date.trim())
+  //      : rowData.classDates;
+        
+  //    console.log("Class Topic generated is : ", classTopic);
+   
+  //    await classPageFixture.fillCreateClassForm({
+  //       batchName: rowData.batchName,
+  //       classTopic: rowData.classTopic,
+  //       classDesc: rowData.classDesc,
+  //       classDates: rowData.classDates,
+  //       staffName: rowData.staffName,
+  //       status: rowData.status,
+  //       comments: rowData.comments,
+  //       notes: rowData.notes,
+  //       recording: rowData.recording
+  //   });
+
+  // });
+  
+  // Then('Admin should see Class details are searched by entered data', async ({}) => {
+  //   // Step: Then Admin should see Class details are searched by entered data
+  //   // From: src\test\features\04class.feature:159:5
+  // });
+
 
