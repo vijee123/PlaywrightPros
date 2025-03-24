@@ -136,7 +136,8 @@ const ProgramPage  = require('../pageObjects/programPage.js');
   Then('Admin gets message for the scenario {string} for program Module', async ({programPageFixture}, scenario) => {
     console.log("Admin should see the valid message displayed...");
     const isVisible = await programPageFixture.validateCreateProgramMessage(scenario);
-    await expect(isVisible).toBeTruthy();
+    //await expect(isVisible).toBeTruthy();
+    await expect(isVisible).toBe(true);
   });
 
 
