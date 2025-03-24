@@ -244,6 +244,45 @@ test.describe('Validate class page functionality', () => {
 
   });
 
+  test('Validate row level edit icon of a existing class', { tag: ['@parallel'] }, async ({ When, classPageFixture, Then }) => { 
+    await When('Admin clicks on the edit icon in the class page', null, { classPageFixture }); 
+    await Then('check that a new pop up with class details appears', null, { classPageFixture }); 
+  });
+
+  test('Validate Class Topic is disabled while editing existing Class', { tag: ['@parallel'] }, async ({ When, classPageFixture, Then }) => { 
+    await When('Admin clicks on the edit icon in the class page', null, { classPageFixture }); 
+    await Then('Admin should see class topic field is disabled', null, { classPageFixture }); 
+  });
+
+  test('Validate bacthName is disbaled while editing existing Class', { tag: ['@parallel'] }, async ({ When, classPageFixture, Then }) => { 
+    await When('Admin clicks on the edit icon in the class page', null, { classPageFixture }); 
+    await Then('Admin should see batch name field is disabled', null, { classPageFixture }); 
+  });
+
+  test('Validate row level delete icon in the class page', { tag: ['@parallel'] }, async ({ When, classPageFixture, Then }) => { 
+    await When('Admin clicks the delete icon in the class page', null, { classPageFixture }); 
+    await Then('Admin should see a alert open with heading Confirm along with YES and NO button for deletion', null, { classPageFixture }); 
+  });
+
+  test('Click No on deletion window of a class', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+    await When('Admin clicks the delete icon in the class page of a class topic', null, { classPageFixture }); 
+    await And('Admin clicks No option to delete on confirm page of class', null, { classPageFixture }); 
+    await Then('Admin can see the deletion alert disappears without deleting the class', null, { classPageFixture }); 
+  });
+
+  test('Click Yes on deletion window of a class', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+    await When('Admin clicks the delete icon in the class page of a class topic', null, { classPageFixture }); 
+    await And('Admin clicks Yes option to delete on confirm page of class', null, { classPageFixture }); 
+    await Then('Admin gets a message Successful Class Deleted alert', null, { classPageFixture }); 
+    await And('Do not see that Class in the data table', null, { classPageFixture }); 
+  });
+
+  test('Validate Close(X) icon on Confirm Deletion alert', { tag: ['@parallel'] }, async ({ When, classPageFixture, And, Then }) => { 
+    await When('Admin clicks the delete icon in the class page of a class topic', null, { classPageFixture }); 
+    await And('Admin clicks CLose X Icon on confirm page of class', null, { classPageFixture }); 
+    await Then('Admin can see the deletion alert disappears without deleting the class', null, { classPageFixture }); 
+  });
+
 });
 
 // == technical section ==
@@ -299,4 +338,11 @@ const bddFileData = [ // bdd-data-start
   {"pwTestLine":225,"pickleLine":96,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":226,"gherkinStepLine":97,"keywordType":"Context","textWithKeyword":"Given Admin is on the Class Popup window","stepMatchArguments":[]},{"pwStepLine":227,"gherkinStepLine":98,"keywordType":"Action","textWithKeyword":"When Admin clicks date picker","stepMatchArguments":[]},{"pwStepLine":228,"gherkinStepLine":99,"keywordType":"Outcome","textWithKeyword":"Then Admin should see weekends dates are disabled to select","stepMatchArguments":[]}]},
   {"pwTestLine":233,"pickleLine":108,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":234,"gherkinStepLine":102,"keywordType":"Context","textWithKeyword":"Given Admin clicks the Add New Class button and enters the details of \"validClass\" in the Create Class form","stepMatchArguments":[{"group":{"start":64,"value":"\"validClass\"","children":[{"start":65,"value":"validClass","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":235,"gherkinStepLine":103,"keywordType":"Action","textWithKeyword":"When Admin clicks Cancel button OR Close Icon \"CancelBtn\"","stepMatchArguments":[{"group":{"start":41,"value":"\"CancelBtn\"","children":[{"start":42,"value":"CancelBtn","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":236,"gherkinStepLine":104,"keywordType":"Outcome","textWithKeyword":"Then Class Details popup window should be closed without saving","stepMatchArguments":[]}]},
   {"pwTestLine":239,"pickleLine":109,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":240,"gherkinStepLine":102,"keywordType":"Context","textWithKeyword":"Given Admin clicks the Add New Class button and enters the details of \"validClass\" in the Create Class form","stepMatchArguments":[{"group":{"start":64,"value":"\"validClass\"","children":[{"start":65,"value":"validClass","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":241,"gherkinStepLine":103,"keywordType":"Action","textWithKeyword":"When Admin clicks Cancel button OR Close Icon \"CloseIcon\"","stepMatchArguments":[{"group":{"start":41,"value":"\"CloseIcon\"","children":[{"start":42,"value":"CloseIcon","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]},{"pwStepLine":242,"gherkinStepLine":104,"keywordType":"Outcome","textWithKeyword":"Then Class Details popup window should be closed without saving","stepMatchArguments":[]}]},
+  {"pwTestLine":247,"pickleLine":111,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":248,"gherkinStepLine":112,"keywordType":"Action","textWithKeyword":"When Admin clicks on the edit icon in the class page","stepMatchArguments":[]},{"pwStepLine":249,"gherkinStepLine":113,"keywordType":"Outcome","textWithKeyword":"Then check that a new pop up with class details appears","stepMatchArguments":[]}]},
+  {"pwTestLine":252,"pickleLine":115,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":253,"gherkinStepLine":116,"keywordType":"Action","textWithKeyword":"When Admin clicks on the edit icon in the class page","stepMatchArguments":[]},{"pwStepLine":254,"gherkinStepLine":117,"keywordType":"Outcome","textWithKeyword":"Then Admin should see class topic field is disabled","stepMatchArguments":[]}]},
+  {"pwTestLine":257,"pickleLine":119,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":258,"gherkinStepLine":120,"keywordType":"Action","textWithKeyword":"When Admin clicks on the edit icon in the class page","stepMatchArguments":[]},{"pwStepLine":259,"gherkinStepLine":121,"keywordType":"Outcome","textWithKeyword":"Then Admin should see batch name field is disabled","stepMatchArguments":[]}]},
+  {"pwTestLine":262,"pickleLine":123,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":263,"gherkinStepLine":124,"keywordType":"Action","textWithKeyword":"When Admin clicks the delete icon in the class page","stepMatchArguments":[]},{"pwStepLine":264,"gherkinStepLine":125,"keywordType":"Outcome","textWithKeyword":"Then Admin should see a alert open with heading Confirm along with YES and NO button for deletion","stepMatchArguments":[]}]},
+  {"pwTestLine":267,"pickleLine":127,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":268,"gherkinStepLine":128,"keywordType":"Action","textWithKeyword":"When Admin clicks the delete icon in the class page of a class topic","stepMatchArguments":[]},{"pwStepLine":269,"gherkinStepLine":129,"keywordType":"Action","textWithKeyword":"And Admin clicks No option to delete on confirm page of class","stepMatchArguments":[]},{"pwStepLine":270,"gherkinStepLine":130,"keywordType":"Outcome","textWithKeyword":"Then Admin can see the deletion alert disappears without deleting the class","stepMatchArguments":[]}]},
+  {"pwTestLine":273,"pickleLine":132,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":274,"gherkinStepLine":133,"keywordType":"Action","textWithKeyword":"When Admin clicks the delete icon in the class page of a class topic","stepMatchArguments":[]},{"pwStepLine":275,"gherkinStepLine":134,"keywordType":"Action","textWithKeyword":"And Admin clicks Yes option to delete on confirm page of class","stepMatchArguments":[]},{"pwStepLine":276,"gherkinStepLine":135,"keywordType":"Outcome","textWithKeyword":"Then Admin gets a message Successful Class Deleted alert","stepMatchArguments":[]},{"pwStepLine":277,"gherkinStepLine":136,"keywordType":"Outcome","textWithKeyword":"And Do not see that Class in the data table","stepMatchArguments":[]}]},
+  {"pwTestLine":280,"pickleLine":138,"tags":["@parallel"],"steps":[{"pwStepLine":7,"gherkinStepLine":5,"keywordType":"Action","textWithKeyword":"When Admin clicks the Class Navigation bar in the Header","isBg":true,"stepMatchArguments":[]},{"pwStepLine":281,"gherkinStepLine":139,"keywordType":"Action","textWithKeyword":"When Admin clicks the delete icon in the class page of a class topic","stepMatchArguments":[]},{"pwStepLine":282,"gherkinStepLine":140,"keywordType":"Action","textWithKeyword":"And Admin clicks CLose X Icon on confirm page of class","stepMatchArguments":[]},{"pwStepLine":283,"gherkinStepLine":141,"keywordType":"Outcome","textWithKeyword":"Then Admin can see the deletion alert disappears without deleting the class","stepMatchArguments":[]}]},
 ]; // bdd-data-end

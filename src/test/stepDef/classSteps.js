@@ -187,4 +187,88 @@ const classTestData = readCSV(csvPath);
     console.log(`Class Details Form is Visible: ${isVisible}`); 
     expect(isVisible).toBe(false); 
   });
+
+  When('Admin clicks on the edit icon in the class page', async ({classPageFixture}) => {
+    console.log("Admin clicks Edit icon...")
+    await classPageFixture.clickTopRowEditIcon();
+  });
+
+  Then('check that a new pop up with class details appears', async ({classPageFixture}) => {
+    console.log("Admin verifies the opening of Class details pop-up..")
+    const isVisible = await classPageFixture.classDetailsFormVisibility();
+    expect(isVisible).toBe(true);
+  });
+
+  Then('Admin should see class topic field is disabled', async ({classPageFixture}) => {
+    console.log("verify whether class topic field is disabled...")
+    const isDisabled = await classPageFixture.classTopicFieldStatus();
+    console.log("Is the Class Topic field disabled?", isDisabled);
+    expect(isDisabled).toBe(true);
+  });
   
+  Then('Admin should see batch name field is disabled', async ({classPageFixture}) => {
+    console.log("verify whether batch name field is disabled...")
+    const isDisabled = await classPageFixture.batchNameFieldStatus();
+    console.log("Is the Class Topic field disabled?", isDisabled);
+    expect(isDisabled).toBe(true);
+  });
+  
+  When('Admin clicks the delete icon in the class page', async ({classPageFixture}) => {
+    console.log("Admin clicks the delete icon");
+    await classPageFixture.clickTopRowDeleteIcon();
+  });
+  
+  Then('Admin should see a alert open with heading Confirm along with YES and NO button for deletion', async ({classPageFixture}) => {
+    console.log("verify delete confirm pops-up....")
+    const isVisible = await classPageFixture.deleteConfirmPopupVisibility();
+    await expect(isVisible).toBe(true);
+  });
+
+  When('Admin clicks the delete icon in the class page of a class topic', async ({classPageFixture}) => {
+    console.log('Admin clicks delete icon of particular class Topic');
+    const topRowClassTopic1 = await classPageFixture.getTopRowClassTopic();
+    console.log("Top Row Class Topic before Delete is: ", topRowClassTopic1);
+    await classPageFixture.clickTopRowDeleteIcon();
+    classPageFixture.topRowClassTopicBeforeDelete = topRowClassTopic1;
+  });
+
+  When('Admin clicks No option to delete on confirm page of class', async ({classPageFixture}) => {
+    console.log("Admin clicks No option on the confirm pop-up...");
+    await classPageFixture.clickNoDeleteOnConfirm();
+  });
+  
+  Then('Admin can see the deletion alert disappears without deleting the class', async ({classPageFixture}) => {
+    console.log("Verify whether the confirm pop-up disappears without deleting...")
+    const topRowClassTopic2 = await classPageFixture.getTopRowClassTopic();
+    console.log("Top Row Class Topic after Canceling Delete is: ", topRowClassTopic2);
+    await expect(topRowClassTopic2).toEqual(classPageFixture.topRowClassTopicBeforeDelete);
+    const isVisible= await classPageFixture.verifyManageClassDisplay();
+    await expect(isVisible).toBe(true);
+  });
+
+  When('Admin clicks Yes option to delete on confirm page of class', async ({classPageFixture}) => {
+    console.log("Admin clicks YES option on the confirm pop-up...");
+    await classPageFixture.clickYesDeleteOnConfirm();
+  });
+  
+  Then('Admin gets a message Successful Class Deleted alert', async ({classPageFixture}) => {
+    console.log("Verify whether the Admin gets a message Successful Class Deleted alert");
+    const isVisible = await classPageFixture.classDeletedMessageVisible();
+    expect(isVisible).toBe(true);    
+  });
+
+  When('Admin clicks CLose X Icon on confirm page of class', async ({classPageFixture}) => {
+    console.log('Admin clicks the CLose Icon on confirm delete window...')
+    await classPageFixture.clickCloseIconDeleteConfirm();
+  });
+  
+  Then('Do not see that Class in the data table', async ({classPageFixture}) => {
+    console.log("Verify that the selected class Topic is deleted...")
+    const topRowClassTopic2 = await classPageFixture.getTopRowClassTopic();
+    console.log("Top Row Class Topic after Delete is: ", topRowClassTopic2);
+    await expect(topRowClassTopic2).not.toBe(classPageFixture.topRowClassTopicBeforeDelete);
+    const isVisible= await classPageFixture.verifyManageClassDisplay();
+    await expect(isVisible).toBe(true);
+  });
+
+
