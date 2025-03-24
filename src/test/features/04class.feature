@@ -135,6 +135,7 @@ Feature: Validate class page functionality
     And Admin clicks No option to delete on confirm page of class
     Then Admin can see the deletion alert disappears without deleting the class
 
+  # Delete
   # Scenario: Click Yes on deletion window of a class
   #   When Admin clicks the delete icon in the class page
   #   And Admin clicks Yes option to delete on confirm page of class
@@ -146,7 +147,7 @@ Feature: Validate class page functionality
     And Admin clicks CLose X Icon on confirm page of class
     Then Admin can see the deletion alert disappears without deleting the class
 
-  #Multiple Delete Scenarios
+  # #Multiple Delete Scenarios
   Scenario: Validate Common Delete button enabled after clicking on any checkbox in class page
     When Admin clicks any checkbox in the data table
     Then Admin should see common delete option enabled under header Manage class
@@ -156,7 +157,7 @@ Feature: Validate class page functionality
     When Admin clicks No option to delete on confirm page of class
     Then Admin can see the deletion alert disappears without deleting the class
 
-
+  # Delete
   # Scenario: Validate multiple class delete button by selecting Single checkbox and clicking YES
   #    Given Admin clicks single checkbox in the data table and clicks Multi Delete icon in class page
   #    When Admin clicks Yes option to delete on confirm page of class
@@ -168,22 +169,43 @@ Feature: Validate class page functionality
     When Admin clicks No option to delete on confirm page of class
     Then Admin can see the deletion alert disappears without deleting the selected classes
 
-# Scenario: Validate multiple class delete button by selecting multiple checkboxes and clicking YES
-#   Given Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in class page
-#   When Admin clicks Yes option to delete on confirm page of class
-#   Then Admin gets a message Successful Classes Deleted alert
-#   And Do not see that Classes in the data table
+  # Delete
+  # Scenario: Validate multiple class delete button by selecting multiple checkboxes and clicking YES
+  #   Given Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in class page
+  #   When Admin clicks Yes option to delete on confirm page of class
+  #   Then Admin gets a message Successful Classes Deleted alert
+  #   And Do not see that Classes in the data table
 
 
-# Search class scenarios
-# Scenario Outline: Scenario Outline name: Search class by Batch Name, Class topic and by Staff Name
-#   When Admin enter the data "<searchBy>" in search textbox
-#   Then Admin should see Class details are searched by entered data
-#   Examples:
-#     | searchBy   |
-#     | batchName  |
-#     | classTopic |
-#     | staffName  |
+  # Search class scenarios
+  # Scenario Outline: Scenario Outline name: Search class by Batch Name, Class topic and by Staff Name
+  #   When Admin enter the data "<searchBy>" in search textbox
+  #   Then Admin should see Class details are searched by entered data
+  #   Examples:
+  #     | searchBy   |
+  #     | batchName  |
+  #     | classTopic |
+  #     | staffName  |
+
+
+  #Manage Class Sorting
+
+  Scenario Outline: Manage Class - Sorting Class by Class Topic/Batch Name/Program Name/ Class Description / Staff Name and Class Dates
+
+    Then Admin see the Class Topic/Batch Name/Class Description / Staff Name and Class Dates sorted by ascending or decending order after clicking the sort icon "<ClassHeader>"
+
+    Examples:
+      | ClassHeader                      |
+      | batchName_AscendingOrder         |
+      | batchName_DescendingOrder        |
+      | classTopic_AscendingOrder        |
+      | classTopic_DecendingOrder        |
+      | ClassDescription_AscendingOrder  |
+      | ClassDescription_DescendingOrder |
+      | staffName_AscendingOrder         |
+      | staffName_DecendingOrder         |
+      # | classDate_AscendingOrder         |
+      # | classDate_DescendingOrder        |
 
 
 

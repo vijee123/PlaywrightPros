@@ -108,7 +108,7 @@ export default class classPage {
     //     await this.searchTextbox.fill()
     // }
 
-  
+
 
     async verifyHeaderDeleteIconDisplay() {
         return await this.headerDeleteIcon.isVisible();
@@ -133,10 +133,10 @@ export default class classPage {
         }
     }
 
-    
-    
+
+
     // Delete Methods
-    async getTopRowData(module){
+    async getTopRowData(module) {
         let common = new commonTest(this.page);
         return await common.getTopRowData(module);
     }
@@ -151,59 +151,59 @@ export default class classPage {
         return await common.deleteConfirmPopup.isVisible();
     }
 
-    async clickYesDeleteOnConfirm(){
+    async clickYesDeleteOnConfirm() {
         let common = new commonTest(this.page);
         await common.YesDeleteButtonConfirm.click();
     }
 
-    async clickNoDeleteOnConfirm(){
+    async clickNoDeleteOnConfirm() {
         let common = new commonTest(this.page);
         await common.NoDeleteButtonConfirm.click();
     }
 
-    async singleDeleteMessageVisible(){
+    async singleDeleteMessageVisible() {
         let common = new commonTest(this.page);
         return await common.classDeletedMessage.isVisible();
     }
 
-    async multiDeleteMessageVisible(module){
+    async multiDeleteMessageVisible(module) {
         let common = new commonTest(this.page);
         return await common.multiDeleteMessageVisible(module);
     }
 
-    async clickCloseIconDeleteConfirm(){
+    async clickCloseIconDeleteConfirm() {
         let common = new commonTest(this.page);
         await common.deleteConfirmCloseIcon.click();
     }
 
-    async clickTopRowCheckBox(){
+    async clickTopRowCheckBox() {
         let common = new commonTest(this.page);
         await common.topRowCheckBox.click();
     }
 
-    async clickMultipleCheckBoxes(){
+    async clickMultipleCheckBoxes() {
         let common = new commonTest(this.page);
         await common.clickTopTwoCheckBox();
     }
 
-    async checkMultiDeleteIconStatus(){
+    async checkMultiDeleteIconStatus() {
         let common = new commonTest(this.page);
         return await common.multiDeleteIcon.isEnabled();
     }
 
-    async clickMultiDeleteIcon(){
+    async clickMultiDeleteIcon() {
         let common = new commonTest(this.page);
         await common.multiDeleteIcon.click();
     }
 
-    async getTopTwoRowData(module){
+    async getTopTwoRowData(module) {
         let common = new commonTest(this.page);
         return await common.getTopTwoRowData(module);
     }
 
     // ---------Other---------
 
-    
+
     async classDetailsFormVisibility() {
         return this.classDetailsFormTitle.isVisible();
     }
@@ -527,5 +527,47 @@ export default class classPage {
     }
 
 
+
+    //--------------CLASS PAGE SORTING METHOD------------------------
+    async ClassSorting(classHeader) {
+        await this.page.keyboard.press('Escape');
+        let common = new commonTest(this.page);
+        let isSorted;
+        switch (classHeader) {
+            case "batchName_AscendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Batch Name', 'Ascending');
+                return isSorted;
+            case "batchName_DescendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Batch Name', 'Descending');
+                return isSorted;
+            case "classTopic_AscendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Class Topic', 'Ascending');
+                return isSorted;
+            case "classTopic_DecendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Class Topic', 'Descending');
+                return isSorted;
+            case "ClassDescription_AscendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Class Description', 'Descending');
+                return isSorted;
+            case "ClassDescription_DescendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Class Description', 'Descending');
+                return isSorted;
+            case "staffName_AscendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Staff Name', 'Ascending');
+                return isSorted;
+            case "staffName_DescendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Staff Name', 'Descending');
+                return isSorted;
+            case "classDate_AscendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Class Date', 'Descending');
+                return isSorted;
+            case "classDate_DescendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Class Date', 'Descending');
+                return isSorted;
+            default:
+                throw new Error(`Error: field "${classHeader}" not found!`);
+        }
+
+    }
 
 }
