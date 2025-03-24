@@ -1,4 +1,9 @@
-Feature: program Module  
+
+Feature: program Module
+  
+Scenario:Navigating to the program module
+    When Admin clicks the program menu from the header
+   Then Admin should land on the program page
 
 Scenario:Verify Logout displayed in menu bar
 Then Admin should see Logout in menu bar
@@ -39,7 +44,7 @@ Examples:
   |Delete_Icon |
 
 
-#Add New Program Scenarios
+Add New Program Scenarios
 
 Scenario: Verify add New Program pop up window
 Then Admin should see pop up window for program details after clicking the Add New Program button
@@ -79,7 +84,7 @@ Examples:
 |Program Status|
 
 
-# Manage Program Sorting 
+Manage Program Sorting 
 
 Scenario Outline: Manage Program - Sorting Program by Program Name/Program Description
 

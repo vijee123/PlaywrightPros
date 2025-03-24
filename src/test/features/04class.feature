@@ -107,3 +107,36 @@ Feature: Validate class page functionality
       | scenario   | Icon      |
       | validClass | CancelBtn |
       | validClass | CloseIcon |
+
+Scenario: Validate row level edit icon of a existing class
+     When Admin clicks on the edit icon in the class page
+     Then check that a new pop up with class details appears
+
+Scenario: Validate Class Topic is disabled while editing existing Class
+     When Admin clicks on the edit icon in the class page
+     Then Admin should see class topic field is disabled
+
+Scenario: Validate batchName is disabled while editing existing Class
+     When Admin clicks on the edit icon in the class page
+     Then Admin should see batch name field is disabled
+
+Scenario: Validate row level delete icon in the class page
+    When Admin clicks the delete icon in the class page
+    Then Admin should see a alert open with heading Confirm along with YES and NO button for deletion
+
+Scenario: Click No on deletion window of a class
+    When Admin clicks the delete icon in the class page of a class topic
+    And Admin clicks No option to delete on confirm page of class
+    Then Admin can see the deletion alert disappears without deleting the class
+
+Scenario: Click Yes on deletion window of a class
+   When Admin clicks the delete icon in the class page of a class topic
+   And Admin clicks Yes option to delete on confirm page of class
+   Then Admin gets a message Successful Class Deleted alert
+   And Do not see that Class in the data table
+
+Scenario: Validate Close(X) icon on Confirm Deletion alert
+    When Admin clicks the delete icon in the class page of a class topic
+    And Admin clicks CLose X Icon on confirm page of class
+    Then Admin can see the deletion alert disappears without deleting the class
+
