@@ -1,6 +1,7 @@
+
 Feature: program Module
   
- Scenario:Navigating to the program module
+Scenario:Navigating to the program module
     When Admin clicks the program menu from the header
    Then Admin should land on the program page
 
@@ -39,7 +40,7 @@ Then Admin should see the "<Options>" in each rows
 Examples: 
   |Options|
   |Edit_Icon|
-   |Check_Box|
+  |Check_Box|
   |Delete_Icon |
 
 
@@ -58,7 +59,7 @@ Scenario Outline: Verify Add New Program functionalities
 
    Examples: 
      | scenario  |
-     |cancelwithValidData|
+      |cancelwithValidData|
      |closewithValidData|
      |onlyMandatoryfields|
      |withoutMandatoryfields|
@@ -97,7 +98,7 @@ Examples:
 |ProgramDescription_DecendingOrder|
 
 
-Program Pagination
+#Program Pagination
 
 Scenario Outline: Validating the text and pagination icon in the programPage
       Then Admin should see the below "<items>" pagination controls under the data table in the programPage
@@ -123,5 +124,5 @@ Examples:
 |searchBy_ValidProgramName|
 |searchBy_ProgramDescription|
 |searchBy_InValidProgramName|
-# |searchBy_PartialProgramName|
+|searchBy_PartialProgramName|
 
