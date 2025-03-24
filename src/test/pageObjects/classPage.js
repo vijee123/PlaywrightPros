@@ -1,10 +1,10 @@
-import {expect} from "@playwright/test";
+import { expect } from "@playwright/test";
 
 import LoginPage from './loginPage';
 import commonTest from '../utils/commonMethods';
 import { th } from "@faker-js/faker";
 
-export default class classPage{
+export default class classPage {
 
     constructor(page) {
         this.page = page;
@@ -17,13 +17,14 @@ export default class classPage{
         this.classDescHeader = this.page.locator("//th[normalize-space()='Class Description']");
         this.classDateHeader = this.page.locator("//th[normalize-space()='Class Date']");
         this.statusHeader = this.page.locator("//th[normalize-space()='Status']");
-        this.staffNameHeader = this.page.locator("//th[normalize-space()='Staff Name']");   
+        this.staffNameHeader = this.page.locator("//th[normalize-space()='Staff Name']");
         this.EditDeleteHeader = this.page.locator("//th[contains(text(), 'Edit / Delete')]");
         this.paginationText = this.page.getByText('Showing');
         this.addNewClassButton = this.page.getByText('Add New Class');
-        this.labels =this.page.locator("//label");
+        this.labels = this.page.locator("//label");
         this.selectBatchName = this.page.locator("//input[@placeholder='Select a Batch Name']");
-        this.classTopicTextbox = this.page.locator("#classTopic");  
+        this.batchNameField = this.page.locator("#batchName");
+        this.classTopicTextbox = this.page.locator("#classTopic");
         this.classDescTextbox = this.page.locator("#classDescription");
         this.classDate = this.page.locator("//p-calendar//input");
         this.classNumber = this.page.locator("#classNo");
@@ -54,60 +55,174 @@ export default class classPage{
         this.headerDeleteIcon = this.page.locator("//mat-card-title[@class='mat-card-title']//button[@icon='pi pi-trash']");
         this.saveButton = this.page.locator("//span[text()='Save']");
         this.cancelButton = this.page.locator("//span[text()='Cancel']");
-        this.closeIcon = this.page.locator("//span[contains(@class,'p-dialog-header-close-icon')]");   
-             
-       }
+        this.closeIcon = this.page.locator("//span[contains(@class,'p-dialog-header-close-icon')]");
+        this.classDetailsFormTitle = this.page.locator("//span[text()='Class Details']");
+        this.topRowEditIcon = this.page.locator("((//div[@class='action'])[1]/span/button)[1]");
+        this.topRowDeleteIcon = this.page.locator("(//div[@class='action'])[1]//button[@icon='pi pi-trash']");
+        this.multiDeleteIcon = this.page.locator("//mat-card-title[@class='mat-card-title']//button[@icon='pi pi-trash']");
+        this.deleteConfirmPopup = this.page.locator("//span[text()='Confirm']");
+        this.NoDeleteButtonConfirm = this.page.locator("//div[contains(@class,'p-dialog-footer')]/button[@ng-reflect-label='No']");
+        this.YesDeleteButtonConfirm = this.page.locator("//div[contains(@class,'p-dialog-footer')]/button[@ng-reflect-label='Yes']");
+        this.deleteConfirmCloseIcon = this.page.locator("//button[contains(@class,'dialog-header-icon')]");
+        this.classDeletedMessage = this.page.locator("//div[text()='Class Deleted']");
+        this.topRowClassTopic = this.page.locator("(//tbody[@class='p-datatable-tbody']/tr[1])/td[3]");
+        this.topRowCheckBox = this.page.locator("(//tbody//div[@role='checkbox'])[1]");
 
-
-    async clickClassMenu(){
-        await this.classMenuLink.click();
-    }   
-
-    async classLogin(url, username, password){
-        let loginPage = new LoginPage(this.page);
-        await loginPage.launchApp(url);
-        await loginPage.validLogin(username, password); 
     }
 
-    async classNoDisplayed(){
+
+    async clickClassMenu() {
+        await this.classMenuLink.click();
+        await this.page.click('body', { position: { x: 0, y: 0 } });
+        await this.page.keyboard.press('Escape');
+    }
+
+    async classLogin(url, username, password) {
+        let loginPage = new LoginPage(this.page);
+        await loginPage.launchApp(url);
+        await loginPage.validLogin(username, password);
+    }
+
+    async classNoDisplayed() {
         const classNo = await this.classNumber.getAttribute('ng-reflect-model');
         console.log("class Count Displayed is ", classNo);
         return classNo;
     }
 
-    async verifyManageClassDisplay(){
-       // await this.manageClassText.waitFor({timeout: 3000});
+    async verifyManageClassDisplay() {
+        // await this.manageClassText.waitFor({timeout: 3000});
         return await this.manageClassText.isVisible();
     }
 
-    async clickLMSTextClick(){
+    async clickLMSTextClick() {
         await this.LMSDisplayHomePage.click();
-    }  
-    
-    async clickHeaderDeleteIcon(){
-        await this.headerDeleteIcon.click();    
     }
 
-    async verifyHeaderDeleteIconDisplay(){
-        return await this.headerDeleteIcon.isVisible();     
+    async clickHeaderDeleteIcon() {
+        await this.headerDeleteIcon.click();
     }
 
-    async verifyClassFooterMessage(moduleName){
+    // async fillSearchTextbox(searchBy){
+
+    //     await this.searchTextbox.fill()
+    // }
+
+    async clickYesDeleteOnConfirm(){
+        await this.YesDeleteButtonConfirm.click();
+    }
+
+    async clickNoDeleteOnConfirm(){
+        await this.NoDeleteButtonConfirm.click();
+    }
+
+    async verifyHeaderDeleteIconDisplay() {
+        return await this.headerDeleteIcon.isVisible();
+    }
+
+    async verifyClassFooterMessage(moduleName) {
         let common = new commonTest(this.page);
         return await common.verifyFooterMessage(moduleName);
     }
 
-    async verifyFieldNameDisplay(fieldName){
+    async clickTopRowEditIcon() {
+        const editIcon = this.topRowEditIcon;
+
+        if (await editIcon.count() === 0) {
+            throw new Error("Edit icon is not present in the DOM.");
+        }
+
+        if (await editIcon.isVisible()) {
+            await editIcon.click();
+        } else {
+            throw new Error("Edit icon is present but not visible to click.");
+        }
+    }
+
+    async clickTopRowDeleteIcon() {
+        const deleteIcon = this.topRowDeleteIcon;
+
+        if (await deleteIcon.count() === 0) {
+            throw new Error("Delete icon is not present in the DOM.");
+        }
+
+        if (await deleteIcon.isVisible()) {
+            await deleteIcon.click();
+        } else {
+            throw new Error("Delete icon is present but not visible to click.");
+        }
+    }
+
+    async getTopRowClassTopic(){
+        const classTopic = await this.topRowClassTopic.textContent();
+        console.log("Top Row Class Topic Text:", classTopic);
+        return classTopic;
+    }
+
+    async clickTopRowCheckBox(){
+        await this.topRowCheckBox.click();
+    }
+
+    async checkMultiDeleteIconStatus(){
+        return await this.multiDeleteIcon.isEnabled();
+    }
+    
+    async deleteConfirmPopupVisibility() {
+        return this.deleteConfirmPopup.isVisible();
+    }
+
+    async clickCloseIconDeleteConfirm(){
+        await this.deleteConfirmCloseIcon.click();
+    }
+
+    async classDeletedMessageVisible(){
+        return this.classDeletedMessage.isVisible();
+    }
+
+
+    async classDetailsFormVisibility() {
+        return this.classDetailsFormTitle.isVisible();
+    }
+
+    async batchNameFieldStatus() {
+        return await this.selectBatchName.isDisabled();
+    }
+
+    async classTopicFieldStatus() {
+        return await this.page.locator('#classTopic').isDisabled();
+    }
+
+    async clickCancelOrClose(Icon) {
+        switch (Icon) {
+            case "CancelBtn":
+                console.log("Clicking Cancel Button...");
+                await this.cancelButton.click();
+                break;
+            case "CloseIcon":
+                console.log("Clicking Close Icon...");
+                await this.closeIcon.click();
+                break;
+            default:
+                console("No Such buttons or Icons are available...");
+        }
+
+    }
+
+    async classDetailsFormVisibility() {
+        await this.page.waitForTimeout(2000);
+        return await this.classDetailsFormTitle.isVisible();
+    }
+
+    async verifyFieldNameDisplay(fieldName) {
         console.log("Tested Field Name is: " + fieldName);
         const fieldLabels = await this.page.locator("//label").allTextContents();
-        console.log("The labels of fields are: "+fieldLabels); 
-        switch(fieldName){
-            case "BatchName":  
-               return await fieldLabels.includes("Batch Name");
-            case "ClassTopic": 
-               return await fieldLabels.includes("Class Topic");
+        console.log("The labels of fields are: " + fieldLabels);
+        switch (fieldName) {
+            case "BatchName":
+                return await fieldLabels.includes("Batch Name");
+            case "ClassTopic":
+                return await fieldLabels.includes("Class Topic");
             case "ClassDescription":
-                return  await fieldLabels.includes("Class Description");
+                return await fieldLabels.includes("Class Description");
             case "ClassDates":
                 return await fieldLabels.includes(" Select Class Dates ");
             case "ClassNo":
@@ -127,18 +242,18 @@ export default class classPage{
     }
 
 
-    async verifyFieldBoxDisplay(fieldBox){
-         switch(fieldBox){
-            case "BatchName":  
-                {console.log("into bathc name..");return await this.selectBatchName.isVisible();}
-            case "ClassTopic": 
-              {console.log("into class topic..");return await this.classTopicTextbox.isVisible();}
+    async verifyFieldBoxDisplay(fieldBox) {
+        switch (fieldBox) {
+            case "BatchName":
+                { console.log("into bathc name.."); return await this.selectBatchName.isVisible(); }
+            case "ClassTopic":
+                { console.log("into class topic.."); return await this.classTopicTextbox.isVisible(); }
             case "ClassDescription":
                 return await this.classDescTextbox.isVisible();
             case "ClassDates":
                 return await this.classDate.isVisible();
             case "ClassNo":
-               return await this.classNumber.isVisible();
+                return await this.classNumber.isVisible();
             case "StaffName":
                 return await this.staffNameDropdown.isVisible();
             case "Comments":
@@ -146,19 +261,19 @@ export default class classPage{
             case "Notes":
                 return await this.notesTextbox.isVisible();
             case "Recording":
-               return await this.recordingTextbox.isVisible();
+                return await this.recordingTextbox.isVisible();
             case "Status":
-               return await this.statusActiveRadioBtn.isVisible();
-             
+                return await this.statusActiveRadioBtn.isVisible();
+
         }
 
     }
-            
-                
 
-    async verifyHeaderDisplay(header){
+
+
+    async verifyHeaderDisplay(header) {
         console.log("Header is: " + header);
-        switch(header){
+        switch (header) {
             case "Batch Name":
                 return await this.batchNameHeader.isVisible();
             case "Class Topic":
@@ -174,7 +289,7 @@ export default class classPage{
             case "Edit/Delete":
                 return await this.EditDeleteHeader.isVisible();
             default:
-               throw new Error(`Header "${header}" not found!`);
+                throw new Error(`Header "${header}" not found!`);
         }
 
     }
@@ -184,30 +299,30 @@ export default class classPage{
         return await this.paginationText.isVisible();
     }
 
-    async verifyPaginationTextAndIcons(items){
+    async verifyPaginationTextAndIcons(items) {
         let common = new commonTest(this.page);
         return await common.verifyPaginationTextAndIcons(items);
-    }   
+    }
 
-    async verifySortIconDisplayInHeaderFields(){
+    async verifySortIconDisplayInHeaderFields() {
         let common = new commonTest(this.page);
         return await common.verifyHeaderFieldsSortIcons();
     }
 
-    async clickAddNewClassButton(){
+    async clickAddNewClassButton() {
         await this.addNewClassButton.click();
     }
 
-    async clickSaveButton(){
+    async clickSaveButton() {
         await this.saveButton.click();
     }
 
-    async classCreatedMsgDisplay(){
+    async classCreatedMsgDisplay() {
         return await this.classCreatedMsg.isVisible();
     }
 
-    async clickBatchNameDeleteIcon(){
-        await this.batchNameDeleteIcon.click(); 
+    async clickBatchNameDeleteIcon() {
+        await this.batchNameDeleteIcon.click();
     }
 
     async selectStaffByName(staffName) {
@@ -216,14 +331,48 @@ export default class classPage{
             return;
         }
         await this.staffNameDropdown.click();
-        await this.page.waitForTimeout(3000); 
+        await this.page.waitForTimeout(1500);
         await this.page.waitForSelector("//ul[@role='listbox']/p-dropdownitem");
         await this.page.locator(`//p-dropdownitem[@ng-reflect-label='${staffName}']`).click();
     }
 
-    async fillCreateClassForm({ batchName, classTopic, classDesc, classDates, staffName, status, comments,notes, recording}) {
-        await this.selectBatchName.fill(batchName); 
-        await this.classTopicTextbox.fill(classTopic); 
+    async checkNoOfClasses() {
+        try {
+            const value = await this.page.locator('#classNo').inputValue();
+            console.log("No of Classes value:", value);
+            return value;
+        } catch (error) {
+            console.error("Error getting class number:", error);
+            throw error;
+        }
+    }
+
+    async clickDatePickerBtn() {
+        await this.classDatePickerBtn.click();
+    }
+
+    async verifyDisabledWeekendDates() {
+        const weekendDates = await this.page.$$("//div[contains(@class,'p-datepicker-calendar-container')]//tbody//td[position()=1 or position()=7]");
+        for (const date of weekendDates) {
+            const isDisabled = await date.$('span.p-disabled') !== null;
+            const dateText = await date.innerText();
+
+            if (!isDisabled) {
+                console.log(`Weekend date ${dateText} is enabled`);
+                return false;
+            }
+
+            console.log(`Weekend date ${dateText} is disabled`);
+        }
+
+        console.log("All the week end dates are disabled....")
+        return true;
+    }
+
+
+    async fillCreateClassForm({ batchName, classTopic, classDesc, classDates, staffName, status, comments, notes, recording }) {
+        await this.selectBatchName.fill(batchName);
+        await this.classTopicTextbox.fill(classTopic);
         await this.classDescTextbox.fill(classDesc);
         await this.selectDates(classDates);
         await this.selectStaffByName(staffName);
@@ -242,12 +391,13 @@ export default class classPage{
     async selectDates(classDates) {
 
         // Ensure classDates is always an array
-       if (!Array.isArray(classDates)) {
-       classDates = [classDates]; 
+        if (!Array.isArray(classDates)) {
+            classDates = classDates.split(",").map(date => date.trim());
         }
 
         // Filter out invalid or empty dates
         classDates = classDates.filter(date => date && typeof date === "string" && date.includes("/"));
+
 
         // If there are no valid dates, exit early
         if (classDates.length === 0) {
@@ -255,67 +405,69 @@ export default class classPage{
             return;
         }
 
-       await this.classDatePickerBtn.click(); 
-   
-       for (const targetDate of classDates) {
-       if (!targetDate || typeof targetDate !== "string" || !targetDate.includes("/")) {
-           console.error("Invalid date format:", targetDate);
-           continue;
-       }
+        await this.classDatePickerBtn.click();
 
-       // Extract month, day, and year
-       const [month, day, yearRaw] = targetDate.trim().split("/");
-       const year = yearRaw.trim().split(" ")[0].replace(/[^0-9]/g, '');
-      
-       // Convert month number to text
-       const monthNames = ["January", "February", "March", "April", "May", "June",
-                           "July", "August", "September", "October", "November", "December"];
-       const targetMonth = monthNames[parseInt(month, 10) - 1];
-      
-       // Get the currently displayed month and year
-       let displayedYear = await this.datePickerYear.textContent();
-       let displayedMonth = await this.datePickerMonth.textContent(); 
+        for (const targetDate of classDates) {
+            if (!targetDate || typeof targetDate !== "string" || !targetDate.includes("/")) {
+                console.error("Invalid date format:", targetDate);
+                continue;
+            }
 
-       // Navigate to the correct month and year
-       while (displayedMonth !== targetMonth || displayedYear !== year) {
-           const currentYear = parseInt(displayedYear, 10);
-           const targetYear = parseInt(year, 10);
-           const currentMonthIndex = monthNames.indexOf(displayedMonth);
-           const targetMonthIndex = monthNames.indexOf(targetMonth);
+            // Extract month, day, and year
+            const [month, day, yearRaw] = targetDate.trim().split("/");
+            const year = yearRaw.trim().split(" ")[0].replace(/[^0-9]/g, '');
 
-           if (currentYear < targetYear || (currentYear === targetYear && currentMonthIndex < targetMonthIndex)) {
-               await this.datePickerNextArrowBtn.click(); 
-           } else {
-               await this.datePickerPrevArrowBtn.click(); 
-           }
+            // Convert month number to text
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"];
+            const targetMonth = monthNames[parseInt(month, 10) - 1];
 
-           await this.page.waitForTimeout(1000);
-           displayedYear = await this.datePickerYear.textContent();
-           displayedMonth = await this.datePickerMonth.textContent();
-       }
+            // Get the currently displayed month and year
+            let displayedYear = await this.datePickerYear.textContent();
+            let displayedMonth = await this.datePickerMonth.textContent();
 
-       console.log(`Navigated to: ${displayedMonth} ${displayedYear}`);
+            // Navigate to the correct month and year
+            while (displayedMonth !== targetMonth || displayedYear !== year) {
+                const currentYear = parseInt(displayedYear, 10);
+                const targetYear = parseInt(year, 10);
+                const currentMonthIndex = monthNames.indexOf(displayedMonth);
+                const targetMonthIndex = monthNames.indexOf(targetMonth);
+                if (currentYear < targetYear || (currentYear === targetYear && currentMonthIndex < targetMonthIndex)) {
+                    await this.datePickerNextArrowBtn.click();
+                } else {
+                    await this.datePickerPrevArrowBtn.click();
+                }
 
-       // Click the correct day
-       await this.page.locator(`//table[contains(@class,'p-datepicker-calendar')]/tbody/tr/td/span[text()='${parseInt(day, 10)}']`).click();
-       console.log(`Selected date: ${targetDate}`);
+                await this.page.waitForTimeout(1000);
+                displayedYear = await this.datePickerYear.textContent();
+                displayedMonth = await this.datePickerMonth.textContent();
+            }
 
-       await this.page.waitForTimeout(2000);
-      }
+            console.log(`Navigated to: ${displayedMonth} ${displayedYear}`);
 
-     await this.page.keyboard.press('Escape'); 
+            // Click the correct day
+            await this.page.locator(`//table[contains(@class,'p-datepicker-calendar')]/tbody/tr/td/span[text()='${parseInt(day, 10)}']`).click();
+            console.log(`Selected date: ${targetDate}`);
+
+            await this.page.waitForTimeout(2000);
+        }
+
+        await this.page.click('body', { position: { x: 0, y: 0 } });
+        await this.page.keyboard.press('Escape');
+        await this.page.waitForTimeout(1000);
+
     }
 
 
-    async verifyMessageDisplay(message){
+    async verifyMessageDisplay(message) {
         console.log("Checking message visibility for:", message);
-      
+
         if (this.page.isClosed()) {
             console.error("Page is already closed. Cannot verify message.");
             return false;
         }
 
-        switch(message){
+        switch (message) {
             case "success":
                 console.log("Checking Valid Class Created Message..");
                 return await this.classCreatedMsg.isVisible();
@@ -334,11 +486,21 @@ export default class classPage{
             case "batchNameErrorMsg":
                 console.log("Checking Batch name Error Message..");
                 return await this.batchNameErrorMsg.isVisible();
+            case "allErrorMsg":
+                console.log("Verifying the display of all Error Messages..");
+                const results = await Promise.all([
+                    this.statusErrorMsg.isVisible(),
+                    this.staffNameErrorMsg.isVisible(),
+                    this.classDateErrorMsg.isVisible(),
+                    this.classTopicErrorMsg.isVisible(),
+                    this.batchNameErrorMsg.isVisible()
+                ]);
+                return results.every(isVisible => isVisible);
             default:
                 throw new Error(`Error message "${message}" not found!`);
         }
     }
 
-    
+
 
 }

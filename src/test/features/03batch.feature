@@ -178,4 +178,3 @@ Feature: Validate Batch page functionality
 
 
 
-

@@ -3,17 +3,17 @@ import { test, Given, Then, When } from '../../../fixture/customFixtures.js';
 
 const { faker } = require('@faker-js/faker');
 const path = require('path');
-import { chainingData } from "../utils/chainingData.js";
-//console.log("Chaining batchName data into class Steps is: "+chainingData.getBatchName());
+const { readCSV } = require('../utils/csvReader');
+const csvPath = path.resolve(__dirname, '../../../test-data/classTestData.csv'); 
+const classTestData = readCSV(csvPath);
 
-import { readExcelSheet } from '../utils/excelReader.js';
-const classTestData = readExcelSheet('classData');  
+//import { chainingData } from "../utils/chainingData.js";
+//console.log("Chaining batchName data into class Steps is: "+chainingData.getBatchName());
 
 
  When('Admin clicks the Class Navigation bar in the Header', async ({classPageFixture}) => {
     console.log("Admin clicks the Class Navigation bar in the Header");
-   await classPageFixture.clickClassMenu();
-   
+   await classPageFixture.clickClassMenu();   
   });
   
   Then('Admin should land on the Manage class page', async ({classPageFixture}) => {
@@ -57,7 +57,7 @@ const classTestData = readExcelSheet('classData');
     await expect(allHaveIcons).toBeTruthy();
   });
 
-  When('Admin clicks the Add New Class button and enters the details of {string} in the Create Class form', async ({classPageFixture, sharedData}, scenario) => {
+  When('Admin clicks the Add New Class button and enters the details of {string} in the Create Class form', async ({classPageFixture}, scenario) => {
     console.log("Admin clicks the Create Class button...");
     //const batchName = sharedData.batchName;
     //console.log("The batchName inside CLASS STEPS is: "+sharedData.batchName);
@@ -79,9 +79,16 @@ const classTestData = readExcelSheet('classData');
     const classTopic = randomClassScenarios.includes(scenario) 
         ? `Playwright_${faker.string.alphanumeric(3).toUpperCase()}`  
         : rowData.classTopic;
+
+    //convert dates from string to date format and remove
+    const classDates = typeof rowData.classDates === 'string'
+       ? rowData.classDates.replace(/^"|"$/g, '').split(',').map(date => date.trim())
+       : rowData.classDates;
+    
+    console.log("Processed classDates:", classDates);
     
      console.log("Class Topic generated is : ", classTopic);
-
+    console.log("The dates sent are: "+rowData.classDates);
     await classPageFixture.fillCreateClassForm({
         batchName: rowData.batchName,
         classTopic: rowData.classTopic,
@@ -151,11 +158,175 @@ const classTestData = readExcelSheet('classData');
   });
   
   When('Admin selects class date in date picker', async ({classPageFixture}) => {
-    await classPageFixture.selectDates("03/26/2025, 03/27/2025");
+    await classPageFixture.selectDates("04/07/2025, 04/08/2025");
   });
   
   Then('Admin should see no of class value is added automatically', async ({classPageFixture}) => {
     console.log("Verify the No Of Classses displayed..");
-    await expect(this.page.locator('#classNo')).toHaveAttribute('ng-reflect-model', '2');
+     await expect(classPageFixture.checkNoOfClasses()).resolves.toEqual('2');
+  });
+
+  When('Admin clicks date picker', async ({classPageFixture}) => {
+    console.log("Clicking the Date Picker...")
+    await classPageFixture.clickDatePickerBtn();
   });
   
+  Then('Admin should see weekends dates are disabled to select', async ({classPageFixture}) => {
+    console.log("Checking whether all the weekends dates are disabled...")
+    await classPageFixture.verifyDisabledWeekendDates();
+  });
+
+  When('Admin clicks Cancel button OR Close Icon {string}', async ({classPageFixture}, Icon) => {
+    console.log("Clicking Cancel Button OR the Close Icon.....")
+    await classPageFixture.clickCancelOrClose(Icon);
+  });
+  
+  Then('Class Details popup window should be closed without saving', async ({classPageFixture}) => {
+    console.log("Checking whether class details form is closed...")
+    const isVisible = await classPageFixture.classDetailsFormVisibility(); 
+    console.log(`Class Details Form is Visible: ${isVisible}`); 
+    expect(isVisible).toBe(false); 
+  });
+
+  When('Admin clicks on the edit icon in the class page', async ({classPageFixture}) => {
+    console.log("Admin clicks Edit icon...")
+    await classPageFixture.clickTopRowEditIcon();
+  });
+
+  Then('check that a new pop up with class details appears', async ({classPageFixture}) => {
+    console.log("Admin verifies the opening of Class details pop-up..")
+    const isVisible = await classPageFixture.classDetailsFormVisibility();
+    expect(isVisible).toBe(true);
+  });
+
+  Then('Admin should see class topic field is disabled', async ({classPageFixture}) => {
+    console.log("verify whether class topic field is disabled...")
+    const isDisabled = await classPageFixture.classTopicFieldStatus();
+    console.log("Is the Class Topic field disabled?", isDisabled);
+    expect(isDisabled).toBe(true);
+  });
+  
+  Then('Admin should see batch name field is disabled', async ({classPageFixture}) => {
+    console.log("verify whether batch name field is disabled...")
+    const isDisabled = await classPageFixture.batchNameFieldStatus();
+    console.log("Is the Class Topic field disabled?", isDisabled);
+    expect(isDisabled).toBe(true);
+  });
+  
+  When('Admin clicks the delete icon in the class page', async ({classPageFixture}) => {
+    console.log("Admin clicks the delete icon");
+    await classPageFixture.clickTopRowDeleteIcon();
+  });
+  
+  Then('Admin should see a alert open with heading Confirm along with YES and NO button for deletion', async ({classPageFixture}) => {
+    console.log("verify delete confirm pops-up....")
+    const isVisible = await classPageFixture.deleteConfirmPopupVisibility();
+    await expect(isVisible).toBe(true);
+  });
+
+  When('Admin clicks the delete icon in the class page of a class topic', async ({classPageFixture}) => {
+    console.log('Admin clicks delete icon of particular class Topic');
+    const topRowClassTopic1 = await classPageFixture.getTopRowClassTopic();
+    console.log("Top Row Class Topic before Delete is: ", topRowClassTopic1);
+    await classPageFixture.clickTopRowDeleteIcon();
+    classPageFixture.topRowClassTopicBeforeDelete = topRowClassTopic1;
+  });
+
+  When('Admin clicks No option to delete on confirm page of class', async ({classPageFixture}) => {
+    console.log("Admin clicks No option on the confirm pop-up...");
+    await classPageFixture.clickNoDeleteOnConfirm();
+  });
+  
+  Then('Admin can see the deletion alert disappears without deleting the class', async ({classPageFixture}) => {
+    console.log("Verify whether the confirm pop-up disappears without deleting...")
+    const topRowClassTopic2 = await classPageFixture.getTopRowClassTopic();
+    console.log("Top Row Class Topic after Canceling Delete is: ", topRowClassTopic2);
+    await expect(topRowClassTopic2).toEqual(classPageFixture.topRowClassTopicBeforeDelete);
+    const isVisible= await classPageFixture.verifyManageClassDisplay();
+    await expect(isVisible).toBe(true);
+  });
+
+  When('Admin clicks Yes option to delete on confirm page of class', async ({classPageFixture}) => {
+    console.log("Admin clicks YES option on the confirm pop-up...");
+    await classPageFixture.clickYesDeleteOnConfirm();
+  });
+  
+  Then('Admin gets a message Successful Class Deleted alert', async ({classPageFixture}) => {
+    console.log("Verify whether the Admin gets a message Successful Class Deleted alert");
+    const isVisible = await classPageFixture.classDeletedMessageVisible();
+    expect(isVisible).toBe(true);    
+  });
+
+  When('Admin clicks CLose X Icon on confirm page of class', async ({classPageFixture}) => {
+    console.log('Admin clicks the CLose Icon on confirm delete window...')
+    await classPageFixture.clickCloseIconDeleteConfirm();
+  });
+  
+  Then('Do not see that Class in the data table', async ({classPageFixture}) => {
+    console.log("Verify that the selected class Topic is deleted...")
+    const topRowClassTopic2 = await classPageFixture.getTopRowClassTopic();
+    console.log("Top Row Class Topic after Delete is: ", topRowClassTopic2);
+    await expect(topRowClassTopic2).not.toBe(classPageFixture.topRowClassTopicBeforeDelete);
+    const isVisible= await classPageFixture.verifyManageClassDisplay();
+    await expect(isVisible).toBe(true);
+  });
+
+  When('Admin clicks any checkbox in the data table', async ({classPageFixture}) => {
+    console.log("Admin clicks any check box...");
+    await classPageFixture.clickTopRowCheckBox();
+  });
+  
+  Then('Admin should see common delete option enabled under header Manage class', async ({classPageFixture}) => {
+    console.log("Verify whether the common delete option enabled under header Manage class..");
+    const isEnabled = await classPageFixture.checkMultiDeleteIconStatus();
+    console.log("Is multi-delete icon enabled?:", isEnabled);
+    expect(isEnabled).toBe(true);
+  });
+
+  // When('Admin enter the data {string} in search textbox', async ({classPageFixture}, searchBy) => {
+  //   console.log("Admin searches the class by entering the "+searchBy);
+
+  //   await classPageFixture.clickAddNewClassButton();
+  
+  //   console.log("Admin enters the given details in the Create Class form");
+  //   const rowData = classTestData.find(row => row.Scenario === scenario);
+    
+  //   if (!rowData) {
+  //       throw new Error(`No data found for scenario: ${scenario}`);
+  //   }
+
+  //   // Scenarios where we want a random alphanumeric value starting with "Playwright"
+  //   const randomClassScenarios = ["validClass"];
+
+  //   // Generate classTopic only for specified scenarios
+  //   const classTopic = randomClassScenarios.includes(scenario) 
+  //       ? `Playwright_${faker.string.alphanumeric(3).toUpperCase()}`  
+  //       : rowData.classTopic;
+
+  //   //convert dates from string to date format and remove
+  //   const classDates = typeof rowData.classDates === 'string'
+  //      ? rowData.classDates.replace(/^"|"$/g, '').split(',').map(date => date.trim())
+  //      : rowData.classDates;
+        
+  //    console.log("Class Topic generated is : ", classTopic);
+   
+  //    await classPageFixture.fillCreateClassForm({
+  //       batchName: rowData.batchName,
+  //       classTopic: rowData.classTopic,
+  //       classDesc: rowData.classDesc,
+  //       classDates: rowData.classDates,
+  //       staffName: rowData.staffName,
+  //       status: rowData.status,
+  //       comments: rowData.comments,
+  //       notes: rowData.notes,
+  //       recording: rowData.recording
+  //   });
+
+  // });
+  
+  // Then('Admin should see Class details are searched by entered data', async ({}) => {
+  //   // Step: Then Admin should see Class details are searched by entered data
+  //   // From: src\test\features\04class.feature:159:5
+  // });
+
+
