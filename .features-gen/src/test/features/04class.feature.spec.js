@@ -254,7 +254,7 @@ test.describe('Validate class page functionality', () => {
     await Then('Admin should see class topic field is disabled', null, { classPageFixture }); 
   });
 
-  test('Validate bacthName is disbaled while editing existing Class', { tag: ['@parallel'] }, async ({ When, classPageFixture, Then }) => { 
+  test('Validate batchName is disabled while editing existing Class', { tag: ['@parallel'] }, async ({ When, classPageFixture, Then }) => { 
     await When('Admin clicks on the edit icon in the class page', null, { classPageFixture }); 
     await Then('Admin should see batch name field is disabled', null, { classPageFixture }); 
   });

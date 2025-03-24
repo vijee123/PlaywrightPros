@@ -116,7 +116,7 @@ Scenario: Validate Class Topic is disabled while editing existing Class
      When Admin clicks on the edit icon in the class page
      Then Admin should see class topic field is disabled
 
-Scenario: Validate bacthName is disbaled while editing existing Class
+Scenario: Validate batchName is disabled while editing existing Class
      When Admin clicks on the edit icon in the class page
      Then Admin should see batch name field is disabled
 
@@ -139,6 +139,4 @@ Scenario: Validate Close(X) icon on Confirm Deletion alert
     When Admin clicks the delete icon in the class page of a class topic
     And Admin clicks CLose X Icon on confirm page of class
     Then Admin can see the deletion alert disappears without deleting the class
-
-
 
