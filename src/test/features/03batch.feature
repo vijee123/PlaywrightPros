@@ -130,5 +130,3 @@ Feature: Validate Batch page functionality
     Given Admin is on the Batch Details Page
     When Admin enters the valid data "ValidInput_EditCancelBtn" to all the mandatory fields and click cancel button
     Then Admin can see the batch details popup closes without editing the batch
-
-

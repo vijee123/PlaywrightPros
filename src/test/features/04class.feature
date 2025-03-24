@@ -107,8 +107,3 @@ Feature: Validate class page functionality
       | scenario   | Icon      |
       | validClass | CancelBtn |
       | validClass | CloseIcon |
-
-
-
-
-
