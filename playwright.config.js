@@ -34,8 +34,8 @@ const testDir = defineBddConfig({
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
-  //testDir,
-  testDir: 'src/test/features',
+  testDir,
+  //testDir: 'src/test/features',
   /* Run tests in files in parallel */
   fullyParallel: true,
 
