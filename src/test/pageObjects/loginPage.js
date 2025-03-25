@@ -18,6 +18,7 @@ export default class LoginPage{
     this.multipleCredentialErrMsgs = this.page.locator("//mat-error");
     this.formLoginToLMSText = this.page.locator("//form/p")
     this.image = this.page.locator("//img")
+    this.allTextField = this.page.locator("//input[contains(@class,'text-field')]")
 
 }
 
@@ -25,6 +26,86 @@ async launchApp(url) {
     await this.page.goto(url, { timeout: 60000 }, { waitUntil: 'load' });
 }
 
+async getNumberOfTextFields(){
+  return await this.allTextField.count();
+}
+
+async checkCentralAllignmentOfTextFields(fieldName){
+  let name = fieldName.toLowerCase().trim();
+
+  let textField,boundingBox;
+
+  if(name == "user"){
+    textField = this.page.locator("//input[@id='username']");
+     // Get the bounding box of the text field
+     boundingBox = await textField.boundingBox();
+  }
+  else if(name == "password"){
+    textField = this.page.locator("//input[@id='password']");
+     // Get the bounding box of the text field
+    boundingBox = await textField.boundingBox();
+  }
+  // Get the page viewport size
+  const viewportWidth = await this.page.evaluate(() => window.innerWidth);
+  const viewportHeight = await this.page.evaluate(() => window.innerHeight);
+
+  // Set the page to the maximum screen size
+  await this.page.setViewportSize({ width: viewportWidth, height: viewportHeight });
+
+  // Calculate the expected center of the page
+  const expectedCenterX = viewportWidth / 2;
+  const expectedCenterY = viewportHeight / 2;
+
+  // Check if the text field is near the center of the page
+  const isNearCenter = (
+    Math.abs(boundingBox.x + boundingBox.width / 2 - expectedCenterX) < 50 &&
+    Math.abs(boundingBox.y + boundingBox.height / 2 - expectedCenterY) < 50
+  );
+  return isNearCenter;
+}
+
+async getTextColrOfTextFields(fieldName){
+  let name = fieldName.toLowerCase().trim();
+  let textColor, textElement;
+  if(name == "user"){
+    textElement = this.page.locator("(//input[@id='username']/../span//span)[1]");
+    textColor = await textElement.evaluate((element) => {
+      return window.getComputedStyle(element).color;
+    });
+  }
+  else if(name == "password"){
+    textElement = this.page.locator("(//input[@id='password']/../span//span)[1]");
+    textColor = await textElement.evaluate((element) => {
+      return window.getComputedStyle(element).color;
+    });
+  }
+
+  return textColor.trim();
+}
+
+async getLabelOfTextFields(fieldName){
+  let name = fieldName.toLowerCase().trim();
+  let label;
+  if(name == "user"){
+    label = await this.page.locator("(//input[@id='username']/../span//span)[1]").textContent();
+  }
+  else if(name == "password"){
+    label = await this.page.locator("(//input[@id='"+name+"']/../span//span)[1]").textContent();
+  }
+  return label.trim();
+}
+
+async isAsteriskPresentOfTextField(fieldName){
+  let name = fieldName.toLowerCase().trim();
+  let asteriskPresent;
+  if(name == "user"){
+    asteriskPresent = await this.page.locator("(//input[@id='username']/../span//span)[2]").isVisible()
+  }
+  else if(name == "password"){
+    asteriskPresent = await this.page.locator("(//input[@id='"+name+"']/../span//span)[2]").isVisible()
+  }
+  return asteriskPresent;
+}
 
 async validLogin(username, password) {
     await this.userName.fill(username);
@@ -94,6 +175,7 @@ async loginThroughMouse(username, password) {
   await this.userName.pressSequentially(username);
   await this.password.pressSequentially(password);
   await this.clickLoginButtonThroughMouse();
+
   return new HomePage(this.page);
 }
 

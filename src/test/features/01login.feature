@@ -46,6 +46,8 @@ Background:
     Given Admin lands on login page
     When Admin enter value only in user name and clicks login button
     Then Error message "Please enter your password"   
+
+    #Error Msg is not showing
     
 
 ################## ADDITIONAL SCENARIOS ################################
@@ -67,6 +69,8 @@ Background:
 		
 		# Scenario: Verify the text spelling in the page 
 		# Then Admin should see correct spellings in all fields 
+
+    #Couldnt implement
 
 		Scenario: Verify application name 
 		Then Admin should see  LMS - Learning Management System    
@@ -93,4 +97,40 @@ Background:
 
   # Incorrect_Endpoint and Misspelled_Endpoint should get 404 but got 200
 
+  Scenario: Verify text field is present
+	Then Admin should see 2 text field
+
+  Scenario: Verify text on the first field
+	Then Admin should "User" in the first text field 
+
+  Scenario: Verify asterisk next to USER text
+	Then Admin should see asterisk mark symbol next to text for mandatory fields
+
+  
+  Scenario: Verify text on the second field
+	Then Admin should "Password" in the second text field
+
+  Scenario: Verify asterisk mark symbol next to password text
+	Then Admin should see asterisk mark symbol next to password text
+
+  @wip @failing
+  Scenario: Verify the alignment input field for the login
+	Then Admin should see input field on the centre of the page
+
+  #Automation failing
+
+  Scenario: Verify Login button is present
+	Then Admin should see login button 
+
+  Scenario: Verify input descriptive text in user field
+	Then Admin should see user in gray color
+
+  Scenario: Verify input descriptive text in password field
+	Then Admin should see password in gray color
+
+  #failing because expectation is Gray: rgb(128, 128, 128) but getting Gray: rgb(0, 0, 0.54)
+
+
+
+  
   
