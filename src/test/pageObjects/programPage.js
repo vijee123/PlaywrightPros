@@ -55,7 +55,6 @@ export default class programPage {
   async clickProgramBtn() {
     await this.programBtn.click();
     await this.page.keyboard.press('Escape');
-
   }
 
   async programLogin(url, username, password) {
@@ -162,12 +161,12 @@ export default class programPage {
 
 
   async newProgramEnterDetails(scenario) {
-   
+
     const rowData = testData.find(row => row.scenario === scenario);
     if (!rowData) {
       throw new Error(`No data found for scenario: ${scenario}`);
     }
- 
+
     await this.programName.fill(rowData.ProgramName);
     await this.prgDescription.fill(rowData.programDescription);
     if (rowData.Status == 'Active') {
@@ -209,7 +208,7 @@ export default class programPage {
 
 
 
-  async validateCreateProgramMessage(scenario) {   
+  async validateCreateProgramMessage(scenario) {
 
     const rowData = testData.find(row => row.scenario === scenario);
     if (!rowData) {
@@ -249,13 +248,13 @@ export default class programPage {
         await this.page.waitForTimeout(1000);
         const namelist = await this.pgmNameslist.textContent();
         console.log('Namelist:', namelist); // Debugging log
-      
-        if(namelist === rowData.ProgramName) {
+
+        if (namelist === rowData.ProgramName) {
           return true;
-      } else {
+        } else {
           throw new Error('No programs found in the list.');
-      }
-                           
+        }
+
       default:
         throw new Error(`Error message "${message}" not found!`);
 
@@ -386,12 +385,85 @@ export default class programPage {
 
       default:
         throw new Error(`Error: field "${programHeader}" not found!`);
-
-
     }
-
-
   }
+
+  //------------------------------------DELETE FUCNTION METHODS---------------------------------
+
+  async getTopRowData(module) {
+    let common = new commonTest(this.page);
+    return await common.getTopRowData(module);
+  }
+
+  async clickTopRowDeleteIcon() {
+    await this.page.keyboard.press('Escape');
+    let common = new commonTest(this.page);
+    await common.clickTopRowDeleteIcon();
+  }
+
+  async deleteConfirmPopupVisibility() {
+    let common = new commonTest(this.page);
+    return await common.deleteConfirmPopup.isVisible();
+  }
+
+  async clickYesDeleteOnConfirm() {
+    let common = new commonTest(this.page);
+    await common.YesDeleteButtonConfirm.click();
+  }
+
+  async clickNoDeleteOnConfirm() {
+    let common = new commonTest(this.page);
+    await common.NoDeleteButtonConfirm.click();
+  }
+
+  async singleDeleteMessageVisible(module) {
+    let common = new commonTest(this.page);
+    return await common.singleDeleteMessageVisible(module);
+  }
+
+  async multiDeleteMessageVisible(module) {
+    let common = new commonTest(this.page);
+    return await common.multiDeleteMessageVisible(module);
+  }
+
+  async clickCloseIconDeleteConfirm() {
+    let common = new commonTest(this.page);
+    await common.deleteConfirmCloseIcon.click();
+  }
+
+  async clickTopRowCheckBox() {
+    await this.page.keyboard.press('Escape');
+    let common = new commonTest(this.page);
+    await common.topRowCheckBox.click();
+  }
+
+  async clickMultipleCheckBoxes() {
+    await this.page.keyboard.press('Escape');
+    let common = new commonTest(this.page);
+    await common.clickTopTwoCheckBox();
+  }
+
+  async checkMultiDeleteIconStatus() {
+    let common = new commonTest(this.page);
+    return await common.multiDeleteIcon.isEnabled();
+  }
+
+  async clickMultiDeleteIcon() {
+    let common = new commonTest(this.page);
+    await common.multiDeleteIcon.click();
+  }
+
+  async getTopTwoRowData(module) {
+    let common = new commonTest(this.page);
+    return await common.getTopTwoRowData(module);
+  }
+
+  async verifyManageProgramDisplay(){
+    return await this.managePgm.isVisible();
+  }
+
+  // --------------------------------DELETE OVER------------------------------------------
+
 
 
 }
