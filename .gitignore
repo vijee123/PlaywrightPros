@@ -5,10 +5,6 @@
 /fixture/
 /node_modules/
 /playwright-report/
-/src/test/utils/
 /test-results/
-.env
-package-lock.json
-package.json
-global-setup.js
-#playwright.config.js
+
+

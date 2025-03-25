@@ -108,13 +108,6 @@ export default class classPage {
         await this.headerDeleteIcon.click();
     }
 
-    // async fillSearchTextbox(searchBy){
-
-    //     await this.searchTextbox.fill()
-    // }
-
-
-
     async verifyHeaderDeleteIconDisplay() {
         return await this.headerDeleteIcon.isVisible();
     }
@@ -140,7 +133,7 @@ export default class classPage {
 
 
 
-    // Delete Methods
+    // ----------------------DELETE FUCNTION METHODS---------------------------------
     async getTopRowData(module) {
         let common = new commonTest(this.page);
         return await common.getTopRowData(module);
@@ -242,6 +235,8 @@ export default class classPage {
         return await this.classDetailsFormTitle.isVisible();
     }
 
+
+    //-------------------------------FIELD NAME AND TEXT BOX VERIFICATION METHODS---------------------
     async verifyFieldNameDisplay(fieldName) {
         console.log("Tested Field Name is: " + fieldName);
         const fieldLabels = await this.page.locator("//label").allTextContents();
@@ -300,7 +295,7 @@ export default class classPage {
     }
 
 
-
+    //---------------------------------HEADER VERIFICATION------------------------------
     async verifyHeaderDisplay(header) {
         console.log("Header is: " + header);
         switch (header) {
@@ -400,7 +395,7 @@ export default class classPage {
         return true;
     }
 
-
+    //------------------------------------CLASS FORM FILLING METHOD-------------------------
     async fillCreateClassForm({ batchName, classTopic, classDesc, classDates, staffName, status, comments, notes, recording }) {
         await this.selectBatchName.fill(batchName);
         await this.classTopicTextbox.fill(classTopic);
@@ -418,7 +413,7 @@ export default class classPage {
         await this.recordingTextbox.fill(recording);
     }
 
-
+    //-----------------------------------------CALENDAR DATE PICKING METHOD--------------------------------------
     async selectDates(classDates) {
 
         // Ensure classDates is always an array
@@ -489,7 +484,7 @@ export default class classPage {
 
     }
 
-
+    //---------------------------CHECKING ERROR MESSAGE AND SUCCESS MESSAGES IN CLASS-----------------------
     async verifyMessageDisplay(message) {
         console.log("Checking message visibility for:", message);
 
@@ -534,7 +529,7 @@ export default class classPage {
 
 
 
-    //--------------CLASS PAGE SORTING METHOD------------------------
+     //--------------CLASS PAGE SORTING METHOD------------------------
     async ClassSorting(classHeader) {
         await this.page.keyboard.press('Escape');
         let common = new commonTest(this.page);
@@ -576,13 +571,13 @@ export default class classPage {
 
     }
     
-    
-    //---------------------------SEARCHING METHOD-----------------
-    async classSearch(scenario) {
+
+       //---------------------------SEARCHING METHOD----------------------------
+       async classSearch(scenario) {
         await this.page.keyboard.press('Escape');
-    
+
         const rowData = classTestData.find(row => row.Scenario === scenario);
-    
+
         if (!rowData) {
           throw new Error(`No data found for scenario: ${scenario}`);
         }

@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
-import { test, Given, Then, When } from '../../../fixture/customFixtures.js';
+//import { test, Given, Then, When } from '../../../fixture/customFixtures.js';
+import { Given, Then, When } from '../../../fixture/customFixtures.js';
 
 const { faker } = require('@faker-js/faker');
 const path = require('path');
@@ -92,7 +93,6 @@ When('Admin clicks the Add New Class button and enters the details of {string} i
   await classPageFixture.fillCreateClassForm({
     batchName: rowData.batchName,
     classTopic: randomClassScenarios.includes(scenario) ? classTopic : rowData.classTopic,
-    // classTopic: rowData.classTopic,
     classDesc: rowData.classDesc,
     classDates: rowData.classDates,
     staffName: rowData.staffName,
@@ -334,13 +334,12 @@ Then('Do not see that Classes in the data table', async ({ classPageFixture }) =
 });
 
 
-Then('Admin see the Class Topic\\/Batch Name\\/Class Description \\/ Staff Name and Class Dates sorted by ascending or decending order after clicking the sort icon {string}', async ({classPageFixture}, ClassHeader) => {
-  console.log("Checking the sorting of "+ClassHeader);
-  const result= await classPageFixture.ClassSorting(ClassHeader);
-  console.log("The "+ClassHeader+" is sorted properly: "+result);
+Then('Admin see the Class Topic\\/Batch Name\\/Class Description \\/ Staff Name and Class Dates sorted by ascending or decending order after clicking the sort icon {string}', async ({ classPageFixture }, ClassHeader) => {
+  console.log("Checking the sorting of " + ClassHeader);
+  const result = await classPageFixture.ClassSorting(ClassHeader);
+  console.log("The " + ClassHeader + " is sorted properly: " + result);
   expect(result).toBe(true);
 });
-
 
 When('Admin searches by below scenario {string} in the Class module', async ({classPageFixture}, classSearch) => {
   console.log("Searching class table using "+classSearch);
@@ -348,4 +347,3 @@ When('Admin searches by below scenario {string} in the Class module', async ({cl
   console.log("Searching using "+classSearch+" is successful: "+result);
   expect(result).toBe(true);
 });
-

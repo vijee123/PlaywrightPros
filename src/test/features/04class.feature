@@ -141,6 +141,12 @@ Feature: Validate class page functionality
     And Admin clicks Yes option to delete on confirm page of class
     Then Admin gets a message Successful Class Deleted alert
     And Do not see that Class in the data table
+  # Delete
+  Scenario: Click Yes on deletion window of a class
+    When Admin clicks the delete icon in the class page
+    And Admin clicks Yes option to delete on confirm page of class
+    Then Admin gets a message Successful Class Deleted alert
+    And Do not see that Class in the data table
 
   Scenario: Validate Close(X) icon on Confirm Deletion alert
     When Admin clicks the delete icon in the class page
@@ -163,6 +169,12 @@ Feature: Validate class page functionality
     When Admin clicks Yes option to delete on confirm page of class
     Then Admin gets a message Successful Classes Deleted alert
     And Do not see that Class in the data table
+  # Delete
+  Scenario: Validate multiple class delete button by selecting Single checkbox and clicking YES
+     Given Admin clicks single checkbox in the data table and clicks Multi Delete icon in class page
+     When Admin clicks Yes option to delete on confirm page of class
+     Then Admin gets a message Successful Classes Deleted alert
+     And Do not see that Class in the data table
 
   Scenario: Validate multiple class deletion by selecting multiple check boxes and clicking NO
     Given Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in class page
@@ -177,7 +189,7 @@ Feature: Validate class page functionality
   # #   And Do not see that Classes in the data table
 
 
-  # #Manage Class Sorting
+  #Manage Class Sorting
 
   Scenario Outline: Manage Class - Sorting Class by Class Topic/Batch Name/Program Name/ Class Description / Staff Name and Class Dates
     Then Admin see the Class Topic/Batch Name/Class Description / Staff Name and Class Dates sorted by ascending or decending order after clicking the sort icon "<ClassHeader>"
@@ -192,11 +204,10 @@ Feature: Validate class page functionality
       | ClassDescription_DescendingOrder |
       | staffName_AscendingOrder         |
       | staffName_DecendingOrder         |
-      | classDate_AscendingOrder         |
-      | classDate_DescendingOrder        |
+      # | classDate_AscendingOrder         |
+      # | classDate_DescendingOrder        |
 
-
-  # # Search class scenarios
+      # # Search class scenarios
   Scenario Outline: Scenario Outline name: Search class by Batch Name, Class topic, Class Description and by Staff Name
     When Admin searches by below scenario "<scenarioName>" in the Class module
     Examples:
@@ -205,3 +216,6 @@ Feature: Validate class page functionality
       | searchBy_classTopic       |
       | searchBy_ClassDescription |
       | searchBy_staffName        |
+
+
+

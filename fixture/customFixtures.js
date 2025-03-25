@@ -6,7 +6,7 @@ import LoginPage from '../src/test/pageObjects/loginPage.js';
 import ClassPage from '../src/test/pageObjects/classPage.js';
 import ProgramPage from '../src/test/pageObjects/programPage.js';
 import BatchPage from '../src/test/pageObjects/batchPage.js';
-import LogoutPage from '../src/test/pageObjects/logoutPage.js';
+//import LogoutPage from '../src/test/pageObjects/logoutPage.js';
 import { CONFIG } from '../config/env.js';
 
 
@@ -14,7 +14,9 @@ const test= baseTest.extend({
 
     loginPageFixture:async({page},use)=>{
       const loginPage=new LoginPage(page); 
+      console.log("Inside fixture B4 launching app")
       await loginPage.launchApp(CONFIG.BASE_URL);
+      console.log("Inside fixture AFTER launching app")
       await use(loginPage);
        },
 
@@ -36,11 +38,17 @@ const test= baseTest.extend({
       await use(classPage);
         },
 
+    browser: async ({ browser }, use) => {
+      await use(browser);
+    },
+
+    /*
     logoutPageFixture:async({page},use)=>{
       const logoutPage=new LogoutPage(page); 
-      await logoutPage.logoutLogin(CONFIG.BASE_URL, CONFIG.USERNAME, CONFIG.PASSWORD);
+      //await logoutPage.logoutLogin(CONFIG.BASE_URL, CONFIG.USERNAME, CONFIG.PASSWORD);
       await use(logoutPage);
       },
+    */
 
   });
 
