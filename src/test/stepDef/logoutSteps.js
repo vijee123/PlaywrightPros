@@ -14,9 +14,8 @@ let page, loginPage, homePage, response;
   });
 
 Given('Admin is in home page', async ({}) => {
-    let scenarioName = test.info().title;
-    console.log(`scenario Name = ${scenarioName}`)
-    const isVisibleBoolean = await homePage.isLMSTextVisible();
+
+  const isVisibleBoolean = await homePage.isLMSTextVisible();
     expect(isVisibleBoolean).toBeTruthy();
 
   });

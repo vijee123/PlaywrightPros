@@ -1,5 +1,5 @@
 #Author: Tohfatul SDET126
-@login
+@login  
 Feature: Login Page Validation
 
 Background:
@@ -22,7 +22,7 @@ Background:
     Given Admin lands on login page
     When Admin enter valid credentials and clicks login button through mouse
     Then Admin should land on home page
-  
+ 
   Scenario Outline: Validate login with invalid data - "<TestCase>"
     Given Admin lands on login page
     When Admin enter invalid "<Username>" and/or "<Password>", and clicks login button
@@ -35,8 +35,7 @@ Background:
     | Username_MissingAtSymbol        |Playwrightgmail.com   |March@2025|
     | Username_IncorrectSubdomain     |Playwright@hotmail.com|March@2025|
     | Username_IncorrectTopLevelDomain|Playwright@gmail.net  |March@2025|
-    
-    
+       
   Scenario: Validate login credentials with null user name
     Given Admin lands on login page
     When Admin enter value only in password and clicks login button
@@ -71,6 +70,7 @@ Background:
 
 		Scenario: Verify application name 
 		Then Admin should see  LMS - Learning Management System    
+
 
 		Scenario: Verify company name 
 		Then Admin should see company name below the app name         
