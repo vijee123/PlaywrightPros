@@ -92,7 +92,7 @@ When('Admin clicks the Add New Class button and enters the details of {string} i
   console.log("The dates sent are: " + rowData.classDates);
   await classPageFixture.fillCreateClassForm({
     batchName: rowData.batchName,
-    classTopic: rowData.classTopic,
+    classTopic: randomClassScenarios.includes(scenario) ? classTopic : rowData.classTopic,
     classDesc: rowData.classDesc,
     classDates: rowData.classDates,
     staffName: rowData.staffName,
@@ -341,3 +341,9 @@ Then('Admin see the Class Topic\\/Batch Name\\/Class Description \\/ Staff Name 
   expect(result).toBe(true);
 });
 
+When('Admin searches by below scenario {string} in the Class module', async ({classPageFixture}, classSearch) => {
+  console.log("Searching class table using "+classSearch);
+  const result = await classPageFixture.classSearch(classSearch);
+  console.log("Searching using "+classSearch+" is successful: "+result);
+  expect(result).toBe(true);
+});

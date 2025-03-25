@@ -136,11 +136,11 @@ Feature: Validate class page functionality
     Then Admin can see the deletion alert disappears without deleting the class
 
   # Delete
-  # Scenario: Click Yes on deletion window of a class
-  #   When Admin clicks the delete icon in the class page
-  #   And Admin clicks Yes option to delete on confirm page of class
-  #   Then Admin gets a message Successful Class Deleted alert
-  #   And Do not see that Class in the data table
+  Scenario: Click Yes on deletion window of a class
+    When Admin clicks the delete icon in the class page
+    And Admin clicks Yes option to delete on confirm page of class
+    Then Admin gets a message Successful Class Deleted alert
+    And Do not see that Class in the data table
 
   Scenario: Validate Close(X) icon on Confirm Deletion alert
     When Admin clicks the delete icon in the class page
@@ -158,11 +158,11 @@ Feature: Validate class page functionality
     Then Admin can see the deletion alert disappears without deleting the class
 
   # Delete
-  # Scenario: Validate multiple class delete button by selecting Single checkbox and clicking YES
-  #    Given Admin clicks single checkbox in the data table and clicks Multi Delete icon in class page
-  #    When Admin clicks Yes option to delete on confirm page of class
-  #    Then Admin gets a message Successful Classes Deleted alert
-  #    And Do not see that Class in the data table
+  Scenario: Validate multiple class delete button by selecting Single checkbox and clicking YES
+     Given Admin clicks single checkbox in the data table and clicks Multi Delete icon in class page
+     When Admin clicks Yes option to delete on confirm page of class
+     Then Admin gets a message Successful Classes Deleted alert
+     And Do not see that Class in the data table
 
   Scenario: Validate multiple class deletion by selecting multiple check boxes and clicking NO
     Given Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in class page
@@ -175,17 +175,6 @@ Feature: Validate class page functionality
   #   When Admin clicks Yes option to delete on confirm page of class
   #   Then Admin gets a message Successful Classes Deleted alert
   #   And Do not see that Classes in the data table
-
-
-  # Search class scenarios
-  # Scenario Outline: Scenario Outline name: Search class by Batch Name, Class topic and by Staff Name
-  #   When Admin enter the data "<searchBy>" in search textbox
-  #   Then Admin should see Class details are searched by entered data
-  #   Examples:
-  #     | searchBy   |
-  #     | batchName  |
-  #     | classTopic |
-  #     | staffName  |
 
 
   #Manage Class Sorting
@@ -206,6 +195,16 @@ Feature: Validate class page functionality
       | staffName_DecendingOrder         |
       # | classDate_AscendingOrder         |
       # | classDate_DescendingOrder        |
+
+      # # Search class scenarios
+  Scenario Outline: Scenario Outline name: Search class by Batch Name, Class topic, Class Description and by Staff Name
+    When Admin searches by below scenario "<scenarioName>" in the Class module
+    Examples:
+      | scenarioName              |
+      | searchBy_batchName        |
+      | searchBy_classTopic       |
+      | searchBy_ClassDescription |
+      | searchBy_staffName        |
 
 
 

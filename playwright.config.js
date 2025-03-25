@@ -1,11 +1,9 @@
 // @ts-check
 import { defineConfig, devices } from '@playwright/test';
-import { fail } from 'assert';
-import { on } from 'events';
 import { defineBddConfig } from 'playwright-bdd';
 
 const testDir = defineBddConfig({
-  features: ['src/test/features/'], 
+  features: ['src/test/features/*.feature'], 
   steps: [
     './fixture/customFixtures.js', 
     'src/test/stepDef/**/*.js', 
