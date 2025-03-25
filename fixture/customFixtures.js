@@ -14,7 +14,9 @@ const test= baseTest.extend({
 
     loginPageFixture:async({page},use)=>{
       const loginPage=new LoginPage(page); 
+      console.log("Inside fixture B4 launching app")
       await loginPage.launchApp(CONFIG.BASE_URL);
+      console.log("Inside fixture AFTER launching app")
       await use(loginPage);
        },
 
