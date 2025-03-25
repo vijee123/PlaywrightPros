@@ -178,3 +178,15 @@ When('Admin searches by valid program name,program description {string} in the P
   await programPageFixture.programSearch(programSearch);
 });
 
+
+// Edit Program
+
+When('Admin clicks on Edit option for particular program', async ({programPageFixture}) => {
+  
+
+});
+
+Then('Admin lands on Program details form', async ({}) => {
+ 
+
+});

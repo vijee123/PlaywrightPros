@@ -391,9 +391,37 @@ export default class programPage {
 
 
     }
+   
+  }
+
+
+
+  async click_EditProgram(){
+
+    await this.page.keyboard.press('Escape');
+    
+    
+
+  }
+
+
+
+  async editNewProgram(scenario)
+  {
+    const rowData = testData.find(row => row.scenario === scenario);
+
+    if (!rowData) {
+      throw new Error(`No data found for scenario: ${scenario}`);
+    }
+   
+   
+
+
 
 
   }
+
+
 
 
 }
