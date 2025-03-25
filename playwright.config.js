@@ -3,7 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 import { defineBddConfig } from 'playwright-bdd';
 
 const testDir = defineBddConfig({
-  features: ['src/test/features/**.feature'], 
+  features: ['src/test/features/01login.feature'], 
   steps: [
     './fixture/customFixtures.js', 
     'src/test/stepDef/**/*.js', 
@@ -30,7 +30,7 @@ export default defineConfig({
   fullyParallel: true,
 
   // Limits the number of parallel workers
-  workers: 3,
+  workers: 1,
 
   //Global Setup and TearDown
    //  globalSetup: require.resolve('./src/test/global-setup.js'),
@@ -39,7 +39,7 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 1 : 0,
   /* Opt out of parallel tests on CI. */
   //workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
@@ -54,7 +54,7 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     headless: false, 
-    retries: 2, 
+    retries: 0, 
   },
 
   

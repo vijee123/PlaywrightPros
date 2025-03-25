@@ -1,0 +1,11 @@
+scenario,invalidURL,,
+Incorrect_DomainName,https://playwright-ui-hackathon-frontend-app-a9ea85794ad9.herokuapp.com/login,404,text/html
+Misspelled_DomainName,https://plawright-frontend-app-a9ea85794ad9.herokuapp.com/login,405,text/html
+Incorrect_Protocol,httpx://playwright-frontend-app-a9ea85794ad9.herokuapp.com/login,,
+Missing_Protocol,playwright-frontend-app-a9ea85794ad9.herokuapp.com/login,,
+Incorrect_Endpoint,https://playwright-frontend-app-a9ea85794ad9.herokuapp.com/batch,,
+Misspelled_Endpoint,https://playwright-frontend-app-a9ea85794ad9.herokuapp.com/loginnnn,,
+Incorrect_TopLevelDomain,https://playwright-frontend-app-a9ea85794ad9.herokuapp.net/login,,
+Missing_TopLevelDomain,https://playwright-frontend-app-a9ea85794ad9.herokuapp/,,
+NonExistenSubDomain,https://video.playwright-frontend-app-a9ea85794ad9.herokuapp.com/login,,
+InvalidCharacters,https://playwright-@!-frontend-app-a9ea85794ad9.herokuapp.com/login,,
