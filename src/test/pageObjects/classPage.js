@@ -529,7 +529,7 @@ export default class classPage {
 
 
 
-     //--------------CLASS PAGE SORTING METHOD------------------------
+    //--------------CLASS PAGE SORTING METHOD------------------------
     async ClassSorting(classHeader) {
         await this.page.keyboard.press('Escape');
         let common = new commonTest(this.page);
@@ -570,54 +570,54 @@ export default class classPage {
         }
 
     }
-    
 
-       //---------------------------SEARCHING METHOD----------------------------
-       async classSearch(scenario) {
+
+    //---------------------------SEARCHING METHOD----------------------------
+    async classSearch(scenario) {
         await this.page.keyboard.press('Escape');
 
         const rowData = classTestData.find(row => row.Scenario === scenario);
 
         if (!rowData) {
-          throw new Error(`No data found for scenario: ${scenario}`);
+            throw new Error(`No data found for scenario: ${scenario}`);
         }
 
         switch (scenario) {
-          case 'searchBy_batchName':
-            console.log("Searching using batch name: "+rowData.batchName);
-            await this.searchTextbox.fill(rowData.batchName);
-            await this.page.keyboard.press('Enter');
-            const batchList = await this.page.locator('//tr/td[position() >= 2 and position() <= 7]').allTextContents();
-            const batchMatch = batchList.some(item => item.includes(rowData.batchName));
-            console.log("Retrieved Top Row Items List Names: "+batchList); 
-            return batchMatch;
-          case 'searchBy_classTopic':
-            console.log("Searching using Class Topic: "+rowData.classTopic);
-            await this.searchTextbox.fill(rowData.classTopic);
-            await this.page.keyboard.press('Enter');
-            const classList = await this.page.locator('//tr/td[position() >= 2 and position() <= 7]').allTextContents();
-            const topicMatch = classList.some(item => item.includes(rowData.classTopic));
-            console.log("Retrieved Top Row Items List Names: "+classList); 
-            return topicMatch;
-          case 'searchBy_ClassDescription':
-            console.log("Searching using Class Description: "+rowData.classDesc);
-            await this.searchTextbox.fill(rowData.classDesc);
-            await this.page.keyboard.press('Enter');
-            const classDescList = await this.page.locator('//tr/td[position() >= 2 and position() <= 7]').allTextContents();
-            const DescMatch = classDescList.some(item => item.includes(rowData.classDesc));
-            console.log("Retrieved Top Row Items List Names: "+classDescList); 
-            return DescMatch;
-          case 'searchBy_staffName':
-            console.log("Searching using Staff name: "+rowData.staffName);
-            await this.searchTextbox.fill(rowData.staffName);
-            await this.page.keyboard.press('Enter');
-            const staffList =await this.page.locator('//tr/td[position() >= 2 and position() <= 7]').allTextContents();
-            const staffMatch = staffList.some(item => item.includes(rowData.staffName));
-            console.log("Retrieved Top Row Items List Names: "+staffList); 
-            return staffMatch;
-          default:
-            throw new Error(`Error: field "${scenario}" not found!`);
+            case 'searchBy_batchName':
+                console.log("Searching using batch name: " + rowData.batchName);
+                await this.searchTextbox.fill(rowData.batchName);
+                await this.page.keyboard.press('Enter');
+                const batchList = await this.page.locator('//tr/td[position() >= 2 and position() <= 7]').allTextContents();
+                const batchMatch = batchList.some(item => item.includes(rowData.batchName));
+                console.log("Retrieved Top Row Items List Names: " + batchList);
+                return batchMatch;
+            case 'searchBy_classTopic':
+                console.log("Searching using Class Topic: " + rowData.classTopic);
+                await this.searchTextbox.fill(rowData.classTopic);
+                await this.page.keyboard.press('Enter');
+                const classList = await this.page.locator('//tr/td[position() >= 2 and position() <= 7]').allTextContents();
+                const topicMatch = classList.some(item => item.includes(rowData.classTopic));
+                console.log("Retrieved Top Row Items List Names: " + classList);
+                return topicMatch;
+            case 'searchBy_ClassDescription':
+                console.log("Searching using Class Description: " + rowData.classDesc);
+                await this.searchTextbox.fill(rowData.classDesc);
+                await this.page.keyboard.press('Enter');
+                const classDescList = await this.page.locator('//tr/td[position() >= 2 and position() <= 7]').allTextContents();
+                const DescMatch = classDescList.some(item => item.includes(rowData.classDesc));
+                console.log("Retrieved Top Row Items List Names: " + classDescList);
+                return DescMatch;
+            case 'searchBy_staffName':
+                console.log("Searching using Staff name: " + rowData.staffName);
+                await this.searchTextbox.fill(rowData.staffName);
+                await this.page.keyboard.press('Enter');
+                const staffList = await this.page.locator('//tr/td[position() >= 2 and position() <= 7]').allTextContents();
+                const staffMatch = staffList.some(item => item.includes(rowData.staffName));
+                console.log("Retrieved Top Row Items List Names: " + staffList);
+                return staffMatch;
+            default:
+                throw new Error(`Error: field "${scenario}" not found!`);
         }
-      }
+    }
 
 }
