@@ -141,13 +141,7 @@ Feature: Validate class page functionality
     And Admin clicks Yes option to delete on confirm page of class
     Then Admin gets a message Successful Class Deleted alert
     And Do not see that Class in the data table
-  # Delete
-  Scenario: Click Yes on deletion window of a class
-    When Admin clicks the delete icon in the class page
-    And Admin clicks Yes option to delete on confirm page of class
-    Then Admin gets a message Successful Class Deleted alert
-    And Do not see that Class in the data table
-
+  
   Scenario: Validate Close(X) icon on Confirm Deletion alert
     When Admin clicks the delete icon in the class page
     And Admin clicks CLose X Icon on confirm page of class
