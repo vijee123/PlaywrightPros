@@ -112,10 +112,6 @@ expect(test.info().errors).toHaveLength(0);
 });
 
 
-
-
-
-
 Then('Admin should see {string}', async ({}, expString) => {
   expect(await loginPage.getFormLoginText()).toBe(expString);
 });
@@ -178,3 +174,48 @@ Then('Admin should receive application error', async ({}) => {
     }
 });
 
+Then('Admin should see {int} text field', async ({}, expNumberOfFields) => {
+    expect(await loginPage.getNumberOfTextFields()).toBe(expNumberOfFields);
+});
+
+
+Then('Admin should {string} in the first text field', async ({}, expectedLabelText) => {
+  expect(await loginPage.getLabelOfTextFields("User")).toBe(expectedLabelText);
+});
+
+Then('Admin should {string} in the second text field', async ({}, expectedLabelText) => {
+  expect(await loginPage.getLabelOfTextFields("Password")).toBe(expectedLabelText);
+
+});
+
+Then('Admin should see asterisk mark symbol next to text for mandatory fields', async ({}) => {
+  expect(await loginPage.isAsteriskPresentOfTextField("User")).toBeTruthy();
+
+});
+
+Then('Admin should see asterisk mark symbol next to password text', async ({}) => {
+  expect(await loginPage.isAsteriskPresentOfTextField("Password")).toBeTruthy();
+});
+
+Then('Admin should see login button', async ({}) => {
+  await expect(loginPage.loginButton).toBeVisible();
+});
+
+/**
+Black: rgb(0, 0, 0)
+Gray: rgb(128, 128, 128)
+White: rgb(255, 255, 255) */
+
+Then('Admin should see user in gray color', async ({}) => {
+  expect(await loginPage.getTextColrOfTextFields("User")).toBe("rgb(128, 128, 128)");
+});
+
+Then('Admin should see password in gray color', async ({}) => {
+  expect(await loginPage.getTextColrOfTextFields("Password")).toBe("rgb(128, 128, 128)");
+});
+
+Then('Admin should see input field on the centre of the page', async ({}) => {
+  expect(await loginPage.checkCentralAllignmentOfTextFields("User")).toBeTruthy();
+  expect(await loginPage.checkCentralAllignmentOfTextFields("Password")).toBeTruthy();
+
+});
