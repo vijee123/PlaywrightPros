@@ -178,3 +178,113 @@ When('Admin searches by valid program name,program description {string} in the P
   await programPageFixture.programSearch(programSearch);
 });
 
+//---------------------------Program Single And Multiple Delete Steps-----------------------------------
+When('Admin clicks the delete icon in the program page', async ({programPageFixture}) => {
+  console.log('Admin clicks delete icon of a program');
+  const topRowProgram1 = await programPageFixture.getTopRowData("program");
+  console.log("Top Row Program before Delete is: ", topRowProgram1);
+  await programPageFixture.clickTopRowDeleteIcon();
+  programPageFixture.topRowProgramBeforeDelete = topRowProgram1;
+});
+
+Then('Admin should see a alert open with heading Confirm along with YES and NO button for deletion in program', async ({programPageFixture}) => {
+  console.log("verify delete confirm pops-up....")
+  const isVisible = await programPageFixture.deleteConfirmPopupVisibility();
+  await expect(isVisible).toBe(true);
+});
+
+
+When('Admin clicks No option to delete on confirm page of program', async ({programPageFixture}) => {
+  console.log("Admin clicks No option on the confirm pop-up...");
+  await programPageFixture.clickNoDeleteOnConfirm();
+});
+
+Then('Admin can see the deletion alert disappears without deleting the program', async ({programPageFixture}) => {
+  console.log("Verify whether the confirm pop-up disappears without deleting...")
+  const topRowProgram2 = await programPageFixture.getTopRowData("program");
+  console.log("Top Row Program after Canceling Delete is: ", topRowProgram2);
+  await expect(topRowProgram2).toEqual(programPageFixture.topRowProgramBeforeDelete);
+  const isVisible = await programPageFixture.verifyManageProgramDisplay();
+  await expect(isVisible).toBe(true);
+});
+
+When('Admin clicks Yes option to delete on confirm page of program', async ({programPageFixture}) => {
+  console.log("Admin clicks YES option on the confirm pop-up...");
+  await programPageFixture.clickYesDeleteOnConfirm();
+});
+
+Then('Admin gets a message Successful program Deleted alert', async ({programPageFixture}) => {
+  console.log("Verify whether the Admin gets a message Successful Program Deleted alert");
+  const isVisible = await programPageFixture.singleDeleteMessageVisible("program");
+  expect(isVisible).toBe(true);
+});
+
+Then('Do not see that program in the data table', async ({programPageFixture}) => {
+  console.log("Verify that the selected Program is deleted...")
+  const topRowProgram2 = await programPageFixture.getTopRowData("program");
+  console.log("Top Row Program name after Delete is: ", topRowProgram2);
+  await expect(topRowProgram2).not.toBe(programPageFixture.topRowProgramBeforeDelete);
+  const isVisible = await programPageFixture.verifyManageProgramDisplay();
+  await expect(isVisible).toBe(true);
+});
+
+When('Admin clicks CLose X Icon on confirm page of program', async ({programPageFixture}) => {
+  console.log('Admin clicks the CLose Icon on confirm delete window...')
+  await programPageFixture.clickCloseIconDeleteConfirm();
+});
+
+When('Admin clicks any checkbox in the data table of program', async ({programPageFixture}) => {
+  console.log("Admin clicks any check box...");
+  await programPageFixture.clickTopRowCheckBox();
+  const topRowProgram1 = await programPageFixture.getTopRowData("program");
+  console.log("Program checked to Delete is: ", topRowProgram1);
+  await programPageFixture.clickTopRowDeleteIcon();
+  programPageFixture.topRowProgramBeforeDelete = topRowProgram1;
+})
+
+Then('Admin should see common delete option enabled under header Manage program', async ({programPageFixture}) => {
+  console.log("Verify whether the common delete option enabled under header Manage Program..");
+  const isEnabled = await programPageFixture.checkMultiDeleteIconStatus();
+  console.log("Is multi-delete icon enabled?:", isEnabled);
+  expect(isEnabled).toBe(true);
+});
+
+Given('Admin clicks single checkbox in the data table and clicks Multi Delete icon in program page', async ({programPageFixture}) => {
+  console.log("Admin clicks any check box...");
+  await programPageFixture.clickTopRowCheckBox();
+  const topRowProgram1 = await programPageFixture.getTopRowData("program");
+  console.log("Program checked to Delete is: ", topRowProgram1);
+  programPageFixture.topRowProgramBeforeDelete = topRowProgram1;
+  await programPageFixture.clickMultiDeleteIcon();
+});
+
+Then('Admin gets a message Successful programs Deleted alert', async ({programPageFixture}) => {
+  console.log("Verify whether the Admin gets a Programs Deleted alert....");
+  const isVisible = await programPageFixture.multiDeleteMessageVisible("program");
+  console.log("is Programs Deleted Alert Visible: " + isVisible);
+  expect(isVisible).toBe(true);
+});
+
+Given('Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in program page', async ({programPageFixture}) => {
+  console.log("Admin clicks on more than one check box...");
+  await programPageFixture.clickMultipleCheckBoxes();
+  const topTwoRowPrograms1 = await programPageFixture.getTopTwoRowData("program");
+  console.log("Programs checked for Multiple Delete are: ", topTwoRowPrograms1);
+  programPageFixture.topTwoRowProgramsBeforeDelete = topTwoRowPrograms1;
+  await programPageFixture.clickMultiDeleteIcon();
+});
+
+Then('Admin can see the deletion alert disappears without deleting the selected programs', async ({programPageFixture}) => {
+  console.log("Verify whether the confirm pop-up disappears without deleting...")
+  const topTwoRowPrograms2 = await programPageFixture.getTopTwoRowData("program");
+  console.log("Top Row Program names after Canceling Delete are: ", topTwoRowPrograms2);
+  await expect(topTwoRowPrograms2).toEqual(programPageFixture.topTwoRowProgramsBeforeDelete);
+  const isVisible = await programPageFixture.verifyManageProgramDisplay();
+  await expect(isVisible).toBe(true);
+});
+
+Then('Do not see that programs in the data table', async ({}) => {
+  // Step: And Do not see that programs in the data table
+  // From: src\test\features\02program.feature:195:5
+});
+

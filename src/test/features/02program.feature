@@ -126,3 +126,59 @@ Feature: program Module
       | searchBy_InValidProgramName |
       | searchBy_PartialProgramName |
 
+
+  ############################# Program Delete Scenarios##########################################
+
+  Scenario: Validate row level delete icon in the program page
+    When Admin clicks the delete icon in the program page
+    Then Admin should see a alert open with heading Confirm along with YES and NO button for deletion in program
+
+  Scenario: Click No on deletion window of a program
+    When Admin clicks the delete icon in the program page
+    And Admin clicks No option to delete on confirm page of program
+    Then Admin can see the deletion alert disappears without deleting the program
+
+  #Delete
+  Scenario: Click Yes on deletion window of a program
+    When Admin clicks the delete icon in the program page
+    And Admin clicks Yes option to delete on confirm page of program
+    Then Admin gets a message Successful program Deleted alert
+    And Do not see that program in the data table
+
+  Scenario: Validate Close(X) icon on Confirm Deletion alert
+    When Admin clicks the delete icon in the program page
+    And Admin clicks CLose X Icon on confirm page of program
+    Then Admin can see the deletion alert disappears without deleting the program
+
+  #Multiple Delete Scenarios
+  Scenario: Validate Common Delete button enabled after clicking on any checkbox in program page
+    When Admin clicks any checkbox in the data table of program
+    Then Admin should see common delete option enabled under header Manage program
+
+  Scenario: Validate multiple program delete button by selecting Single checkbox and clicking NO
+    Given Admin clicks single checkbox in the data table and clicks Multi Delete icon in program page
+    When Admin clicks No option to delete on confirm page of program
+    Then Admin can see the deletion alert disappears without deleting the program
+
+  ####Delete
+  Scenario: Validate multiple program delete button by selecting Single checkbox and clicking YES
+    Given Admin clicks single checkbox in the data table and clicks Multi Delete icon in program page
+    When Admin clicks Yes option to delete on confirm page of program
+    Then Admin gets a message Successful programs Deleted alert
+    And Do not see that program in the data table
+
+  # Multiple Program Delete
+  Scenario: Validate multiple program deletion by selecting multiple check boxes and clicking NO
+    Given Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in program page
+    When Admin clicks No option to delete on confirm page of program
+    Then Admin can see the deletion alert disappears without deleting the selected programs
+
+  # # # Multiple Program Delete
+  Scenario: Validate multiple program delete button by selecting multiple checkboxes and clicking YES
+    Given Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in program page
+    When Admin clicks Yes option to delete on confirm page of program
+    Then Admin gets a message Successful programs Deleted alert
+    And Do not see that programs in the data table
+
+#########################################################  DELETE OVER ##########################################
+

@@ -197,6 +197,61 @@ test.describe('program Module', () => {
 
   });
 
+  test('Validate row level delete icon in the program page', async ({ When, programPageFixture, Then }) => { 
+    await When('Admin clicks the delete icon in the program page', null, { programPageFixture }); 
+    await Then('Admin should see a alert open with heading Confirm along with YES and NO button for deletion in program', null, { programPageFixture }); 
+  });
+
+  test('Click No on deletion window of a program', async ({ When, programPageFixture, And, Then }) => { 
+    await When('Admin clicks the delete icon in the program page', null, { programPageFixture }); 
+    await And('Admin clicks No option to delete on confirm page of program', null, { programPageFixture }); 
+    await Then('Admin can see the deletion alert disappears without deleting the program', null, { programPageFixture }); 
+  });
+
+  test('Click Yes on deletion window of a program', async ({ When, programPageFixture, And, Then }) => { 
+    await When('Admin clicks the delete icon in the program page', null, { programPageFixture }); 
+    await And('Admin clicks Yes option to delete on confirm page of program', null, { programPageFixture }); 
+    await Then('Admin gets a message Successful program Deleted alert', null, { programPageFixture }); 
+    await And('Do not see that program in the data table', null, { programPageFixture }); 
+  });
+
+  test('Validate Close(X) icon on Confirm Deletion alert', async ({ When, programPageFixture, And, Then }) => { 
+    await When('Admin clicks the delete icon in the program page', null, { programPageFixture }); 
+    await And('Admin clicks CLose X Icon on confirm page of program', null, { programPageFixture }); 
+    await Then('Admin can see the deletion alert disappears without deleting the program', null, { programPageFixture }); 
+  });
+
+  test('Validate Common Delete button enabled after clicking on any checkbox in program page', async ({ When, programPageFixture, Then }) => { 
+    await When('Admin clicks any checkbox in the data table of program', null, { programPageFixture }); 
+    await Then('Admin should see common delete option enabled under header Manage program', null, { programPageFixture }); 
+  });
+
+  test('Validate multiple program delete button by selecting Single checkbox and clicking NO', async ({ Given, programPageFixture, When, Then }) => { 
+    await Given('Admin clicks single checkbox in the data table and clicks Multi Delete icon in program page', null, { programPageFixture }); 
+    await When('Admin clicks No option to delete on confirm page of program', null, { programPageFixture }); 
+    await Then('Admin can see the deletion alert disappears without deleting the program', null, { programPageFixture }); 
+  });
+
+  test('Validate multiple program delete button by selecting Single checkbox and clicking YES', async ({ Given, programPageFixture, When, Then, And }) => { 
+    await Given('Admin clicks single checkbox in the data table and clicks Multi Delete icon in program page', null, { programPageFixture }); 
+    await When('Admin clicks Yes option to delete on confirm page of program', null, { programPageFixture }); 
+    await Then('Admin gets a message Successful programs Deleted alert', null, { programPageFixture }); 
+    await And('Do not see that program in the data table', null, { programPageFixture }); 
+  });
+
+  test('Validate multiple program deletion by selecting multiple check boxes and clicking NO', async ({ Given, programPageFixture, When, Then }) => { 
+    await Given('Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in program page', null, { programPageFixture }); 
+    await When('Admin clicks No option to delete on confirm page of program', null, { programPageFixture }); 
+    await Then('Admin can see the deletion alert disappears without deleting the selected programs', null, { programPageFixture }); 
+  });
+
+  test('Validate multiple program delete button by selecting multiple checkboxes and clicking YES', async ({ Given, programPageFixture, When, Then, And }) => { 
+    await Given('Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in program page', null, { programPageFixture }); 
+    await When('Admin clicks Yes option to delete on confirm page of program', null, { programPageFixture }); 
+    await Then('Admin gets a message Successful programs Deleted alert', null, { programPageFixture }); 
+    await And('Do not see that programs in the data table'); 
+  });
+
 });
 
 // == technical section ==
@@ -248,4 +303,13 @@ const bddFileData = [ // bdd-data-start
   {"pwTestLine":186,"pickleLine":125,"tags":[],"steps":[{"pwStepLine":187,"gherkinStepLine":120,"keywordType":"Action","textWithKeyword":"When Admin searches by valid program name,program description \"searchBy_ProgramDescription\" in the Program module","stepMatchArguments":[{"group":{"start":57,"value":"\"searchBy_ProgramDescription\"","children":[{"start":58,"value":"searchBy_ProgramDescription","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
   {"pwTestLine":190,"pickleLine":126,"tags":[],"steps":[{"pwStepLine":191,"gherkinStepLine":120,"keywordType":"Action","textWithKeyword":"When Admin searches by valid program name,program description \"searchBy_InValidProgramName\" in the Program module","stepMatchArguments":[{"group":{"start":57,"value":"\"searchBy_InValidProgramName\"","children":[{"start":58,"value":"searchBy_InValidProgramName","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
   {"pwTestLine":194,"pickleLine":127,"tags":[],"steps":[{"pwStepLine":195,"gherkinStepLine":120,"keywordType":"Action","textWithKeyword":"When Admin searches by valid program name,program description \"searchBy_PartialProgramName\" in the Program module","stepMatchArguments":[{"group":{"start":57,"value":"\"searchBy_PartialProgramName\"","children":[{"start":58,"value":"searchBy_PartialProgramName","children":[{"children":[]}]},{"children":[{"children":[]}]}]},"parameterTypeName":"string"}]}]},
+  {"pwTestLine":200,"pickleLine":132,"tags":[],"steps":[{"pwStepLine":201,"gherkinStepLine":133,"keywordType":"Action","textWithKeyword":"When Admin clicks the delete icon in the program page","stepMatchArguments":[]},{"pwStepLine":202,"gherkinStepLine":134,"keywordType":"Outcome","textWithKeyword":"Then Admin should see a alert open with heading Confirm along with YES and NO button for deletion in program","stepMatchArguments":[]}]},
+  {"pwTestLine":205,"pickleLine":136,"tags":[],"steps":[{"pwStepLine":206,"gherkinStepLine":137,"keywordType":"Action","textWithKeyword":"When Admin clicks the delete icon in the program page","stepMatchArguments":[]},{"pwStepLine":207,"gherkinStepLine":138,"keywordType":"Action","textWithKeyword":"And Admin clicks No option to delete on confirm page of program","stepMatchArguments":[]},{"pwStepLine":208,"gherkinStepLine":139,"keywordType":"Outcome","textWithKeyword":"Then Admin can see the deletion alert disappears without deleting the program","stepMatchArguments":[]}]},
+  {"pwTestLine":211,"pickleLine":142,"tags":[],"steps":[{"pwStepLine":212,"gherkinStepLine":143,"keywordType":"Action","textWithKeyword":"When Admin clicks the delete icon in the program page","stepMatchArguments":[]},{"pwStepLine":213,"gherkinStepLine":144,"keywordType":"Action","textWithKeyword":"And Admin clicks Yes option to delete on confirm page of program","stepMatchArguments":[]},{"pwStepLine":214,"gherkinStepLine":145,"keywordType":"Outcome","textWithKeyword":"Then Admin gets a message Successful program Deleted alert","stepMatchArguments":[]},{"pwStepLine":215,"gherkinStepLine":146,"keywordType":"Outcome","textWithKeyword":"And Do not see that program in the data table","stepMatchArguments":[]}]},
+  {"pwTestLine":218,"pickleLine":148,"tags":[],"steps":[{"pwStepLine":219,"gherkinStepLine":149,"keywordType":"Action","textWithKeyword":"When Admin clicks the delete icon in the program page","stepMatchArguments":[]},{"pwStepLine":220,"gherkinStepLine":150,"keywordType":"Action","textWithKeyword":"And Admin clicks CLose X Icon on confirm page of program","stepMatchArguments":[]},{"pwStepLine":221,"gherkinStepLine":151,"keywordType":"Outcome","textWithKeyword":"Then Admin can see the deletion alert disappears without deleting the program","stepMatchArguments":[]}]},
+  {"pwTestLine":224,"pickleLine":154,"tags":[],"steps":[{"pwStepLine":225,"gherkinStepLine":155,"keywordType":"Action","textWithKeyword":"When Admin clicks any checkbox in the data table of program","stepMatchArguments":[]},{"pwStepLine":226,"gherkinStepLine":156,"keywordType":"Outcome","textWithKeyword":"Then Admin should see common delete option enabled under header Manage program","stepMatchArguments":[]}]},
+  {"pwTestLine":229,"pickleLine":158,"tags":[],"steps":[{"pwStepLine":230,"gherkinStepLine":159,"keywordType":"Context","textWithKeyword":"Given Admin clicks single checkbox in the data table and clicks Multi Delete icon in program page","stepMatchArguments":[]},{"pwStepLine":231,"gherkinStepLine":160,"keywordType":"Action","textWithKeyword":"When Admin clicks No option to delete on confirm page of program","stepMatchArguments":[]},{"pwStepLine":232,"gherkinStepLine":161,"keywordType":"Outcome","textWithKeyword":"Then Admin can see the deletion alert disappears without deleting the program","stepMatchArguments":[]}]},
+  {"pwTestLine":235,"pickleLine":164,"tags":[],"steps":[{"pwStepLine":236,"gherkinStepLine":165,"keywordType":"Context","textWithKeyword":"Given Admin clicks single checkbox in the data table and clicks Multi Delete icon in program page","stepMatchArguments":[]},{"pwStepLine":237,"gherkinStepLine":166,"keywordType":"Action","textWithKeyword":"When Admin clicks Yes option to delete on confirm page of program","stepMatchArguments":[]},{"pwStepLine":238,"gherkinStepLine":167,"keywordType":"Outcome","textWithKeyword":"Then Admin gets a message Successful programs Deleted alert","stepMatchArguments":[]},{"pwStepLine":239,"gherkinStepLine":168,"keywordType":"Outcome","textWithKeyword":"And Do not see that program in the data table","stepMatchArguments":[]}]},
+  {"pwTestLine":242,"pickleLine":171,"tags":[],"steps":[{"pwStepLine":243,"gherkinStepLine":172,"keywordType":"Context","textWithKeyword":"Given Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in program page","stepMatchArguments":[]},{"pwStepLine":244,"gherkinStepLine":173,"keywordType":"Action","textWithKeyword":"When Admin clicks No option to delete on confirm page of program","stepMatchArguments":[]},{"pwStepLine":245,"gherkinStepLine":174,"keywordType":"Outcome","textWithKeyword":"Then Admin can see the deletion alert disappears without deleting the selected programs","stepMatchArguments":[]}]},
+  {"pwTestLine":248,"pickleLine":177,"tags":[],"steps":[{"pwStepLine":249,"gherkinStepLine":178,"keywordType":"Context","textWithKeyword":"Given Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in program page","stepMatchArguments":[]},{"pwStepLine":250,"gherkinStepLine":179,"keywordType":"Action","textWithKeyword":"When Admin clicks Yes option to delete on confirm page of program","stepMatchArguments":[]},{"pwStepLine":251,"gherkinStepLine":180,"keywordType":"Outcome","textWithKeyword":"Then Admin gets a message Successful programs Deleted alert","stepMatchArguments":[]},{"pwStepLine":252,"gherkinStepLine":181,"keywordType":"Outcome","textWithKeyword":"And Do not see that programs in the data table","stepMatchArguments":[]}]},
 ]; // bdd-data-end
