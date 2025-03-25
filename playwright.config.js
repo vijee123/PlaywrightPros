@@ -20,7 +20,7 @@ const testDir = defineBddConfig({
 // import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 
-/**
+/** new edit
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
