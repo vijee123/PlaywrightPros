@@ -174,6 +174,143 @@ if (!rowData) {
   Then('batch details pop up closes', async ({batchPageFixture}) => {
     await expect(batchPageFixture.popUpClosed()).toBeTruthy();
   });
+
+
+  When('Admin enters alphabets in batch name prefix box', async ({batchPageFixture}) => {
+    
+   console.log("checking if the batch name prefix box is editable");
+  });
+  
+  Then('Admin should see empty text box', async ({batchPageFixture}) => {
+    await expect(batchPageFixture.emptyBatchPrefix()).toBeTruthy();
+  });
+  
+  Given('Admin is on the Batch page', async ({batchPageFixture}) => {
+   await batchPageFixture.batchTabClick();
+  });
+  
+  When('Admin clicks the edit icon', async ({batchPageFixture}) => {
+    await batchPageFixture.EditIconClick();
+  });
+  
+  Then('Admin should see the Batch details pop up window', async ({batchPageFixture}) => {
+    await expect(batchPageFixture.editPopUpDisplayed()).toBeTruthy();
+  });
+  
+  Then('Admin should see Program name value field is disabled for editing', async ({batchPageFixture}) => {
+   await expect(batchPageFixture.ProgramNameNotEditable()).toBeTruthy();
+  });
+  
+  Then('Admin should see batch name value field is disabled for editing', async ({batchPageFixture}) => {
+    await expect(batchPageFixture.BatchNameNotEditable()).toBeTruthy();
+  });
+  
+  Given('Admin is on the Batch Details Page', async ({batchPageFixture}) => {
+    await batchPageFixture.batchTabClick();
+    await batchPageFixture.EditIconClick();
+
+  });
+  
+  When('Admin Updates any fields with invalid data {string} and click save button', async ({batchPageFixture},scenario) => {
+    await batchPageFixture.DataInEdit(scenario);
+    
+  });
+
+  Then('Admin should get a error message under the respective field', async ({batchPageFixture}) => {
+    await expect(batchPageFixture.invalidEditDataErrorMsgDisplayed()).toBeTruthy();
+  });
+  
+  When('Admin enters the valid data {string} to all the mandatory fields and click save button', async ({batchPageFixture},scenario) => {
+    await batchPageFixture.DataInEdit(scenario);
+
+    
+  });
+  
+  Then('Admin should get a successful message for editing the batch', async ({batchPageFixture}) => {
+    
+    await expect(batchPageFixture.editSuccessMsgDisplayed()).toBeTruthy();
+  });
+
+  When('Admin enters the valid data {string} to all the mandatory fields and click cancel button', async ({batchPageFixture},scenario) => {
+    await batchPageFixture.DataInEdit(scenario);
+
+  });
+  
+  
+  Then('Admin can see the batch details popup closes without editing the batch', async ({batchPageFixture}) => {
+
+    await expect(batchPageFixture.editCancelBtnValidation()).toBeTruthy();
+  });
+
+  When('Admin clicks the delete Icon on any row', async ({batchPageFixture}) => {
+    await batchPageFixture.deleteIcon.click();
+  });
+  
+  Then('Admin should see the confirm alert box with yes and no button', async ({batchPageFixture}) => {
+    await expect(batchPageFixture.deleteConfirmBox.isVisible()).toBeTruthy();
+  });
+  
+  Given('Admin is on the batch confirm popup page', async ({batchPageFixture}) => {
+    await batchPageFixture.batchTabClick();
+    await batchPageFixture.deleteIcon.click();
+
+  });
+  
+  When('Admin clicks on the delete icon and click yes button', async ({batchPageFixture}) => {
+   await batchPageFixture.deleteYes.click();
+  });
+  
+  Then('Admin should see the successful message and the batch should be deleted', async ({batchPageFixture}) => {
+   await expect(batchPageFixture.deleteSuccessMSg.isVisible()).toBeTruthy();
+  });
+  
+  When('Admin clicks on the delete icon and click no button', async ({batchPageFixture}) => {
+    await batchPageFixture.deleteNo.click();
+  });
+  
+  Then('Admin should see the alert box closed and the batch is not deleted', async ({batchPageFixture}) => {
+    await expect(batchPageFixture.VerifyDeleteNoBtn()).toBeTruthy();
+  });
+
+  When('Admin clicks on the delete close icon', async ({batchPageFixture}) => {
+    await batchPageFixture.deleteCloseBtn.click();
+  });
+  
+  
+  Then('Admin should see the alert box closed', async ({batchPageFixture}) => {
+    
+    await expect(batchPageFixture.deleteConfirmBoxClosed()).toBeTruthy();
+  });
+
+  Given('Admin is on the batch page', async ({batchPageFixture}) => {
+    await batchPageFixture.batchTabClick();
+   
+  });
+  
+  When('Admin clicks on the delete icon under the Manage batch header', async ({batchPageFixture}) => {
+   await batchPageFixture.selectBatchRowforDelete(1);
+   await batchPageFixture.deleteYes.click();
+  });
+  
+  Then('The respective row in the table should be deleted', async ({batchPageFixture}) => {
+   await expect(batchPageFixture.VerifyBatchRowDeleted()).toBeTruthy();
+  });
+  
+  When('Admin clicks more than one delete icons under the Manage batch header', async ({batchPageFixture}) => {
+    await batchPageFixture.selectBatchRowforDelete(3);
+    await batchPageFixture.deleteYes.click();
+  });
+  
+  When('Admin enters the batch name {string} in the search text box', async ({batchPageFixture},text) => {
+    await batchPageFixture.enterSearchBox(text);
+  });
+  
+  Then('Admin should see the filtered batches {string} in the data table', async ({batchPageFixture},text) => {
+    await expect(batchPageFixture.BatchNameHasSearchText(text)).toBeTruthy();
+  });
+  
+  
+  
    
 
 

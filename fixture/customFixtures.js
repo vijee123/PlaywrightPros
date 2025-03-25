@@ -42,7 +42,7 @@ const test= baseTest.extend({
       const logoutPage=new LogoutPage(page); 
       await logoutPage.logoutLogin(CONFIG.BASE_URL, CONFIG.USERNAME, CONFIG.PASSWORD);
       await use(logoutPage);
-       },
+      },
 
   });
 

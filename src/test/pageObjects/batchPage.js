@@ -2,6 +2,12 @@ import {expect} from "@playwright/test";
 
 import LoginPage from './loginPage';
 import commonTest from '../utils/commonMethods';
+const path = require('path');
+import { chainingData } from "../utils/chainingData.js";
+const { readCSV } = require('../utils/csvReader');
+const csvPath = path.resolve(__dirname, '../../../test-data/batchTestData.csv');
+const testData = readCSV(csvPath);
+
 
 export default class batchPage{
 
@@ -37,9 +43,27 @@ export default class batchPage{
         this.batchDescFormatErrorMsg = this.page.locator("//small[text()='This field should start with an alphabet and min 2 character.']");
         this.batchStatusEmptyErrorMsg = this.page.locator("//small[text()='Status is required.']");
         this.noOfClassesEmptyErrorMsg = this.page.locator("//small[text()='Number of classes is required.']");
-        
-       
-    }
+
+        //editIcon Elements
+        this.editPopUp = this.page.locator("//div[@role='dialog']");
+        this.editSuccessMsg = this.page.locator("//div[text() = 'batch Updated']");
+        this.editSaveBtn = this.page.locator("//span[text()='Save']");
+        this.editCancelBtn = this.page.locator("//span[text()='Cancel']");
+
+        //deleteIconElements
+        this.deleteIcon = this.page.locator("//button[@icon='pi pi-trash']").nth(1);
+        this.deleteConfirmBox = this.page.locator("//span[text()='Confirm']");
+        this.deleteYes = this.page.locator("//span[normalize-space()='Yes']");
+        this.deleteNo = this.page.locator("//span[normalize-space()='No']");
+        this.deleteCloseBtn = this.page.locator("//button[@class='ng-tns-c204-8 p-dialog-header-icon p-dialog-header-close p-link ng-star-inserted']");
+        this.deleteSuccessMSg = this.page.locator("//div[text()='batch Deleted']");
+        this.batchNamesForDelete = [];
+
+        //searchBox validation
+
+        this.SearchBox = this.page.locator("//input[@id='filterGlobal']");
+        this.batchNamesValidation = [];
+    }   
 
     async batchLogin(url, username, password){
         let loginPage = new LoginPage(this.page);
@@ -334,12 +358,182 @@ export default class batchPage{
 
         async popUpClosed(){
             const open = await this.popUpDialog.isVisible();
-            console.log(!open);    
             return !open;
         }
-        // async clickAddNewBatchSaveBtn()
-    // {
-    //     await addNewBatchSaveBtn.click();
-    // }
+        async fillBatchPrefix(){
+            const value="abcd";
+            try {
+                 this.page.locator("//*[@id='batchProg']").fill(value);
+            } catch (error) {
+                console.log(error);
+            }
+            
+        }
+        async emptyBatchPrefix(){
+            const batchPrefix = await this.page.locator("//*[@id='batchProg']").getAttribute('readonly'); 
+            return batchPrefix;
+        }
 
+        async EditIconClick(){
+            await this.page.locator("//button[@ng-reflect-icon='pi pi-pencil']").first().click();
+        }
+        async editPopUpDisplayed(){
+            return await this.editPopUp.isVisible();
+        }
+        async ProgramNameNotEditable(){
+            return await this.page.locator("//p-dropdown[@id='programName']").isDisabled();
+        }
+        async BatchNameNotEditable(){
+            return await this.page.locator("//input[@id='batchName']").nth(1).isDisabled();
+        }
+
+
+        async DataInEdit(scenario){
+
+            const rowData = testData.find(row => row.scenario === scenario);
+if (!rowData) {
+        throw new Error(`No data found for scenario: ${scenario}`);
     }
+    await this.fillEditBatchForm({
+      
+        batchDesc: rowData.batchDesc,
+        status: rowData.status,
+       noOfClasses: rowData.noOfClasses
+    });
+          
+        }
+
+        async fillEditBatchForm({batchDesc, status, noOfClasses}) {
+            await this.batchDescription.fill(batchDesc);
+            if (status === "Active") {
+                await this.statusActiveRadioBtn.click();
+            }
+            else if (status === "Inactive") {
+                await this.statusInactiveRadioBtn.click();
+            }
+          await this.NoOfClasses.fill(noOfClasses);
+        }
+       
+
+        async invalidEditDataErrorMsgDisplayed(){
+
+            return await this.batchDescFormatErrorMsg.isVisible()&& await this.noOfClassesEmptyErrorMsg.isVisible();
+        }
+
+        async editSuccessMsgDisplayed(){
+            await this.editSaveBtn.click();
+            return await this.editSuccessMsg.isVisible();
+        }
+
+        async editCancelBtnValidation(){
+            await this.editCancelBtn.click();
+            const check = await this.editPopUp.isVisible();
+            return (!check);
+        }
+
+        async VerifyDeleteNoBtn(){
+            const Delete = await this.deleteSuccessMSg.isVisible();
+            return (!Delete);
+        }
+
+        async deleteConfirmBoxClosed(){
+            const confirm = await this.deleteConfirmBox.isVisible();
+            return (!confirm);
+        }
+
+        //single and multiple delete
+        
+        async selectBatchRowforDelete(noOfRows){
+            const checkBox = await this.page.locator("//p-tablecheckbox");
+            for(let i=0;i<noOfRows;i++)
+            {
+                
+                await checkBox.nth(i).click();
+                const batch = await this.page.locator(`//tbody/tr[${i+1}]/td[2]`);
+                const batchNames= await batch.textContent();
+                this.batchNamesForDelete.push(batchNames);
+                console.log(await batch.textContent());
+                
+            }
+            const multiDelete = await this.page.locator("//button[@class='p-button-danger p-button p-component p-button-icon-only']//span[@class='p-button-icon pi pi-trash']");
+                const isDeleteDisabled = await multiDelete.isDisabled();
+                if (!isDeleteDisabled) {
+                    // If delete button is not disabled, click the delete button
+                    await multiDelete.click();
+                }
+                else {
+                    console.log("Delete button is disabled.");
+                }      
+               
+        }
+
+        async VerifyBatchRowDeleted() {
+             // const multiDelete = await this.page.locator("//button[@class='p-button-danger p-button p-component p-button-icon-only']//span[@class='p-button-icon pi pi-trash']");
+             const count = this.batchNamesForDelete.length;
+             let isBatchDeleted;
+             for(let i=0; i<count;i++)
+             {
+                const deletedBatch = await this.page.locator(`//tbody/tr[td[contains(text(),'${this.batchNamesForDelete[i]}')]]`);
+           
+              isBatchDeleted = await deletedBatch.count() === 0; // If the batch name is no longer found in the table
+        
+                if (!isBatchDeleted) {
+                    console.log("batch not deleted: ",this.batchNamesForDelete[i]);
+                    return false;
+                
+                } 
+             }
+            console.log("Selected batches got deleted!!!")
+            return isBatchDeleted;
+        }
+
+       async enterSearchBox(text){
+        
+        const paginationMsg = await this.page.locator("//span[@class='p-paginator-current ng-star-inserted']").textContent();
+        console.log("Before",paginationMsg);
+        await this.SearchBox.fill(text);
+        console.log("After search text ",text,paginationMsg);
+          let pageNo = 0;  
+        const batchNamesFromSearch = [];
+            const nextBtn = await this.page.locator("//span[@class='p-paginator-icon pi pi-angle-right']");
+             let nextDisabled = await nextBtn.isDisabled();
+             
+            do {
+                 
+                const rows = await this.page.locator("//tbody/tr");
+                const rowNos = await rows.count();
+                for(let i = 0;i < rowNos;i++)
+                {
+                    const batchNameLocator = await rows.nth(i).locator("td:nth-child(2)");
+                    const batchName = await batchNameLocator.textContent()
+                    console.log("batch Name extracted: ",batchName);
+                    batchNamesFromSearch.push(batchName);
+                }
+                nextDisabled = await nextBtn.isDisabled(); // Re-check after extracting rows
+        
+                if(!nextDisabled){
+                    console.log("next button enabled..clicking next page!!!")
+                    await nextBtn.click();
+                    pageNo++;
+                }
+                // iterate++;
+            } while (!nextDisabled);
+
+        this.batchNamesValidation = batchNamesFromSearch;
+        
+       }
+
+       async BatchNameHasSearchText(text){
+        const count = this.batchNamesValidation.length;
+         for(let i = 0;i<count;i++){
+            const result = this.batchNamesValidation[1];
+            if(!result.includes(text)){
+                console.log("Invalid result..search text not found!!")
+                return false;
+            }
+        }
+        console.log("All results are valid");
+        return true;
+       }
+
+    }//ending braces
