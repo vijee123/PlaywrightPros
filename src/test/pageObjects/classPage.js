@@ -19,8 +19,8 @@ export default class classPage {
         this.statusHeader = this.page.locator("//th[normalize-space()='Status']");
         this.staffNameHeader = this.page.locator("//th[normalize-space()='Staff Name']");
         this.EditDeleteHeader = this.page.locator("//th[contains(text(), 'Edit / Delete')]");
-        this.paginationText = this.page.getByText('Showing');
-        this.addNewClassButton = this.page.getByText('Add New Class');
+        this.paginationText = this.page.locator("//span[contains(text(),'Showing')]");
+        this.addNewClassButton = this.page.locator("//button[contains(text(),'Add New Class')]");
         this.labels = this.page.locator("//label");
         this.selectBatchName = this.page.locator("//input[@placeholder='Select a Batch Name']");
         this.batchNameField = this.page.locator("#batchName");
@@ -335,6 +335,7 @@ export default class classPage {
     }
 
     async clickAddNewClassButton() {
+        await this.classMenuLink.click();;
         await this.addNewClassButton.click();
     }
 
