@@ -1,5 +1,6 @@
 const { expect } = require('@playwright/test');
 import { CONFIG } from '../../../config/env.js';
+import HomePage from './homePage.js';
 
 export default class LoginPage{
     
@@ -21,7 +22,7 @@ export default class LoginPage{
 }
 
 async launchApp(url) {
-    await this.page.goto(url,{ waitUntil: 'load' });
+    await this.page.goto(url, { timeout: 60000 }, { waitUntil: 'load' });
 }
 
 
@@ -31,6 +32,46 @@ async validLogin(username, password) {
     await this.loginButton.click();
     await this.LMSDisplayHomePage.waitFor({timeout: 30000});
  }
+
+ async validLoginChaining(username, password) {
+    await this.userName.fill(username);
+    await this.password.fill(password);
+    await this.loginButton.click();
+    await this.LMSDisplayHomePage.waitFor({timeout: 30000});
+    return new HomePage(this.page);
+}
+
+async navigateBack() {
+  const initialUrl = this.page.url();  // Capture the initial URL
+  let responseStatus = null;
+  let finalUrl = initialUrl;  // Initially, set the finalUrl to the same as initial URL
+
+  // Trigger back navigation
+  await this.page.goBack();
+
+  // Return a Promise that listens for the response and URL change
+  const result = await new Promise((resolve) => {
+    // Listen for a response event and capture the status
+    this.page.on('response', (response) => {
+      responseStatus = response.status(); // Capture response status
+    });
+
+    // Listen for the URL change
+    this.page.waitForURL((url) => {
+      finalUrl = url;  // Set the finalUrl to the current URL
+      return url !== initialUrl;  // URL should change from the initial URL
+    }, { timeout: 5000 }).catch(() => {
+      // If no navigation happens, resolve with the initial URL and 'No navigation'
+      finalUrl = initialUrl;
+      resolve({ responseStatus, finalUrl });
+    });
+
+    // If navigation happens, resolve with response status and final URL
+    setTimeout(() => resolve({ responseStatus, finalUrl }), 5000);
+  });
+
+  return result;
+}
 
  async entercredentials(username, password) {
   await this.userName.waitFor({timeout: 90000});
