@@ -334,10 +334,10 @@ Then('Do not see that Classes in the data table', async ({ classPageFixture }) =
 });
 
 
-Then('Admin see the Class Topic\\/Batch Name\\/Class Description \\/ Staff Name and Class Dates sorted by ascending or decending order after clicking the sort icon {string}', async ({classPageFixture}, ClassHeader) => {
-  console.log("Checking the sorting of "+ClassHeader);
-  const result= await classPageFixture.ClassSorting(ClassHeader);
-  console.log("The "+ClassHeader+" is sorted properly: "+result);
+Then('Admin see the Class Topic\\/Batch Name\\/Class Description \\/ Staff Name and Class Dates sorted by ascending or decending order after clicking the sort icon {string}', async ({ classPageFixture }, ClassHeader) => {
+  console.log("Checking the sorting of " + ClassHeader);
+  const result = await classPageFixture.ClassSorting(ClassHeader);
+  console.log("The " + ClassHeader + " is sorted properly: " + result);
   expect(result).toBe(true);
 });
 

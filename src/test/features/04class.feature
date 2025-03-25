@@ -49,7 +49,7 @@ Feature: Validate class page functionality
   Scenario: Validate the footer message at bottom of manage class page
     Then Admin should see footer message Total no of classes at the bottom of the Manage class page
 
-  # Add New Class with valid and Invalid data
+  #Add New Class with valid and Invalid data
   Scenario Outline: Create a class with valid and invalid inputs
     When Admin clicks the Add New Class button and enters the details of "<scenario>" in the Create Class form
     And Admin clicks the Save button
@@ -69,7 +69,7 @@ Feature: Validate class page functionality
       | withoutRec        | success            |
       | emptyForm         | allErrorMsg        |
 
-  # Validate Class window pop-up and their fields name and text boxes
+  #Validate Class window pop-up and their fields name and text boxes
   Scenario Outline: Validate Class Details Popup window
     When Admin clicks a add new class under the class menu bar
     Then Admin should see a popup open for class details with empty form along with SAVE and CANCEL button and Close(X) Icon
@@ -135,6 +135,12 @@ Feature: Validate class page functionality
     And Admin clicks No option to delete on confirm page of class
     Then Admin can see the deletion alert disappears without deleting the class
 
+  ##Delete
+  Scenario: Click Yes on deletion window of a class
+    When Admin clicks the delete icon in the class page
+    And Admin clicks Yes option to delete on confirm page of class
+    Then Admin gets a message Successful Class Deleted alert
+    And Do not see that Class in the data table
   # Delete
   Scenario: Click Yes on deletion window of a class
     When Admin clicks the delete icon in the class page
@@ -157,6 +163,12 @@ Feature: Validate class page functionality
     When Admin clicks No option to delete on confirm page of class
     Then Admin can see the deletion alert disappears without deleting the class
 
+  # ####Delete
+  Scenario: Validate multiple class delete button by selecting Single checkbox and clicking YES
+    Given Admin clicks single checkbox in the data table and clicks Multi Delete icon in class page
+    When Admin clicks Yes option to delete on confirm page of class
+    Then Admin gets a message Successful Classes Deleted alert
+    And Do not see that Class in the data table
   # Delete
   Scenario: Validate multiple class delete button by selecting Single checkbox and clicking YES
      Given Admin clicks single checkbox in the data table and clicks Multi Delete icon in class page
@@ -169,18 +181,17 @@ Feature: Validate class page functionality
     When Admin clicks No option to delete on confirm page of class
     Then Admin can see the deletion alert disappears without deleting the selected classes
 
-  # Delete
-  # Scenario: Validate multiple class delete button by selecting multiple checkboxes and clicking YES
-  #   Given Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in class page
-  #   When Admin clicks Yes option to delete on confirm page of class
-  #   Then Admin gets a message Successful Classes Deleted alert
-  #   And Do not see that Classes in the data table
+  # # Delete
+  # # Scenario: Validate multiple class delete button by selecting multiple checkboxes and clicking YES
+  # #   Given Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in class page
+  # #   When Admin clicks Yes option to delete on confirm page of class
+  # #   Then Admin gets a message Successful Classes Deleted alert
+  # #   And Do not see that Classes in the data table
 
 
   #Manage Class Sorting
 
   Scenario Outline: Manage Class - Sorting Class by Class Topic/Batch Name/Program Name/ Class Description / Staff Name and Class Dates
-
     Then Admin see the Class Topic/Batch Name/Class Description / Staff Name and Class Dates sorted by ascending or decending order after clicking the sort icon "<ClassHeader>"
 
     Examples:
