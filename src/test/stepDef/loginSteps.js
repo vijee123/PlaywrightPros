@@ -6,61 +6,92 @@ const { readCSV } = require('../utils/csvReader');
 const path = require('path');
 const csvPath = path.resolve(__dirname, '../../../test-data/loginTestData.csv');
 const testData = readCSV(csvPath);
+import LoginPage from '../pageObjects/loginPage.js';
 
-let page; 
-let response;
-let err;
+let page, response, err, loginPage, homePage;
 
+//Background:
 Given('The browser is open', async ({browser}) => {
-  console.log('INSIDE BACKGROUND - The browser is open')
   page = await browser.newPage();
 });
 
 Given('Admin gives the correct LMS portal URL', async ({}) => {
-  console.log('INSIDE BACKGROUND - Admin gives the correct LMS portal URL')
   await page.goto(CONFIG.BASE_URL);
+  loginPage = new LoginPage(page);
 });
 
-Then('Admin lands on login page', async ({loginPageFixture}) => {
-  expect(loginPageFixture.forgotPasswordLink).toBeTruthy();
+//Scenario: Verify Admin is able to land on login page
+Then('Admin lands on login page', async ({}) => {
+  await expect(loginPage.forgotPasswordLink).toBeVisible();
 });
 
-When('Admin enter invalid {string} and\\/or {string}, and clicks login button', async ({loginPageFixture}, username, password) => {
-  await loginPageFixture.entercredentials(username,password);
+//Scenario: Validate login with valid data in all fields
+When('Admin enter valid data in all field and clicks login button', async ({}) => {
+  homePage = await loginPage.validLoginChaining(CONFIG.USERNAME, CONFIG.PASSWORD);
 });
 
-Then('Error message {string}', async ({loginPageFixture}, expectedErrMsg) => {
+Then('Admin should land on home page', async ({}) => {
+  const isVisibleBoolean = await homePage.isLMSTextVisible();
+    expect(isVisibleBoolean).toBeTruthy();
+});
+
+//Scenario: Verify login button action through keyboard
+When('Admin enter valid credentials and clicks login button through keyboard', async ({}) => {
+  homePage = await loginPage.loginThroughKeyboard(CONFIG.USERNAME, CONFIG.PASSWORD);
+});
+
+
+//Scenario: Verify login button action through mouse
+When('Admin enter valid credentials and clicks login button through mouse', async ({}) => {
+  homePage = await loginPage.loginThroughMouse(CONFIG.USERNAME, CONFIG.PASSWORD);
+});
+
+
+//Scenario Outline: Validate login with invalid data
+When('Admin enter invalid {string} and\\/or {string}, and clicks login button', async ({}, username, password) => {
+  loginPage.entercredentials(username,password)
+});
+
+
+
+//Scenario: Validate login credentials with null user name
+When('Admin enter value only in password and clicks login button', async ({}) => {
+  await loginPage.entercredentials("",CONFIG.PASSWORD);
+});
+
+
+//Scenario: Validate login credentials with null password
+When('Admin enter value only in user name and clicks login button', async ({}) => {
+  await loginPage.entercredentials(CONFIG.USERNAME,"");
+
+});
+
+Then('Error message {string}', async ({}, expectedErrMsg) => {
   let scenarioName = test.info().title;
   
   if(scenarioName.includes('invalid data')){
-    expect(await loginPageFixture.getInvalidCredentialText()).toBe(expectedErrMsg.trim());
+    expect(await loginPage.getInvalidCredentialText()).toBe(expectedErrMsg.trim());
   }
   else if(scenarioName.includes('null user name')){
-    expect(await loginPageFixture.getNullErrTextFor("Username")).toBe(expectedErrMsg.trim());
+    expect(await loginPage.getNullErrTextFor("Username")).toBe(expectedErrMsg.trim());
   }
   else if(scenarioName.includes('null password')){
-    expect(await loginPageFixture.getNullErrTextFor("Password")).toBe(expectedErrMsg.trim());
+    console.log('Inside null password THEN Block')
+    console.log(`ExpectedErrorMsg = ${expectedErrMsg}`)
+    expect(await loginPage.getNullErrTextFor("Password")).toBe(expectedErrMsg.trim()); //should fail yet passing. CONFUSED!
   }
     
 });
 
-When('Admin enter value only in password and clicks login button', async ({loginPageFixture}) => {
-  await loginPageFixture.entercredentials("",CONFIG.PASSWORD);
-});
-
-When('Admin enter value only in user name and clicks login button', async ({loginPageFixture}) => {
-  await loginPageFixture.entercredentials(CONFIG.USERNAME,"");
+//Scenario: Additional_Validate login with Empty Credentials only
+When('Admin does not enter credentials and clicks on login button', async ({}) => {
+  await loginPage.entercredentials("","");
 
 });
 
-When('Admin does not enter credentials and clicks on login button', async ({loginPageFixture}) => {
-  await loginPageFixture.entercredentials("","");
-
-});
-
-Then('Admin sees {int} error messages {string} and {string}', async ({loginPageFixture}, expErrMsgCount, expUsernameErrText, expPasswordErrText) => {
+Then('Admin sees {int} error messages {string} and {string}', async ({}, expErrMsgCount, expUsernameErrText, expPasswordErrText) => {
   
-  let errResult = await loginPageFixture.getnullCredentialErrDetails();
+  let errResult = await loginPage.getnullCredentialErrDetails();
   let actualErrMsgCount = errResult.get("errCount");
   let actualErrMsgTextArray = errResult.get("errTextArray");
 
@@ -81,42 +112,38 @@ expect(test.info().errors).toHaveLength(0);
 });
 
 
-When('Admin enter valid credentials and clicks login button through keyboard', async ({loginPageFixture}) => {
-  await loginPageFixture.loginThroughKeyboard(CONFIG.USERNAME, CONFIG.PASSWORD);
+
+
+
+
+Then('Admin should see {string}', async ({}, expString) => {
+  expect(await loginPage.getFormLoginText()).toBe(expString);
 });
 
-When('Admin enter valid credentials and clicks login button through mouse', async ({loginPageFixture}) => {
-  await loginPageFixture.loginThroughMouse(CONFIG.USERNAME, CONFIG.PASSWORD);
-});
-
-Then('Admin should see {string}', async ({loginPageFixture}, expString) => {
-  expect(await loginPageFixture.getFormLoginText()).toBe(expString);
-});
-
-Then('If HTTP response >= {int}, then the link is broken', async ({loginPageFixture}, expectedStatus) => {
+Then('If HTTP response >= {int}, then the link is broken', async ({}, expectedStatus) => {
 
   //https://playwright.dev/docs/api/class-apiresponseassertions
-  response = await loginPageFixture.apiGETCall(CONFIG.BASE_URL);
+  response = await loginPage.apiGETCall(CONFIG.BASE_URL);
   expect(response.status()).not.toBe(expectedStatus); 
 });
 
 
-Then('Admin should see  LMS - Learning Management System', async ({loginPageFixture}) => {
+Then('Admin should see  LMS - Learning Management System', async ({}) => {
 
   let scenarioName = test.info().title;
-  let data = await loginPageFixture.getScreenshot("partial", scenarioName);
+  let data = await loginPage.getScreenshot("partial", scenarioName);
   await expect(data.get("pageRef")).toHaveScreenshot(data.get("screenshotPath"));
 });
 
 
-Then('Admin should see company name below the app name', async ({loginPageFixture}) => {
+Then('Admin should see company name below the app name', async ({}) => {
   let scenarioName = test.info().title;
-  let data = await loginPageFixture.getScreenshot("partial", scenarioName);
+  let data = await loginPage.getScreenshot("partial", scenarioName);
   await expect(data.get("pageRef")).toHaveScreenshot(data.get("screenshotPath"));
 });
 
-//here here
-When('Admin gives the invalid LMS portal URL for test case {string}', async ({loginPageFixture}, testCase) => { 
+
+When('Admin gives the invalid LMS portal URL for test case {string}', async ({}, testCase) => { 
   
   const rowData = testData.find(row => row.scenario === testCase);
   if (!rowData) {
@@ -125,7 +152,7 @@ When('Admin gives the invalid LMS portal URL for test case {string}', async ({lo
 
     try {
       // Attempt to navigate to the invalid URL
-      response = await loginPageFixture.apiGETCall(rowData.invalidURL);
+      response = await loginPage.apiGETCall(rowData.invalidURL);
     } catch (error) {
       // Capture and log the error
       err = error.message;     
@@ -151,14 +178,3 @@ Then('Admin should receive application error', async ({}) => {
     }
 });
 
-When('Admin enter valid data in all field and clicks login button', async ({loginPageFixture }) => {
-  console.log("Admin enters valid data in all fields and clicks login button");
-  await loginPageFixture.validLogin(CONFIG.USERNAME, CONFIG.PASSWORD);
-
-});
-
-Then('Admin should land on home page', async ({loginPageFixture }) => {
-  console.log("Admin should land on home page");
-  await expect(loginPageFixture.LMSDisplayHomePage).toBeVisible();
-
-});

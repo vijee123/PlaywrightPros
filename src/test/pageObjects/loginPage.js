@@ -85,6 +85,8 @@ async loginThroughKeyboard(username, password) {
   await this.userName.pressSequentially(username, { delay: 100 });
   await this.password.pressSequentially(password, { delay: 100 });
   await this.page.keyboard.press('Enter');
+
+  return new HomePage(this.page);
 }
 
 async loginThroughMouse(username, password) {
@@ -92,6 +94,7 @@ async loginThroughMouse(username, password) {
   await this.userName.pressSequentially(username);
   await this.password.pressSequentially(password);
   await this.clickLoginButtonThroughMouse();
+  return new HomePage(this.page);
 }
 
 async clickLoginButtonThroughMouse() {
@@ -130,14 +133,19 @@ async getNullErrTextFor(fieldName){
 
   if(fieldName.toLowerCase().trim() === 'username'){
     await this.nullUsernameErrMsg.waitFor({timeout: 3000});
-    errMsg = await this.nullUsernameErrMsg.textContent();
+    errMsg = await this.nullUsernameErrMsg.textContent().trim();
   }
   else{
-    await this.nullPasswordErrMsg.waitFor({timeout: 3000});
-    errMsg = await this.nullPasswordErrMsg.textContent();
-  }
-    
-    return errMsg.trim();
+    const count = await this.nullUsernameErrMsg.count();
+    if (count > 0) {
+      errMsg = await this.nullPasswordErrMsg.textContent();
+      console.log(`err msg for null password = ${errMsg}`)
+    }else{
+      errMsg = null;
+      console.log(`err msg for null password = ${errMsg}`)
+    } 
+  } 
+    return errMsg;
   }  
   
   async getnullCredentialErrDetails(){
