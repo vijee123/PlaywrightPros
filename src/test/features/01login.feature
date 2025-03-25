@@ -41,14 +41,11 @@ Background:
     When Admin enter value only in password and clicks login button
     Then Error message "Please enter your user name"
 
-  @fail
+  @fail @TPL-135
   Scenario: Validate login credentials with null password
     Given Admin lands on login page
     When Admin enter value only in user name and clicks login button
     Then Error message "Please enter your password"   
-
-    #Error Msg is not showing
-    
 
 ################## ADDITIONAL SCENARIOS ################################
     
@@ -66,11 +63,10 @@ Background:
 		
 		Scenario: Verify for broken link
 		Then If HTTP response >= 400, then the link is broken
-		
+
+    # Couldnt implement
 		# Scenario: Verify the text spelling in the page 
 		# Then Admin should see correct spellings in all fields 
-
-    #Couldnt implement
 
 		Scenario: Verify application name 
 		Then Admin should see  LMS - Learning Management System    
@@ -79,6 +75,7 @@ Background:
 		Scenario: Verify company name 
 		Then Admin should see company name below the app name         
     
+    @TPL-143
 		Scenario Outline: Verify Admin is not able to land on home page with invalid URL - "<TestCase>"
 		When Admin gives the invalid LMS portal URL for test case "<TestCase>"
 		Then Admin should receive application error 
@@ -122,9 +119,10 @@ Background:
   Scenario: Verify Login button is present
 	Then Admin should see login button 
 
+  @TPL-136
   Scenario: Verify input descriptive text in user field
 	Then Admin should see user in gray color
-
+  @TPL-136
   Scenario: Verify input descriptive text in password field
 	Then Admin should see password in gray color
 
