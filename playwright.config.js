@@ -11,6 +11,16 @@ const testDir = defineBddConfig({
  ], 
 });
 
+// // Define the BDD config for features and steps
+// const bddConfig = defineBddConfig({
+//   features: ['src/test/features/*.feature'],  // BDD feature files
+//   steps: [
+//     './fixture/customFixtures.js', 
+//     'src/test/stepDef/**/*.js', 
+//     'src/test/pageObjects/**/*.js' 
+//   ]
+// });
+
 
 /**
  * Read environment variables from file.
@@ -24,8 +34,8 @@ const testDir = defineBddConfig({
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
-  testDir,
-
+  //testDir,
+  testDir: 'src/test/features',
   /* Run tests in files in parallel */
   fullyParallel: true,
 
@@ -51,11 +61,8 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     headless: false, 
-    retries: 0, 
-    launchOptions:{
-      slowMo:1000,
-    }
-  },
+    retries: 2, 
+   },
 
   
   /* Configure projects for major browsers */
