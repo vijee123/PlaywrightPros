@@ -322,15 +322,12 @@ const randomClassScenarios = ["ValidInput_BatchData"];
     await expect(batchPageFixture.BatchNameHasSearchText(text)).toBeTruthy();
   });
 
-  
-When('Admin clicks the {string} page link on the data table', async ({batchPageFixture},pages) => {
-  await batchPageFixture.paginationValidation(pages);
-});
+  // Pagination
 
-Then('Admin should see the {string} Next enabled link', async ({},pages) => {
-  //await expect(batchPageFixture.paginationValidation(pages)).toBeTruthy();
-  console.log(`${pages} page validated successfully`);
-});
+  Then('Admin navigated to the respective pages when he clicks the {string} link on the data table in batch module', async ({batchPageFixture}, pagelinks) => {
+  await batchPageFixture.batchPagination(pagelinks);
+  });
+  
 
 When('Admin clicks on the logout button', async ({batchPageFixture}) => {
  await batchPageFixture.logout.click();

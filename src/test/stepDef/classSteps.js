@@ -347,3 +347,9 @@ When('Admin searches by below scenario {string} in the Class module', async ({cl
   console.log("Searching using "+classSearch+" is successful: "+result);
   expect(result).toBe(true);
 });
+
+// Class Pagination
+
+Then('Admin navigated to the respective pages when he clicks the {string} link on the data table in Class module', async ({classPageFixture}, pagelinks) => {
+  await classPageFixture.classPagination(pagelinks);
+});

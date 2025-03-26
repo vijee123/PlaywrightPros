@@ -173,6 +173,13 @@ async ClickAddNewPgmBtn()
     return await common.verifyHeaderFieldsSortIcons();
   }
 
+  async programPagination(Pagelinks)
+  {
+    
+    let common = new commonTest(this.page);
+     await common.CommonpaginationValidation(Pagelinks);
+  }
+
   // Add New program functions
 
 

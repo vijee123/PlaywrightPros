@@ -173,12 +173,9 @@ Feature: Validate Batch page functionality
       | abc        |
 
   ###Pagination
-
-  Scenario Outline: Validate pagination links
-    Given Admin is on the batch page
-    When Admin clicks the "<pages>" page link on the data table
-    Then Admin should see the "<pages>" Next enabled link
-    Examples:
+Scenario Outline: Batch Page Pagination
+Then Admin navigated to the respective pages when he clicks the "<pages>" link on the data table in batch module
+  Examples:
       | pages    |
       | next     |
       | previous |

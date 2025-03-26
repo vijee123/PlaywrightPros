@@ -620,4 +620,10 @@ export default class classPage {
         }
     }
 
+
+    async classPagination(Pagelinks)
+    {
+    let common = new commonTest(this.page);
+     await common.CommonpaginationValidation(Pagelinks);
+    }
 }

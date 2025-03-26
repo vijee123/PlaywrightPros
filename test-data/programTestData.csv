@@ -1,14 +1,14 @@
 scenario,ProgramName,programDescription,Status
-onlyMandatoryfields,TedrrryyTest,descriopt,Active
+onlyMandatoryfields,FinalTestMindTest,descriopt,Active
 withoutMandatoryfields,,,
 cancelwithValidData,TedryyyTest,fiveDescription,Active
 closewithValidData,TedryyyTest,fiveDescription,Active
-verifyAddedProgram,TedrrryyTestTwo,sixdescription,Active
+verifyAddedProgram,FinalTestMindTestTwo,sixdescription,Active
 searchBy_ValidProgramName,TedrrryyTest,,
 searchBy_ProgramDescription,,searchTesting,
 searchBy_InValidProgramName,ten,,
 searchBy_PartialProgramName,Tedrrry,,
-ValidateEditPopUp,TedrrryyTestTwo,,
+ValidateEditPopUp,TedrryouTestTwo,,
 update_ProgramName,UpdateProgram,,
 update_Programdescription,,UpdatDescription
 update_ProgramStatus,,,Inactive
