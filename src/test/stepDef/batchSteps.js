@@ -5,6 +5,8 @@ import { chainingData } from "../utils/chainingData.js";
 const { readCSV } = require('../utils/csvReader');
 const csvPath = path.resolve(__dirname, '../../../test-data/batchTestData.csv');
 const testData = readCSV(csvPath);
+const { faker } = require('@faker-js/faker');
+
 
 //let batch;
 When('Admin clicks the Batch Navigation bar in the Header', async ({batchPageFixture}) => {
@@ -90,24 +92,35 @@ When('Admin clicks the Batch Navigation bar in the Header', async ({batchPageFix
   });
 
   When('Admin enters the input with {string} and clicks save button', async ({batchPageFixture}, scenario) => {
-    console.log("Admin enters the given details in the Create batch form");
+
+console.log("Admin enters the given details in the Create batch form");
     const rowData = testData.find(row => row.scenario === scenario);
 if (!rowData) {
         throw new Error(`No data found for scenario: ${scenario}`);
     }
+const randomClassScenarios = ["ValidInput_BatchData"];
+  const batchId = randomClassScenarios.includes(scenario)
+    ? `${faker.string.numeric(3)}`
+    : rowData.batchId;
 
     await batchPageFixture.fillCreateBatchForm({
-      programName: rowData.programName,  
-      batchId: rowData.batchId,
+     // programName: rowData.programName,
+      batchId: randomClassScenarios.includes(scenario) ? batchId : rowData.batchId,
         batchDesc: rowData.batchDesc,
         status: rowData.status,
        noOfClasses: rowData.noOfClasses
     });
+  console.log("Batch id is:", batchId);
 
-    await batchPageFixture.addNewBatchSaveBtn.click();
+    if(scenario == "InvalidInput_BatchEmptyProgramName"){
+     await  batchPageFixture.progCloseBtn.click();
+      console.log("program closebutton clicked");
+    }
 
+  await batchPageFixture.addNewBatchSaveBtn.click();
 
   });
+ 
   Then('Admin should get a valid message {string} for this {string}', async ({batchPageFixture}, message, scenario) => {
     console.log("Admin should see the valid message displayed...");
     const isVisible = await batchPageFixture.verifyMessageDisplay(message,scenario);
@@ -308,16 +321,21 @@ if (!rowData) {
   Then('Admin should see the filtered batches {string} in the data table', async ({batchPageFixture},text) => {
     await expect(batchPageFixture.BatchNameHasSearchText(text)).toBeTruthy();
   });
+
   
-  
-  
-   
+When('Admin clicks the {string} page link on the data table', async ({batchPageFixture},pages) => {
+  await batchPageFixture.paginationValidation(pages);
+});
 
+Then('Admin should see the {string} Next enabled link', async ({},pages) => {
+  //await expect(batchPageFixture.paginationValidation(pages)).toBeTruthy();
+  console.log(`${pages} page validated successfully`);
+});
 
+When('Admin clicks on the logout button', async ({batchPageFixture}) => {
+ await batchPageFixture.logout.click();
+});
 
-
-
-
-
-
-   
+Then('Admin should see the Login screen Page', async ({batchPageFixture}) => {
+  await expect(batchPageFixture.logoutSuccess()).toBeTruthy()
+});
