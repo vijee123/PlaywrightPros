@@ -211,7 +211,11 @@ Then('Admin should get the message for the success or failure update {string}', 
 });
 
 
+// Program Page Pagination
 
+Then('Admin navigated to the respective pages when he clicks the {string} link on the data table in program module', async ({programPageFixture}, pagelinks) => {
+  await programPageFixture.programPagination(pagelinks);
+});
 
 
 
@@ -328,4 +332,3 @@ Then('Do not see that programs in the data table', async ({}) => {
   // Step: And Do not see that programs in the data table
   // From: src\test\features\02program.feature:195:5
 });
-
