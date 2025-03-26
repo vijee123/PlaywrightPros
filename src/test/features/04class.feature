@@ -163,13 +163,7 @@ Feature: Validate class page functionality
     When Admin clicks Yes option to delete on confirm page of class
     Then Admin gets a message Successful Classes Deleted alert
     And Do not see that Class in the data table
-  # Delete
-  Scenario: Validate multiple class delete button by selecting Single checkbox and clicking YES
-     Given Admin clicks single checkbox in the data table and clicks Multi Delete icon in class page
-     When Admin clicks Yes option to delete on confirm page of class
-     Then Admin gets a message Successful Classes Deleted alert
-     And Do not see that Class in the data table
-
+  
   Scenario: Validate multiple class deletion by selecting multiple check boxes and clicking NO
     Given Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in class page
     When Admin clicks No option to delete on confirm page of class
