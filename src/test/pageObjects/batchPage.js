@@ -68,8 +68,7 @@ export default class batchPage{
     async batchLogin(url, username, password){
         let loginPage = new LoginPage(this.page);
         await loginPage.launchApp(url);
-        await loginPage.validLogin(username, password); 
-        
+        await loginPage.validLogin(username, password);         
         //await this.page.mouse.click(100, 200);
      }   
 

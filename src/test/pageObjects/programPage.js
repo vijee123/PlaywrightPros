@@ -65,19 +65,23 @@ export default class programPage {
   }
 
   async currentURL() {
+    await this.page.keyboard.press('Escape');
     return this.page.url();
   }
 
   async logoutBtnVisiblity() {
+    await this.page.keyboard.press('Escape');
     await this.logoutBtn.waitFor({ timeout: 30000 });
     await expect(this.logoutBtn).toBeVisible();
   }
 
   async getTitle() {
+    await this.page.keyboard.press('Escape');
     const title = this.LMSheading.textContent();
     return title;
   }
   async getheaderText() {
+    await this.page.keyboard.press('Escape');
     const headerText = this.header.textContent();
     return headerText;
   }
@@ -89,6 +93,7 @@ export default class programPage {
 
 
   async headerTextValidation() {
+    await this.page.keyboard.press('Escape');
     if (await this.pgmHeaderTxt.isVisible()) {
       const headerText = await this.pgmHeaderTxt.textContent();
       console.log(headerText);
@@ -117,11 +122,13 @@ export default class programPage {
 
 
   async isDeleteButtonDisabled() {
+    await this.page.keyboard.press('Escape');
     const isDisabled = await this.disabledDeleteIcon.evaluate(button => button.disabled);
     return isDisabled;
   }
 
-  async validateHeaderCheckBoxUnchecked() {
+  async validateHeaderCheckBoxUnchecked() {    
+    await this.page.keyboard.press('Escape');
     try {
       const isChecked = await this.pgmNamecheckBox.getAttribute('aria-checked') === 'true';
       // Return true if the checkbox is unchecked
@@ -148,11 +155,13 @@ export default class programPage {
   }
 
   async programpageIconsValidations(option) {
+    await this.page.keyboard.press('Escape');
     let common = new commonTest(this.page);
     return await common.CommonEditDelCheckboxValidation(option);
   }
 
   async ProgramPageverifySortIconDisplayInHeaderFields() {
+    await this.page.keyboard.press('Escape');
     let common = new commonTest(this.page);
     return await common.verifyHeaderFieldsSortIcons();
   }

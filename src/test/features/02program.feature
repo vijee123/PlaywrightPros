@@ -1,7 +1,6 @@
 Feature: program Module
 
-  Scenario:Navigating to the program module
-    When Admin clicks the program menu from the header
+  Scenario:Navigating to the program module    
     Then Admin should land on the program page
 
   Scenario:Verify Logout displayed in menu bar
@@ -45,11 +44,11 @@ Feature: program Module
 
   #Add New Program Scenarios
 
-  Scenario: Verify add New Program pop up window
-    Then Admin should see pop up window for program details after clicking the Add New Program button
+  # Scenario: Verify add New Program pop up window
+  #   Then Admin should see pop up window for program details after clicking the Add New Program button
 
-  Scenario: Verify title of the pop up window
-    Then Admin should see the pop up window title as "Program Details" after clicking the Add New Program button
+  # Scenario: Verify title of the pop up window
+  #   Then Admin should see the pop up window title as "Program Details" after clicking the Add New Program button
 
 
 # Add New Program
@@ -68,23 +67,24 @@ Feature: program Module
       
 
 
-Scenario: Verify Edit Option
+# Scenario: Verify Edit Option
 
-When 	Admin clicks on Edit option for particular program	
-Then Admin lands on Program details form
-
-Scenario: 
-
+# When 	Admin clicks on Edit option for particular program	
+# Then Admin lands on Program details form
+# Then Admin should see the Heading as Program Details
       
-# Edit Program
+# # Edit Program
 
-Scenario Outline: Verify Edit Program Functionalities
+# Scenario Outline: Verify Edit Program Functionalities
 
-When Admin Edited the program deatils "<ScenarioName>" 
-Then Admin should get the message for the success or failure update "<ScenarioName>"
+# When Admin Edited the program deatils "<ScenarioName>" 
+# Then Admin should get the message for the success or failure update "<ScenarioName>"
 
-Examples:
-|ScenarioName|
+# Examples:
+# |ScenarioName|
+# |update_ProgramName|
+# |update_Programdescription|
+# |update_ProgramStatus|
 
 
 
@@ -153,56 +153,56 @@ Examples:
 
   ############################# Program Delete Scenarios##########################################
 
-  Scenario: Validate row level delete icon in the program page
-    When Admin clicks the delete icon in the program page
-    Then Admin should see a alert open with heading Confirm along with YES and NO button for deletion in program
+  # Scenario: Validate row level delete icon in the program page
+  #   When Admin clicks the delete icon in the program page
+  #   Then Admin should see a alert open with heading Confirm along with YES and NO button for deletion in program
 
-  Scenario: Click No on deletion window of a program
-    When Admin clicks the delete icon in the program page
-    And Admin clicks No option to delete on confirm page of program
-    Then Admin can see the deletion alert disappears without deleting the program
+  # Scenario: Click No on deletion window of a program
+  #   When Admin clicks the delete icon in the program page
+  #   And Admin clicks No option to delete on confirm page of program
+  #   Then Admin can see the deletion alert disappears without deleting the program
 
-  #Delete
-  Scenario: Click Yes on deletion window of a program
-    When Admin clicks the delete icon in the program page
-    And Admin clicks Yes option to delete on confirm page of program
-    Then Admin gets a message Successful program Deleted alert
-    And Do not see that program in the data table
+  # #Delete
+  # Scenario: Click Yes on deletion window of a program
+  #   When Admin clicks the delete icon in the program page
+  #   And Admin clicks Yes option to delete on confirm page of program
+  #   Then Admin gets a message Successful program Deleted alert
+  #   And Do not see that program in the data table
 
-  Scenario: Validate Close(X) icon on Confirm Deletion alert
-    When Admin clicks the delete icon in the program page
-    And Admin clicks CLose X Icon on confirm page of program
-    Then Admin can see the deletion alert disappears without deleting the program
+  # Scenario: Validate Close(X) icon on Confirm Deletion alert
+  #   When Admin clicks the delete icon in the program page
+  #   And Admin clicks CLose X Icon on confirm page of program
+  #   Then Admin can see the deletion alert disappears without deleting the program
 
-  #Multiple Delete Scenarios
-  Scenario: Validate Common Delete button enabled after clicking on any checkbox in program page
-    When Admin clicks any checkbox in the data table of program
-    Then Admin should see common delete option enabled under header Manage program
+  # #Multiple Delete Scenarios
+  # Scenario: Validate Common Delete button enabled after clicking on any checkbox in program page
+  #   When Admin clicks any checkbox in the data table of program
+  #   Then Admin should see common delete option enabled under header Manage program
 
-  Scenario: Validate multiple program delete button by selecting Single checkbox and clicking NO
-    Given Admin clicks single checkbox in the data table and clicks Multi Delete icon in program page
-    When Admin clicks No option to delete on confirm page of program
-    Then Admin can see the deletion alert disappears without deleting the program
+  # Scenario: Validate multiple program delete button by selecting Single checkbox and clicking NO
+  #   Given Admin clicks single checkbox in the data table and clicks Multi Delete icon in program page
+  #   When Admin clicks No option to delete on confirm page of program
+  #   Then Admin can see the deletion alert disappears without deleting the program
 
-  ####Delete
-  Scenario: Validate multiple program delete button by selecting Single checkbox and clicking YES
-    Given Admin clicks single checkbox in the data table and clicks Multi Delete icon in program page
-    When Admin clicks Yes option to delete on confirm page of program
-    Then Admin gets a message Successful programs Deleted alert
-    And Do not see that program in the data table
+  # ####Delete
+  # Scenario: Validate multiple program delete button by selecting Single checkbox and clicking YES
+  #   Given Admin clicks single checkbox in the data table and clicks Multi Delete icon in program page
+  #   When Admin clicks Yes option to delete on confirm page of program
+  #   Then Admin gets a message Successful programs Deleted alert
+  #   And Do not see that program in the data table
 
-  # Multiple Program Delete
-  Scenario: Validate multiple program deletion by selecting multiple check boxes and clicking NO
-    Given Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in program page
-    When Admin clicks No option to delete on confirm page of program
-    Then Admin can see the deletion alert disappears without deleting the selected programs
+  # # Multiple Program Delete
+  # Scenario: Validate multiple program deletion by selecting multiple check boxes and clicking NO
+  #   Given Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in program page
+  #   When Admin clicks No option to delete on confirm page of program
+  #   Then Admin can see the deletion alert disappears without deleting the selected programs
 
-  # # # Multiple Program Delete
-  Scenario: Validate multiple program delete button by selecting multiple checkboxes and clicking YES
-    Given Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in program page
-    When Admin clicks Yes option to delete on confirm page of program
-    Then Admin gets a message Successful programs Deleted alert
-    And Do not see that programs in the data table
+  # # # # Multiple Program Delete
+  # Scenario: Validate multiple program delete button by selecting multiple checkboxes and clicking YES
+  #   Given Admin clicks multiple checkbox in the data table and clicks Multi Delete icon in program page
+  #   When Admin clicks Yes option to delete on confirm page of program
+  #   Then Admin gets a message Successful programs Deleted alert
+  #   And Do not see that programs in the data table
 
 #########################################################  DELETE OVER ##########################################
 

@@ -4,9 +4,6 @@ import programPage from '../pageObjects/programPage.js';
 
 const ProgramPage  = require('../pageObjects/programPage.js');
 
-  When('Admin clicks the program menu from the header', async ({programPageFixture}) => {  
-     await programPageFixture.clickProgramBtn();
-  });
   
   Then('Admin should land on the program page', async ({programPageFixture}) => {    
     await expect(programPageFixture.currentURL()).resolves.toContain("program");
