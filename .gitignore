@@ -4,5 +4,8 @@
 /node_modules/
 /playwright-report/
 /test-results/
+package.json
+playwright.config.js
+package.lock.json
 
 
