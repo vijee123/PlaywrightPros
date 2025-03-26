@@ -625,10 +625,17 @@ async editProgramValidation(scenario)
     return await this.managePgm.isVisible();
   }
 
-  // --------------------------------DELETE OVER------------------------------------------
+  // --------------------------------FOR CHAINING ------------------------------------------
 
-
-
-
-
+  async chainingNewProgram(prgName){
+    console.log("Into chaining New Program Method....")
+    await this.programBtn.click();
+    await this.AddNewpgmBtn.click();
+    await this.programName.fill(prgName);
+    await this.prgDescription.fill("Chaining Prog Description");
+    await this.pgmActiveBtn.click();   
+    await this.saveBtn.click();
+  //  return await this.successMsgNewProg.isVisible();
+  }
+  
 }
