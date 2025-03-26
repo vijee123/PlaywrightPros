@@ -1,7 +1,5 @@
 // @ts-check
 import { defineConfig, devices } from '@playwright/test';
-import { fail } from 'assert';
-import { on } from 'events';
 import { defineBddConfig } from 'playwright-bdd';
 
 const testDir = defineBddConfig({
@@ -13,6 +11,16 @@ const testDir = defineBddConfig({
  ], 
 });
 
+// // Define the BDD config for features and steps
+// const bddConfig = defineBddConfig({
+//   features: ['src/test/features/*.feature'],  // BDD feature files
+//   steps: [
+//     './fixture/customFixtures.js', 
+//     'src/test/stepDef/**/*.js', 
+//     'src/test/pageObjects/**/*.js' 
+//   ]
+// });
+
 
 /**
  * Read environment variables from file.
@@ -22,12 +30,12 @@ const testDir = defineBddConfig({
 // import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 
-/**
+/** new edit
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
-  testDir,
-
+  //testDir,
+  testDir: 'src/test/features',
   /* Run tests in files in parallel */
   fullyParallel: true,
 
@@ -40,7 +48,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 3 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [['html'],["line"], ["allure-playwright"]],
   timeout: 30* 3000,
@@ -54,10 +62,7 @@ export default defineConfig({
     video: 'retain-on-failure',
     headless: false, 
     retries: 2, 
-    launchOptions:{
-      slowMo:1000,
-    }
-  },
+   },
 
   
   /* Configure projects for major browsers */
@@ -67,15 +72,15 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
 
-    // {
-    //   name: 'firefox',
-    //   use: { ...devices['Desktop Firefox'] },
-    // },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
 
-    // {
-    //   name: 'webkit',
-    //   use: { ...devices['Desktop Safari'] },
-    // },
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+    },
 
     /* Test against mobile viewports. */
     // {
@@ -106,4 +111,3 @@ export default defineConfig({
   // },
 
 });
-

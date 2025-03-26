@@ -1,10 +1,14 @@
-import {expect} from "@playwright/test";
+import { expect } from "@playwright/test";
 
 import LoginPage from './loginPage';
 import commonTest from '../utils/commonMethods';
 import { th } from "@faker-js/faker";
+const path = require('path');
+const { readCSV } = require('../utils/csvReader');
+const csvPath = path.resolve(__dirname, '../../../test-data/classTestData.csv');
+const classTestData = readCSV(csvPath);
 
-export default class classPage{
+export default class classPage {
 
     constructor(page) {
         this.page = page;
@@ -17,13 +21,14 @@ export default class classPage{
         this.classDescHeader = this.page.locator("//th[normalize-space()='Class Description']");
         this.classDateHeader = this.page.locator("//th[normalize-space()='Class Date']");
         this.statusHeader = this.page.locator("//th[normalize-space()='Status']");
-        this.staffNameHeader = this.page.locator("//th[normalize-space()='Staff Name']");   
+        this.staffNameHeader = this.page.locator("//th[normalize-space()='Staff Name']");
         this.EditDeleteHeader = this.page.locator("//th[contains(text(), 'Edit / Delete')]");
-        this.paginationText = this.page.getByText('Showing');
-        this.addNewClassButton = this.page.getByText('Add New Class');
-        this.labels =this.page.locator("//label");
+        this.paginationText = this.page.locator("//span[contains(text(),'Showing')]");
+        this.addNewClassButton = this.page.locator("//button[contains(text(),'Add New Class')]");
+        this.labels = this.page.locator("//label");
         this.selectBatchName = this.page.locator("//input[@placeholder='Select a Batch Name']");
-        this.classTopicTextbox = this.page.locator("#classTopic");  
+        this.batchNameField = this.page.locator("#batchName");
+        this.classTopicTextbox = this.page.locator("#classTopic");
         this.classDescTextbox = this.page.locator("#classDescription");
         this.classDate = this.page.locator("//p-calendar//input");
         this.classNumber = this.page.locator("#classNo");
@@ -54,52 +59,163 @@ export default class classPage{
         this.headerDeleteIcon = this.page.locator("//mat-card-title[@class='mat-card-title']//button[@icon='pi pi-trash']");
         this.saveButton = this.page.locator("//span[text()='Save']");
         this.cancelButton = this.page.locator("//span[text()='Cancel']");
-        this.closeIcon = this.page.locator("//span[contains(@class,'p-dialog-header-close-icon')]");   
+        this.closeIcon = this.page.locator("//span[contains(@class,'p-dialog-header-close-icon')]");
         this.classDetailsFormTitle = this.page.locator("//span[text()='Class Details']");
-             
-       }
+        this.topRowEditIcon = this.page.locator("((//div[@class='action'])[1]/span/button)[1]");
+        this.topRowDeleteIcon = this.page.locator("(//div[@class='action'])[1]//button[@icon='pi pi-trash']");
+        this.multiDeleteIcon = this.page.locator("//mat-card-title[@class='mat-card-title']//button[@icon='pi pi-trash']");
+        this.deleteConfirmPopup = this.page.locator("//span[text()='Confirm']");
+        this.NoDeleteButtonConfirm = this.page.locator("//div[contains(@class,'p-dialog-footer')]/button[@ng-reflect-label='No']");
+        this.YesDeleteButtonConfirm = this.page.locator("//div[contains(@class,'p-dialog-footer')]/button[@ng-reflect-label='Yes']");
+        this.deleteConfirmCloseIcon = this.page.locator("//button[contains(@class,'dialog-header-icon')]");
+        this.classDeletedMessage = this.page.locator("//div[text()='Class Deleted']");
+        this.classesDeletedMessage = this.page.locator("//div[text()='Classes Deleted']");
+        this.topRowClassTopic = this.page.locator("(//tbody[@class='p-datatable-tbody']/tr[1])/td[3]");
+        this.topRowCheckBox = this.page.locator("(//tbody//div[@role='checkbox'])[1]");
+        this.classTopRowItemsList = this.page.locator("//tr/td[position() >= 2 and position() <= 7]");
 
-
-    async clickClassMenu(){
-        await this.classMenuLink.click();
-    }   
-
-    async classLogin(url, username, password){
-        let loginPage = new LoginPage(this.page);
-        await loginPage.launchApp(url);
-        await loginPage.validLogin(username, password); 
     }
 
-    async classNoDisplayed(){
+
+    async clickClassMenu() {
+        await this.classMenuLink.click();
+        await this.page.click('body', { position: { x: 0, y: 0 } });
+        await this.page.keyboard.press('Escape');
+    }
+
+    async classLogin(url, username, password) {
+        let loginPage = new LoginPage(this.page);
+        await loginPage.launchApp(url);
+        await loginPage.validLogin(username, password);
+    }
+
+    async classNoDisplayed() {
         const classNo = await this.classNumber.getAttribute('ng-reflect-model');
         console.log("class Count Displayed is ", classNo);
         return classNo;
     }
 
-    async verifyManageClassDisplay(){
-       // await this.manageClassText.waitFor({timeout: 3000});
+    async verifyManageClassDisplay() {
+        // await this.manageClassText.waitFor({timeout: 3000});
         return await this.manageClassText.isVisible();
     }
 
-    async clickLMSTextClick(){
+    async clickLMSTextClick() {
         await this.LMSDisplayHomePage.click();
-    }  
-
-    async clickHeaderDeleteIcon(){
-        await this.headerDeleteIcon.click();    
     }
 
-    async verifyHeaderDeleteIconDisplay(){
-        return await this.headerDeleteIcon.isVisible();     
+    async clickHeaderDeleteIcon() {
+        await this.headerDeleteIcon.click();
     }
 
-    async verifyClassFooterMessage(moduleName){
+    async verifyHeaderDeleteIconDisplay() {
+        return await this.headerDeleteIcon.isVisible();
+    }
+
+    async verifyClassFooterMessage(moduleName) {
         let common = new commonTest(this.page);
         return await common.verifyFooterMessage(moduleName);
     }
 
-    async clickCancelOrClose(Icon){
-        switch(Icon){
+    async clickTopRowEditIcon() {
+        const editIcon = this.topRowEditIcon;
+
+        if (await editIcon.count() === 0) {
+            throw new Error("Edit icon is not present in the DOM.");
+        }
+
+        if (await editIcon.isVisible()) {
+            await editIcon.click();
+        } else {
+            throw new Error("Edit icon is present but not visible to click.");
+        }
+    }
+
+
+
+    // ----------------------DELETE FUCNTION METHODS---------------------------------
+    async getTopRowData(module) {
+        let common = new commonTest(this.page);
+        return await common.getTopRowData(module);
+    }
+
+    async clickTopRowDeleteIcon() {
+        let common = new commonTest(this.page);
+        await common.clickTopRowDeleteIcon();
+    }
+
+    async deleteConfirmPopupVisibility() {
+        let common = new commonTest(this.page);
+        return await common.deleteConfirmPopup.isVisible();
+    }
+
+    async clickYesDeleteOnConfirm() {
+        let common = new commonTest(this.page);
+        await common.YesDeleteButtonConfirm.click();
+    }
+
+    async clickNoDeleteOnConfirm() {
+        let common = new commonTest(this.page);
+        await common.NoDeleteButtonConfirm.click();
+    }
+
+    async singleDeleteMessageVisible() {
+        let common = new commonTest(this.page);
+        return await common.classDeletedMessage.isVisible();
+    }
+
+    async multiDeleteMessageVisible(module) {
+        let common = new commonTest(this.page);
+        return await common.multiDeleteMessageVisible(module);
+    }
+
+    async clickCloseIconDeleteConfirm() {
+        let common = new commonTest(this.page);
+        await common.deleteConfirmCloseIcon.click();
+    }
+
+    async clickTopRowCheckBox() {
+        let common = new commonTest(this.page);
+        await common.topRowCheckBox.click();
+    }
+
+    async clickMultipleCheckBoxes() {
+        let common = new commonTest(this.page);
+        await common.clickTopTwoCheckBox();
+    }
+
+    async checkMultiDeleteIconStatus() {
+        let common = new commonTest(this.page);
+        return await common.multiDeleteIcon.isEnabled();
+    }
+
+    async clickMultiDeleteIcon() {
+        let common = new commonTest(this.page);
+        await common.multiDeleteIcon.click();
+    }
+
+    async getTopTwoRowData(module) {
+        let common = new commonTest(this.page);
+        return await common.getTopTwoRowData(module);
+    }
+
+    // ---------Other---------
+
+
+    async classDetailsFormVisibility() {
+        return this.classDetailsFormTitle.isVisible();
+    }
+
+    async batchNameFieldStatus() {
+        return await this.selectBatchName.isDisabled();
+    }
+
+    async classTopicFieldStatus() {
+        return await this.page.locator('#classTopic').isDisabled();
+    }
+
+    async clickCancelOrClose(Icon) {
+        switch (Icon) {
             case "CancelBtn":
                 console.log("Clicking Cancel Button...");
                 await this.cancelButton.click();
@@ -108,28 +224,30 @@ export default class classPage{
                 console.log("Clicking Close Icon...");
                 await this.closeIcon.click();
                 break;
-            default: 
-               console("No Such buttons or Icons are available...");
+            default:
+                console("No Such buttons or Icons are available...");
         }
-        
+
     }
 
-    async classDetailsFormVisibility(){
-        await this.page.waitForTimeout(2000); 
+    async classDetailsFormVisibility() {
+        await this.page.waitForTimeout(2000);
         return await this.classDetailsFormTitle.isVisible();
     }
 
-    async verifyFieldNameDisplay(fieldName){
+
+    //-------------------------------FIELD NAME AND TEXT BOX VERIFICATION METHODS---------------------
+    async verifyFieldNameDisplay(fieldName) {
         console.log("Tested Field Name is: " + fieldName);
         const fieldLabels = await this.page.locator("//label").allTextContents();
-        console.log("The labels of fields are: "+fieldLabels); 
-        switch(fieldName){
-            case "BatchName":  
-               return await fieldLabels.includes("Batch Name");
-            case "ClassTopic": 
-               return await fieldLabels.includes("Class Topic");
+        console.log("The labels of fields are: " + fieldLabels);
+        switch (fieldName) {
+            case "BatchName":
+                return await fieldLabels.includes("Batch Name");
+            case "ClassTopic":
+                return await fieldLabels.includes("Class Topic");
             case "ClassDescription":
-                return  await fieldLabels.includes("Class Description");
+                return await fieldLabels.includes("Class Description");
             case "ClassDates":
                 return await fieldLabels.includes(" Select Class Dates ");
             case "ClassNo":
@@ -149,18 +267,18 @@ export default class classPage{
     }
 
 
-    async verifyFieldBoxDisplay(fieldBox){
-         switch(fieldBox){
-            case "BatchName":  
-                {console.log("into bathc name..");return await this.selectBatchName.isVisible();}
-            case "ClassTopic": 
-              {console.log("into class topic..");return await this.classTopicTextbox.isVisible();}
+    async verifyFieldBoxDisplay(fieldBox) {
+        switch (fieldBox) {
+            case "BatchName":
+                { console.log("into bathc name.."); return await this.selectBatchName.isVisible(); }
+            case "ClassTopic":
+                { console.log("into class topic.."); return await this.classTopicTextbox.isVisible(); }
             case "ClassDescription":
                 return await this.classDescTextbox.isVisible();
             case "ClassDates":
                 return await this.classDate.isVisible();
             case "ClassNo":
-               return await this.classNumber.isVisible();
+                return await this.classNumber.isVisible();
             case "StaffName":
                 return await this.staffNameDropdown.isVisible();
             case "Comments":
@@ -168,19 +286,19 @@ export default class classPage{
             case "Notes":
                 return await this.notesTextbox.isVisible();
             case "Recording":
-               return await this.recordingTextbox.isVisible();
+                return await this.recordingTextbox.isVisible();
             case "Status":
-               return await this.statusActiveRadioBtn.isVisible();
-             
+                return await this.statusActiveRadioBtn.isVisible();
+
         }
 
     }
-            
-                
 
-    async verifyHeaderDisplay(header){
+
+    //---------------------------------HEADER VERIFICATION------------------------------
+    async verifyHeaderDisplay(header) {
         console.log("Header is: " + header);
-        switch(header){
+        switch (header) {
             case "Batch Name":
                 return await this.batchNameHeader.isVisible();
             case "Class Topic":
@@ -196,7 +314,7 @@ export default class classPage{
             case "Edit/Delete":
                 return await this.EditDeleteHeader.isVisible();
             default:
-               throw new Error(`Header "${header}" not found!`);
+                throw new Error(`Header "${header}" not found!`);
         }
 
     }
@@ -206,30 +324,31 @@ export default class classPage{
         return await this.paginationText.isVisible();
     }
 
-    async verifyPaginationTextAndIcons(items){
+    async verifyPaginationTextAndIcons(items) {
         let common = new commonTest(this.page);
         return await common.verifyPaginationTextAndIcons(items);
-    }   
+    }
 
-    async verifySortIconDisplayInHeaderFields(){
+    async verifySortIconDisplayInHeaderFields() {
         let common = new commonTest(this.page);
         return await common.verifyHeaderFieldsSortIcons();
     }
 
-    async clickAddNewClassButton(){
+    async clickAddNewClassButton() {
+        await this.classMenuLink.click();;
         await this.addNewClassButton.click();
     }
 
-    async clickSaveButton(){
+    async clickSaveButton() {
         await this.saveButton.click();
     }
 
-    async classCreatedMsgDisplay(){
+    async classCreatedMsgDisplay() {
         return await this.classCreatedMsg.isVisible();
     }
 
-    async clickBatchNameDeleteIcon(){
-        await this.batchNameDeleteIcon.click(); 
+    async clickBatchNameDeleteIcon() {
+        await this.batchNameDeleteIcon.click();
     }
 
     async selectStaffByName(staffName) {
@@ -238,7 +357,7 @@ export default class classPage{
             return;
         }
         await this.staffNameDropdown.click();
-        await this.page.waitForTimeout(1500); 
+        await this.page.waitForTimeout(1500);
         await this.page.waitForSelector("//ul[@role='listbox']/p-dropdownitem");
         await this.page.locator(`//p-dropdownitem[@ng-reflect-label='${staffName}']`).click();
     }
@@ -250,36 +369,36 @@ export default class classPage{
             return value;
         } catch (error) {
             console.error("Error getting class number:", error);
-            throw error; 
+            throw error;
         }
     }
 
-    async clickDatePickerBtn(){
-       await this.classDatePickerBtn.click();
+    async clickDatePickerBtn() {
+        await this.classDatePickerBtn.click();
     }
-    
-    async verifyDisabledWeekendDates(){
+
+    async verifyDisabledWeekendDates() {
         const weekendDates = await this.page.$$("//div[contains(@class,'p-datepicker-calendar-container')]//tbody//td[position()=1 or position()=7]");
         for (const date of weekendDates) {
             const isDisabled = await date.$('span.p-disabled') !== null;
             const dateText = await date.innerText();
-            
+
             if (!isDisabled) {
                 console.log(`Weekend date ${dateText} is enabled`);
-                return false; 
+                return false;
             }
-            
+
             console.log(`Weekend date ${dateText} is disabled`);
         }
-        
+
         console.log("All the week end dates are disabled....")
         return true;
     }
 
-
-    async fillCreateClassForm({ batchName, classTopic, classDesc, classDates, staffName, status, comments,notes, recording}) {
-        await this.selectBatchName.fill(batchName); 
-        await this.classTopicTextbox.fill(classTopic); 
+    //------------------------------------CLASS FORM FILLING METHOD-------------------------
+    async fillCreateClassForm({ batchName, classTopic, classDesc, classDates, staffName, status, comments, notes, recording }) {
+        await this.selectBatchName.fill(batchName);
+        await this.classTopicTextbox.fill(classTopic);
         await this.classDescTextbox.fill(classDesc);
         await this.selectDates(classDates);
         await this.selectStaffByName(staffName);
@@ -294,12 +413,12 @@ export default class classPage{
         await this.recordingTextbox.fill(recording);
     }
 
-
+    //-----------------------------------------CALENDAR DATE PICKING METHOD--------------------------------------
     async selectDates(classDates) {
 
         // Ensure classDates is always an array
-       if (!Array.isArray(classDates)) {
-          classDates = classDates.split(",").map(date => date.trim()); 
+        if (!Array.isArray(classDates)) {
+            classDates = classDates.split(",").map(date => date.trim());
         }
 
         // Filter out invalid or empty dates
@@ -312,69 +431,69 @@ export default class classPage{
             return;
         }
 
-       await this.classDatePickerBtn.click(); 
-   
-       for (const targetDate of classDates) {
-       if (!targetDate || typeof targetDate !== "string" || !targetDate.includes("/")) {
-           console.error("Invalid date format:", targetDate);
-           continue;
-       }
+        await this.classDatePickerBtn.click();
 
-       // Extract month, day, and year
-       const [month, day, yearRaw] = targetDate.trim().split("/");
-       const year = yearRaw.trim().split(" ")[0].replace(/[^0-9]/g, '');
-      
-       // Convert month number to text
-       const monthNames = ["January", "February", "March", "April", "May", "June",
-                           "July", "August", "September", "October", "November", "December"];
-       const targetMonth = monthNames[parseInt(month, 10) - 1];
-      
-       // Get the currently displayed month and year
-       let displayedYear = await this.datePickerYear.textContent();
-       let displayedMonth = await this.datePickerMonth.textContent(); 
+        for (const targetDate of classDates) {
+            if (!targetDate || typeof targetDate !== "string" || !targetDate.includes("/")) {
+                console.error("Invalid date format:", targetDate);
+                continue;
+            }
 
-       // Navigate to the correct month and year
-       while (displayedMonth !== targetMonth || displayedYear !== year) {
-           const currentYear = parseInt(displayedYear, 10);
-           const targetYear = parseInt(year, 10);
-           const currentMonthIndex = monthNames.indexOf(displayedMonth);
-           const targetMonthIndex = monthNames.indexOf(targetMonth);
-          if (currentYear < targetYear || (currentYear === targetYear && currentMonthIndex < targetMonthIndex)) {
-               await this.datePickerNextArrowBtn.click(); 
-           } else {
-               await this.datePickerPrevArrowBtn.click(); 
-           }
+            // Extract month, day, and year
+            const [month, day, yearRaw] = targetDate.trim().split("/");
+            const year = yearRaw.trim().split(" ")[0].replace(/[^0-9]/g, '');
 
-           await this.page.waitForTimeout(1000);
-           displayedYear = await this.datePickerYear.textContent();
-           displayedMonth = await this.datePickerMonth.textContent();
-       }
+            // Convert month number to text
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"];
+            const targetMonth = monthNames[parseInt(month, 10) - 1];
 
-       console.log(`Navigated to: ${displayedMonth} ${displayedYear}`);
+            // Get the currently displayed month and year
+            let displayedYear = await this.datePickerYear.textContent();
+            let displayedMonth = await this.datePickerMonth.textContent();
 
-       // Click the correct day
-       await this.page.locator(`//table[contains(@class,'p-datepicker-calendar')]/tbody/tr/td/span[text()='${parseInt(day, 10)}']`).click();
-       console.log(`Selected date: ${targetDate}`);
+            // Navigate to the correct month and year
+            while (displayedMonth !== targetMonth || displayedYear !== year) {
+                const currentYear = parseInt(displayedYear, 10);
+                const targetYear = parseInt(year, 10);
+                const currentMonthIndex = monthNames.indexOf(displayedMonth);
+                const targetMonthIndex = monthNames.indexOf(targetMonth);
+                if (currentYear < targetYear || (currentYear === targetYear && currentMonthIndex < targetMonthIndex)) {
+                    await this.datePickerNextArrowBtn.click();
+                } else {
+                    await this.datePickerPrevArrowBtn.click();
+                }
 
-         await this.page.waitForTimeout(2000);
-       }
+                await this.page.waitForTimeout(1000);
+                displayedYear = await this.datePickerYear.textContent();
+                displayedMonth = await this.datePickerMonth.textContent();
+            }
 
-        await this.page.click('body', { position: { x: 0, y: 0 } }); 
-        await this.page.keyboard.press('Escape'); 
+            console.log(`Navigated to: ${displayedMonth} ${displayedYear}`);
+
+            // Click the correct day
+            await this.page.locator(`//table[contains(@class,'p-datepicker-calendar')]/tbody/tr/td/span[text()='${parseInt(day, 10)}']`).click();
+            console.log(`Selected date: ${targetDate}`);
+
+            await this.page.waitForTimeout(2000);
+        }
+
+        await this.page.click('body', { position: { x: 0, y: 0 } });
+        await this.page.keyboard.press('Escape');
         await this.page.waitForTimeout(1000);
-     
+
     }
 
-
-    async verifyMessageDisplay(message){
+    //---------------------------CHECKING ERROR MESSAGE AND SUCCESS MESSAGES IN CLASS-----------------------
+    async verifyMessageDisplay(message) {
         console.log("Checking message visibility for:", message);
-      
+
         if (this.page.isClosed()) {
             console.error("Page is already closed. Cannot verify message.");
             return false;
         }
 
-        switch(message){
+        switch (message) {
             case "success":
                 console.log("Checking Valid Class Created Message..");
                 return await this.classCreatedMsg.isVisible();
@@ -401,13 +520,104 @@ export default class classPage{
                     this.classDateErrorMsg.isVisible(),
                     this.classTopicErrorMsg.isVisible(),
                     this.batchNameErrorMsg.isVisible()
-                ]);        
+                ]);
                 return results.every(isVisible => isVisible);
             default:
                 throw new Error(`Error message "${message}" not found!`);
         }
     }
 
-    
+
+
+    //--------------CLASS PAGE SORTING METHOD------------------------
+    async ClassSorting(classHeader) {
+        await this.page.keyboard.press('Escape');
+        let common = new commonTest(this.page);
+        let isSorted;
+        switch (classHeader) {
+            case "batchName_AscendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Batch Name', 'Ascending');
+                return isSorted;
+            case "batchName_DescendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Batch Name', 'Descending');
+                return isSorted;
+            case "classTopic_AscendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Class Topic', 'Ascending');
+                return isSorted;
+            case "classTopic_DecendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Class Topic', 'Descending');
+                return isSorted;
+            case "ClassDescription_AscendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Class Description', 'Descending');
+                return isSorted;
+            case "ClassDescription_DescendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Class Description', 'Descending');
+                return isSorted;
+            case "staffName_AscendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Staff Name', 'Ascending');
+                return isSorted;
+            case "staffName_DescendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Staff Name', 'Descending');
+                return isSorted;
+            case "classDate_AscendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Class Date', 'Descending');
+                return isSorted;
+            case "classDate_DescendingOrder":
+                isSorted = await common.verifyingColumnSorting(this.page, 'Class Date', 'Descending');
+                return isSorted;
+            default:
+                throw new Error(`Error: field "${classHeader}" not found!`);
+        }
+
+    }
+
+
+    //---------------------------SEARCHING METHOD----------------------------
+    async classSearch(scenario) {
+        await this.page.keyboard.press('Escape');
+
+        const rowData = classTestData.find(row => row.Scenario === scenario);
+
+        if (!rowData) {
+            throw new Error(`No data found for scenario: ${scenario}`);
+        }
+
+        switch (scenario) {
+            case 'searchBy_batchName':
+                console.log("Searching using batch name: " + rowData.batchName);
+                await this.searchTextbox.fill(rowData.batchName);
+                await this.page.keyboard.press('Enter');
+                const batchList = await this.page.locator('//tr/td[position() >= 2 and position() <= 7]').allTextContents();
+                const batchMatch = batchList.some(item => item.includes(rowData.batchName));
+                console.log("Retrieved Top Row Items List Names: " + batchList);
+                return batchMatch;
+            case 'searchBy_classTopic':
+                console.log("Searching using Class Topic: " + rowData.classTopic);
+                await this.searchTextbox.fill(rowData.classTopic);
+                await this.page.keyboard.press('Enter');
+                const classList = await this.page.locator('//tr/td[position() >= 2 and position() <= 7]').allTextContents();
+                const topicMatch = classList.some(item => item.includes(rowData.classTopic));
+                console.log("Retrieved Top Row Items List Names: " + classList);
+                return topicMatch;
+            case 'searchBy_ClassDescription':
+                console.log("Searching using Class Description: " + rowData.classDesc);
+                await this.searchTextbox.fill(rowData.classDesc);
+                await this.page.keyboard.press('Enter');
+                const classDescList = await this.page.locator('//tr/td[position() >= 2 and position() <= 7]').allTextContents();
+                const DescMatch = classDescList.some(item => item.includes(rowData.classDesc));
+                console.log("Retrieved Top Row Items List Names: " + classDescList);
+                return DescMatch;
+            case 'searchBy_staffName':
+                console.log("Searching using Staff name: " + rowData.staffName);
+                await this.searchTextbox.fill(rowData.staffName);
+                await this.page.keyboard.press('Enter');
+                const staffList = await this.page.locator('//tr/td[position() >= 2 and position() <= 7]').allTextContents();
+                const staffMatch = staffList.some(item => item.includes(rowData.staffName));
+                console.log("Retrieved Top Row Items List Names: " + staffList);
+                return staffMatch;
+            default:
+                throw new Error(`Error: field "${scenario}" not found!`);
+        }
+    }
 
 }
