@@ -8,8 +8,8 @@ searchBy_ValidProgramName,TedrrryyTest,,
 searchBy_ProgramDescription,,searchTesting,
 searchBy_InValidProgramName,ten,,
 searchBy_PartialProgramName,Tedrrry,,
-ValidateEditPopUp,TedrrryyTestTwo
-update_ProgramName,UpdateProgram
+ValidateEditPopUp,TedrrryyTestTwo,,
+update_ProgramName,UpdateProgram,,
 update_Programdescription,,UpdatDescription
 update_ProgramStatus,,,Inactive
 programforEdit,,testing,Active
