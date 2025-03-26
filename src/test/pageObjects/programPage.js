@@ -241,20 +241,23 @@ async ClickAddNewPgmBtn()
     switch (scenario) {
       case "onlyMandatoryfields":
         console.log("Checking Valid Program Created Message..");
-
+        await this.pgmSuccessMessgae.waitFor({ timeout: 30000 });
         return await this.pgmSuccessMessgae.isVisible();
 
       case "withoutMandatoryfields":
         console.log("Checking Status Error Message..");
+        await this.pgmNameErrorMesg.waitFor({ timeout: 30000 });
         return await this.pgmNameErrorMesg.isVisible() && this.pgmdescriptionErrormesg.isVisible() && this.pgmStatusErrMesg.isVisible();
 
       case "cancelwithValidData":
+        await this.page.waitForTimeout(2000);
         if (await this.pgmPopupWindow.isVisible())
           return false;
         else
           return true;
 
       case "closewithValidData":
+        await this.page.waitForTimeout(2000);
         if (await this.pgmPopupWindow.isVisible())
           return false;
         else
