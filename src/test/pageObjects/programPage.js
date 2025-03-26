@@ -48,6 +48,8 @@ export default class programPage {
     this.pgmDescriptionSortIcon = this.page.locator('//th[@ng-reflect-field="programDescription"]');
     this.pgmNameslist = this.page.locator('//tr/td[2]');
     this.pgmDescriptionlist = this.page.locator('//tr/td[3]');
+    this.programStatusList=this.page.locator('//tr/td[4]');
+    this.editIcon=this.page.locator('//span[@class="p-button-icon pi pi-pencil"]');
 
   }
 
@@ -108,8 +110,7 @@ export default class programPage {
     return text;
   }
 
-  async popUpheadingValidation() {
-    await this.AddNewpgmBtn.click();
+  async popUpheadingValidation() {    
     const popupheadingtext = this.popUpheading.textContent();
     return popupheadingtext;
   }
@@ -139,9 +140,15 @@ export default class programPage {
     }
   }
 
+async ClickAddNewPgmBtn()
+{
+  await this.AddNewpgmBtn.click();
+}
 
-  async addNewPopUpWindow() {
-    await this.AddNewpgmBtn.click();
+
+
+
+  async addNewPopUpWindow() {    
     try {
       if (await this.programName.isVisible()) {
         return true;
@@ -176,6 +183,9 @@ export default class programPage {
       throw new Error(`No data found for scenario: ${scenario}`);
     }
 
+    /* if(scenario=='programforEdit'){
+      await this.programName.fill(this.generateRandomString(8));
+    } */
     await this.programName.fill(rowData.ProgramName);
     await this.prgDescription.fill(rowData.programDescription);
     if (rowData.Status == 'Active') {
@@ -399,31 +409,144 @@ export default class programPage {
   }
 
 
-
-  async click_EditProgram(){
-
-    await this.page.keyboard.press('Escape');
+  async searchProgram_Edit(scenario){
     
-    
-
-  }
-
-
-
-  async editNewProgram(scenario)
-  {
+    await this.page.keyboard.press('Escape'); 
     const rowData = testData.find(row => row.scenario === scenario);
 
     if (!rowData) {
       throw new Error(`No data found for scenario: ${scenario}`);
     }
-   
-   
 
+    await this.searchBox.fill(rowData.ProgramName);
+    await this.page.keyboard.press('Enter');
+    await this.page.keyboard.press('Tab');
 
-
+    //await this.page.waitForSelector(editIcon);
+   // await this.editIcon.click();    
 
   }
+
+
+async clickEditIcon()
+{
+  await this.page.waitForTimeout(1000);
+  await this.editIcon.click();  
+}
+
+
+  async EditPopUpWindowValidation()
+  {    
+    await this.clickEditIcon();
+    try {
+      if (await this.programName.isVisible()) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.error("Error checking visibility:", error);
+      return false;
+    }
+  }
+
+ 
+
+  async  generateRandomString(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+  
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters[randomIndex];
+    }
+  
+    return result;
+  }
+
+
+async newprogramForEdit()
+{
+    this.newProgramEnterDetails('programforEdit');
+    this.saveBtn.click();
+}
+
+  async editProgram(scenario)
+  {
+    
+    const rowData = testData.find(row => row.scenario === scenario);
+
+    if (!rowData) {
+      throw new Error(`No data found for scenario: ${scenario}`);
+    }
+
+    await this.clickEditIcon();
+
+    switch(scenario){
+
+      case "update_ProgramName":
+            await this.programName.click();
+            await this.page.keyboard.press('Control+A'); 
+            await this.page.keyboard.press('Backspace');
+            await this.programName.fill(rowData.ProgramName);    
+            await this.saveBtn.click(); 
+            break;
+        case "update_Programdescription":
+            await this.prgDescription.click();
+            await this.page.keyboard.press('Control+A'); 
+            await this.page.keyboard.press('Backspace');
+            await this.prgDescription.fill(rowData.programDescription); 
+            await this.saveBtn.click();  
+            break;
+         case "update_ProgramStatus":
+          await this.page.waitForTimeout(2000);
+          await this.prgDescription.click();
+          if (rowData.Status === 'Inactive') {
+            await this.prmInactiveBtn.click();
+           }    
+           await this.saveBtn.click(); 
+           break;
+           default:
+        throw new Error(`Error: field "${scenario}" not found!`);
+    }  
+    
+   
+  }
+
+
+
+async editProgramValidation(scenario)
+{
+
+ const rowData = testData.find(row => row.scenario === scenario);
+
+    if (!rowData) {
+      throw new Error(`No data found for scenario: ${scenario}`);
+    }
+   
+    switch(scenario){
+
+      case "update_ProgramName":
+        await this.searchBox.fill(rowData.ProgramName);
+        await this.page.keyboard.press('Enter');                  
+      console.log(pgmnamelist);
+      return expect(pgmnamelist).toContain(rowData.pgmNameslist);
+
+        case "update_Programdescription":
+          const pgmDeslist = await this.pgmDescriptionlist.textContent();
+          console.log(pgmDeslist);
+          return expect(pgmDeslist).toContain(rowData.programDescription);
+
+          case "update_ProgramStatus":               
+          const pgmstatuslist = await this.programStatusList.textContent();   
+          return expect(pgmstatuslist).toContain(rowData.Status);   
+              default:
+                throw new Error(`Error: field "${scenario}" not found!`);
+    }
+   
+}
+
+
 
   //------------------------------------DELETE FUCNTION METHODS---------------------------------
 

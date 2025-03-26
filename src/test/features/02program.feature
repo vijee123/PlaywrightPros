@@ -42,113 +42,116 @@ Feature: program Module
       | Delete_Icon |
 
 
-  #Add New Program Scenarios
+   # Add New Program Scenarios
 
-  # Scenario: Verify add New Program pop up window
-  #   Then Admin should see pop up window for program details after clicking the Add New Program button
+  Scenario: Verify add New Program pop up window
+    Then Admin should see pop up window for program details after clicking the Add New Program button
 
-  # Scenario: Verify title of the pop up window
-  #   Then Admin should see the pop up window title as "Program Details" after clicking the Add New Program button
+  Scenario: Verify title of the pop up window
+    Then Admin should see the pop up window title as "Program Details" after clicking the Add New Program button
 
 
-# Add New Program
+   #  Add New Program
+ 
 
-# Scenario Outline: Verify Add New Program functionalities  
-#    Then Admin Adds new program and click on save button for the scenario "<scenario>" in program module
-#    Then Admin gets message for the scenario "<scenario>" for program Module
+Scenario Outline: Verify Add New Program functionalities   
 
-#    Examples: 
-#      | scenario  |
-#       |cancelwithValidData|
-#      |closewithValidData|
-#      |onlyMandatoryfields|
-#      |withoutMandatoryfields|
-#      |verifyAddedProgram|
+   Then Admin Adds new program and click on save button for the scenario "<scenario>" in program module
+   Then Admin gets message for the scenario "<scenario>" for program Module
+
+   Examples: 
+     | scenario  |
+      |cancelwithValidData|
+     |closewithValidData|
+     |onlyMandatoryfields|
+     |withoutMandatoryfields|
+     |verifyAddedProgram|
       
 
 
-# Scenario: Verify Edit Option
+Scenario: Verify Edit Option
 
-# When 	Admin clicks on Edit option for particular program	
-# Then Admin lands on Program details form
-# Then Admin should see the Heading as Program Details
-      
-# # Edit Program
+When 	Admin clicks on Edit option for particular program	
+Then Admin lands on Program details form
+Then Admin should see the Heading as Program Details      
 
-# Scenario Outline: Verify Edit Program Functionalities
-
-# When Admin Edited the program deatils "<ScenarioName>" 
-# Then Admin should get the message for the success or failure update "<ScenarioName>"
-
-# Examples:
-# |ScenarioName|
-# |update_ProgramName|
-# |update_Programdescription|
-# |update_ProgramStatus|
+ # Edit Program
 
 
+Scenario Outline: Verify Edit Program Functionalities
 
-#   Scenario Outline: Scenario Outline name: Verify mandatory fields with red asterisk mark 
-#   Then Admin should see the  mandatory fields "<Fields>" with asterisk mark in the pop Up window
+When Admin Edited the program deatils "<ScenarioName>" 
+Then Admin should get the message for the success or failure update "<ScenarioName>"
 
-# Examples:
-# |Fields|
-# |Program Name|
-# |Program Description|
-# |Program Status|
-
-
-# Scenario Outline: Validate the pop up window field Validation
-# Then Admin see the entered text in the fields "<TextFiled>" in the add new program pop up window 
-
-# Examples:
-# |TextFiled|
-# |Program Name|
-# |Program Description|
-# |Program Status|
-
-
-# # Manage Program Sorting 
-
-# Scenario Outline: Manage Program - Sorting Program by Program Name/Program Description
-
-# Then Admin sees the program name or description sorted by ascennding or decending order after clicking the sort icon "<ProgramHeader>"
-
-# Examples:
-# |ProgramHeader|
-# |programName_AscendingOrder|
-# |programName_DecendingOrder|
-# |programDescription_AscendingOrder|
-# |ProgramDescription_DecendingOrder|
-
-
-# #Program Pagination
-
-# Scenario Outline: Validating the text and pagination icon in the programPage
-#       Then Admin should see the below "<items>" pagination controls under the data table in the programPage
-
-#       Examples:
-#         | items            |
-#         | paginationText   |
-#         | firstPageIcon    |
-#         | previousPageIcon |
-#         | nextPageIcon     |
-#         | lastPageIcon     |
+Examples:
+|ScenarioName|
+|update_Programdescription|
+|update_ProgramStatus|
+|update_ProgramName|
 
 
 
-# #   Manage Program - Search bar
+  Scenario Outline: Scenario Outline name: Verify mandatory fields with red asterisk mark 
+  Then Admin should see the  mandatory fields "<Fields>" with asterisk mark in the pop Up window
 
-# Scenario Outline: Verify Admin is able to search results found for valid Program fields
+Examples:
+|Fields|
+|Program Name|
+|Program Description|
+|Program Status|
 
-# When Admin searches by valid program name,program description "<scenarioName>" in the Program module
 
-# Examples:
-# |scenarioName|
-# |searchBy_ValidProgramName|
-# |searchBy_ProgramDescription|
-# |searchBy_InValidProgramName|
-# |searchBy_PartialProgramName|
+Scenario Outline: Validate the pop up window field Validation
+Then Admin see the entered text in the fields "<TextFiled>" in the add new program pop up window 
+
+Examples:
+|TextFiled|
+|Program Name|
+|Program Description|
+|Program Status|
+
+
+# Manage Program Sorting 
+
+Scenario Outline: Manage Program - Sorting Program by Program Name/Program Description
+
+Then Admin sees the program name or description sorted by ascennding or decending order after clicking the sort icon "<ProgramHeader>"
+
+Examples:
+|ProgramHeader|
+|programName_AscendingOrder|
+|programName_DecendingOrder|
+|programDescription_AscendingOrder|
+|ProgramDescription_DecendingOrder|
+
+
+#Program Pagination
+
+Scenario Outline: Validating the text and pagination icon in the programPage
+      Then Admin should see the below "<items>" pagination controls under the data table in the programPage
+
+      Examples:
+        | items            |
+        | paginationText   |
+        | firstPageIcon    |
+        | previousPageIcon |
+        | nextPageIcon     |
+        | lastPageIcon     |
+
+
+
+#   Manage Program - Search bar
+
+Scenario Outline: Verify Admin is able to search results found for valid Program fields
+
+When Admin searches by valid program name,program description "<scenarioName>" in the Program module
+
+Examples:
+|scenarioName|
+|searchBy_ValidProgramName|
+|searchBy_ProgramDescription|
+|searchBy_InValidProgramName|
+|searchBy_PartialProgramName|
 
 
   ############################# Program Delete Scenarios##########################################
