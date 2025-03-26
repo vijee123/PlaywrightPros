@@ -4,9 +4,6 @@ import programPage from '../pageObjects/programPage.js';
 
 const ProgramPage  = require('../pageObjects/programPage.js');
 
-  When('Admin clicks the program menu from the header', async ({programPageFixture}) => {  
-     await programPageFixture.clickProgramBtn();
-  });
   
   Then('Admin should land on the program page', async ({programPageFixture}) => {    
     await expect(programPageFixture.currentURL()).resolves.toContain("program");
@@ -111,6 +108,7 @@ const ProgramPage  = require('../pageObjects/programPage.js');
     //Verify add New Program pop up window
   
     Then('Admin should see pop up window for program details after clicking the Add New Program button', async ({programPageFixture}) => {
+      await programPageFixture.ClickAddNewPgmBtn();
       const PopUpisvisible = await programPageFixture.addNewPopUpWindow();
       expect(PopUpisvisible).toBe(true);
     });
@@ -118,7 +116,7 @@ const ProgramPage  = require('../pageObjects/programPage.js');
     //Verify add New Program pop up window Title  
 
     Then('Admin should see the pop up window title as {string} after clicking the Add New Program button', async ({programPageFixture}, popUpTile) => {
-     
+      await programPageFixture.ClickAddNewPgmBtn();
       const popUptext=await programPageFixture.popUpheadingValidation();   
       expect(popUptext).toContain(popUpTile);
     });
@@ -177,6 +175,49 @@ Then('Admin should see the below {string} pagination controls under the data tab
 When('Admin searches by valid program name,program description {string} in the Program module', async ({programPageFixture}, programSearch) => {
   await programPageFixture.programSearch(programSearch);
 });
+
+
+
+// Edit Program
+
+When('Admin clicks on Edit option for particular program', async ({programPageFixture}) => {  
+  await programPageFixture.searchProgram_Edit('ValidateEditPopUp');
+});
+
+
+Then('Admin should see the Heading as Program Details', async ({programPageFixture}) => {
+  const popUptext=await programPageFixture.popUpheadingValidation();   
+  expect(popUptext).toContain("Program Details");
+});
+
+
+Then('Admin lands on Program details form', async ({programPageFixture}) => {
+  const result= await programPageFixture.EditPopUpWindowValidation();
+  expect(result).toBe(true);  
+});
+
+
+
+// Edit New Program
+
+When('Admin Edited the program deatils {string}', async ({programPageFixture}, Scenario) => { 
+  await programPageFixture.searchProgram_Edit('ValidateEditPopUp');
+  await programPageFixture.editProgram(Scenario);
+});
+
+Then('Admin should get the message for the success or failure update {string}', async ({programPageFixture}, Scenario) => {
+  await programPageFixture.searchProgram_Edit('ValidateEditPopUp');
+  await programPageFixture.editProgramValidation(Scenario);
+});
+
+
+
+
+
+
+
+
+
 
 //---------------------------Program Single And Multiple Delete Steps-----------------------------------
 When('Admin clicks the delete icon in the program page', async ({programPageFixture}) => {
@@ -287,4 +328,3 @@ Then('Do not see that programs in the data table', async ({}) => {
   // Step: And Do not see that programs in the data table
   // From: src\test\features\02program.feature:195:5
 });
-
