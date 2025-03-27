@@ -120,17 +120,7 @@ Feature: Validate Batch page functionality
       | batchDescription | text          |
       | programName      | text          |
       | batchStatus      | p-radiobutton |
-  Scenario Outline: Validating all the fields exist in pop up
-    Given Admin is on the Batch Details Pop Up WIndow
-    When Admin checks all the fields are enabled
-    Then The pop up should include the fields "<field>" as type "<type>"
-    Examples:
-      | field            | type          |
-      | batchName        | text          |
-      | batchNoOfClasses | number        |
-      | batchDescription | text          |
-      | programName      | text          |
-      | batchStatus      | p-radiobutton |
+  
 
   Scenario: Validating batchname prefix selected program name
     Given Admin is on the Batch Details Pop Up WIndow
