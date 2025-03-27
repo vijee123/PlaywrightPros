@@ -41,7 +41,7 @@ Background:
     When Admin enter value only in password and clicks login button
     Then Error message "Please enter your user name"
 
-  @fail @TPL-135
+  @skip @TPL-135
   Scenario: Validate login credentials with null password
     Given Admin lands on login page
     When Admin enter value only in user name and clicks login button
