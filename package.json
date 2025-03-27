@@ -1,9 +1,11 @@
 {
-  "name": "PlaywrightPros",
+  "name": "playwrightpros",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "npx playwright   test"
+    "pretest": "rm -rf allure-report allure-results playwright-report test-results .features-gen allure-report.pdf",
+    "test": "npx bddgen && npx playwright test",
+    "posttest": "allure generate --single-file allure-results && node src/test/utils/generatePDF.mjs"
   },
   "keywords": [],
   "author": "",
@@ -13,7 +15,7 @@
     "@playwright/test": "^1.51.1",
     "@types/node": "^22.13.9",
     "allure-commandline": "^2.33.0",
-    "allure-playwright": "^3.2.0",
+    "allure-playwright": "^3.2.1",
     "csv-parser": "^3.2.0",
     "playwright-bdd": "^8.2.1"
   },
