@@ -374,7 +374,7 @@ Then('Admin should be able to create a new class with the newly created batch', 
   console.log("Admin creates a new class for chaining with new program and new batch created...");
   
  
-  //-----------------------Create a New Class------------------
+  //-----------------------CHAINING ------------------
   await classPageFixture.clickAddNewClassButton();
   console.log("Admin enters the given details in the Create Class form");
   
