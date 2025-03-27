@@ -48,6 +48,8 @@ export default class programPage {
     this.pgmDescriptionSortIcon = this.page.locator('//th[@ng-reflect-field="programDescription"]');
     this.pgmNameslist = this.page.locator('//tr/td[2]');
     this.pgmDescriptionlist = this.page.locator('//tr/td[3]');
+    this.programStatusList=this.page.locator('//tr/td[4]');
+    this.editIcon=this.page.locator('//span[@class="p-button-icon pi pi-pencil"]');
 
   }
 
@@ -65,19 +67,23 @@ export default class programPage {
   }
 
   async currentURL() {
+    await this.page.keyboard.press('Escape');
     return this.page.url();
   }
 
   async logoutBtnVisiblity() {
+    await this.page.keyboard.press('Escape');
     await this.logoutBtn.waitFor({ timeout: 30000 });
     await expect(this.logoutBtn).toBeVisible();
   }
 
   async getTitle() {
+    await this.page.keyboard.press('Escape');
     const title = this.LMSheading.textContent();
     return title;
   }
   async getheaderText() {
+    await this.page.keyboard.press('Escape');
     const headerText = this.header.textContent();
     return headerText;
   }
@@ -89,6 +95,7 @@ export default class programPage {
 
 
   async headerTextValidation() {
+    await this.page.keyboard.press('Escape');
     if (await this.pgmHeaderTxt.isVisible()) {
       const headerText = await this.pgmHeaderTxt.textContent();
       console.log(headerText);
@@ -103,8 +110,7 @@ export default class programPage {
     return text;
   }
 
-  async popUpheadingValidation() {
-    await this.AddNewpgmBtn.click();
+  async popUpheadingValidation() {    
     const popupheadingtext = this.popUpheading.textContent();
     return popupheadingtext;
   }
@@ -117,11 +123,13 @@ export default class programPage {
 
 
   async isDeleteButtonDisabled() {
+    await this.page.keyboard.press('Escape');
     const isDisabled = await this.disabledDeleteIcon.evaluate(button => button.disabled);
     return isDisabled;
   }
 
-  async validateHeaderCheckBoxUnchecked() {
+  async validateHeaderCheckBoxUnchecked() {    
+    await this.page.keyboard.press('Escape');
     try {
       const isChecked = await this.pgmNamecheckBox.getAttribute('aria-checked') === 'true';
       // Return true if the checkbox is unchecked
@@ -132,9 +140,15 @@ export default class programPage {
     }
   }
 
+async ClickAddNewPgmBtn()
+{
+  await this.AddNewpgmBtn.click();
+}
 
-  async addNewPopUpWindow() {
-    await this.AddNewpgmBtn.click();
+
+
+
+  async addNewPopUpWindow() {    
     try {
       if (await this.programName.isVisible()) {
         return true;
@@ -148,13 +162,22 @@ export default class programPage {
   }
 
   async programpageIconsValidations(option) {
+    await this.page.keyboard.press('Escape');
     let common = new commonTest(this.page);
     return await common.CommonEditDelCheckboxValidation(option);
   }
 
   async ProgramPageverifySortIconDisplayInHeaderFields() {
+    await this.page.keyboard.press('Escape');
     let common = new commonTest(this.page);
     return await common.verifyHeaderFieldsSortIcons();
+  }
+
+  async programPagination(Pagelinks)
+  {
+    
+    let common = new commonTest(this.page);
+     await common.CommonpaginationValidation(Pagelinks);
   }
 
   // Add New program functions
@@ -167,6 +190,9 @@ export default class programPage {
       throw new Error(`No data found for scenario: ${scenario}`);
     }
 
+    /* if(scenario=='programforEdit'){
+      await this.programName.fill(this.generateRandomString(8));
+    } */
     await this.programName.fill(rowData.ProgramName);
     await this.prgDescription.fill(rowData.programDescription);
     if (rowData.Status == 'Active') {
@@ -222,20 +248,23 @@ export default class programPage {
     switch (scenario) {
       case "onlyMandatoryfields":
         console.log("Checking Valid Program Created Message..");
-
+        await this.pgmSuccessMessgae.waitFor({ timeout: 30000 });
         return await this.pgmSuccessMessgae.isVisible();
 
       case "withoutMandatoryfields":
         console.log("Checking Status Error Message..");
+        await this.pgmNameErrorMesg.waitFor({ timeout: 30000 });
         return await this.pgmNameErrorMesg.isVisible() && this.pgmdescriptionErrormesg.isVisible() && this.pgmStatusErrMesg.isVisible();
 
       case "cancelwithValidData":
+        await this.page.waitForTimeout(2000);
         if (await this.pgmPopupWindow.isVisible())
           return false;
         else
           return true;
 
       case "closewithValidData":
+        await this.page.waitForTimeout(2000);
         if (await this.pgmPopupWindow.isVisible())
           return false;
         else
@@ -386,7 +415,148 @@ export default class programPage {
       default:
         throw new Error(`Error: field "${programHeader}" not found!`);
     }
+   
   }
+
+
+  async searchProgram_Edit(scenario){
+    
+    await this.page.keyboard.press('Escape'); 
+    const rowData = testData.find(row => row.scenario === scenario);
+
+    if (!rowData) {
+      throw new Error(`No data found for scenario: ${scenario}`);
+    }
+
+    await this.searchBox.fill(rowData.ProgramName);
+    await this.page.keyboard.press('Enter');
+    await this.page.keyboard.press('Tab');
+
+    //await this.page.waitForSelector(editIcon);
+   // await this.editIcon.click();    
+
+  }
+
+
+async clickEditIcon()
+{
+  await this.page.waitForTimeout(1000);
+  await this.editIcon.click();  
+}
+
+
+  async EditPopUpWindowValidation()
+  {    
+    await this.clickEditIcon();
+    try {
+      if (await this.programName.isVisible()) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.error("Error checking visibility:", error);
+      return false;
+    }
+  }
+
+ 
+
+  async  generateRandomString(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+  
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters[randomIndex];
+    }
+  
+    return result;
+  }
+
+
+async newprogramForEdit()
+{
+    this.newProgramEnterDetails('programforEdit');
+    this.saveBtn.click();
+}
+
+  async editProgram(scenario)
+  {
+    
+    const rowData = testData.find(row => row.scenario === scenario);
+
+    if (!rowData) {
+      throw new Error(`No data found for scenario: ${scenario}`);
+    }
+
+    await this.clickEditIcon();
+
+    switch(scenario){
+
+      case "update_ProgramName":
+            await this.programName.click();
+            await this.page.keyboard.press('Control+A'); 
+            await this.page.keyboard.press('Backspace');
+            await this.programName.fill(rowData.ProgramName);    
+            await this.saveBtn.click(); 
+            break;
+        case "update_Programdescription":
+            await this.prgDescription.click();
+            await this.page.keyboard.press('Control+A'); 
+            await this.page.keyboard.press('Backspace');
+            await this.prgDescription.fill(rowData.programDescription); 
+            await this.saveBtn.click();  
+            break;
+         case "update_ProgramStatus":
+          await this.page.waitForTimeout(2000);
+          await this.prgDescription.click();
+          if (rowData.Status === 'Inactive') {
+            await this.prmInactiveBtn.click();
+           }    
+           await this.saveBtn.click(); 
+           break;
+           default:
+        throw new Error(`Error: field "${scenario}" not found!`);
+    }  
+    
+   
+  }
+
+
+
+async editProgramValidation(scenario)
+{
+
+ const rowData = testData.find(row => row.scenario === scenario);
+
+    if (!rowData) {
+      throw new Error(`No data found for scenario: ${scenario}`);
+    }
+   
+    switch(scenario){
+
+      case "update_ProgramName":
+        await this.searchBox.fill(rowData.ProgramName);
+        await this.page.keyboard.press('Enter');                  
+      console.log(pgmnamelist);
+      return expect(pgmnamelist).toContain(rowData.pgmNameslist);
+
+        case "update_Programdescription":
+          const pgmDeslist = await this.pgmDescriptionlist.textContent();
+          console.log(pgmDeslist);
+          return expect(pgmDeslist).toContain(rowData.programDescription);
+
+          case "update_ProgramStatus":               
+          const pgmstatuslist = await this.programStatusList.textContent();   
+          return expect(pgmstatuslist).toContain(rowData.Status);   
+              default:
+                throw new Error(`Error: field "${scenario}" not found!`);
+    }
+   
+}
+
+
 
   //------------------------------------DELETE FUCNTION METHODS---------------------------------
 
@@ -462,9 +632,32 @@ export default class programPage {
     return await this.managePgm.isVisible();
   }
 
-  // --------------------------------DELETE OVER------------------------------------------
+  // --------------------------------FOR CHAINING ------------------------------------------
+
+  async chainingNewProgram(prgName){
+    console.log("Into chaining New Program Method....")
+    await this.programBtn.click();
+    await this.AddNewpgmBtn.click();
+    await this.programName.fill(prgName);
+    await this.prgDescription.fill("Chaining Prog Description");
+    await this.pgmActiveBtn.click();   
+    await this.saveBtn.click();
+  //  return await this.successMsgNewProg.isVisible();
+  }
 
 
+  	// --------------------------------FOR CHAINING ------------------------------------------
 
+    async chainingNewProgram(prgName){
+      console.log("Into chaining New Program Method....")
+      await this.programBtn.click();
+      await this.AddNewpgmBtn.click();
+      await this.programName.fill(prgName);
+      await this.prgDescription.fill("Chaining Prog Description");
+      await this.pgmActiveBtn.click();   
+      await this.saveBtn.click();
+    //  return await this.successMsgNewProg.isVisible();
+    }
+      
+  
 }
-

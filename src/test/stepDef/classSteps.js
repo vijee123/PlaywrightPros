@@ -1,5 +1,4 @@
 import { expect } from '@playwright/test';
-//import { test, Given, Then, When } from '../../../fixture/customFixtures.js';
 import { Given, Then, When } from '../../../fixture/customFixtures.js';
 
 const { faker } = require('@faker-js/faker');
@@ -7,9 +6,7 @@ const path = require('path');
 const { readCSV } = require('../utils/csvReader');
 const csvPath = path.resolve(__dirname, '../../../test-data/classTestData.csv');
 const classTestData = readCSV(csvPath);
-
-//import { chainingData } from "../utils/chainingData.js";
-//console.log("Chaining batchName data into class Steps is: "+chainingData.getBatchName());
+import { chainingData } from "../utils/chainingData.js";
 
 
 When('Admin clicks the Class Navigation bar in the Header', async ({ classPageFixture }) => {
@@ -73,10 +70,8 @@ When('Admin clicks the Add New Class button and enters the details of {string} i
     throw new Error(`No data found for scenario: ${scenario}`);
   }
 
-  // Scenarios where we want a random alphanumeric value starting with "Playwright"
   const randomClassScenarios = ["validClass", "withoutClassDesc", "withoutNotes", "withoutRec"];
 
-  // Generate classTopic only for specified scenarios
   const classTopic = randomClassScenarios.includes(scenario)
     ? `Playwright_${faker.string.alphanumeric(3).toUpperCase()}`
     : rowData.classTopic;
@@ -347,3 +342,67 @@ When('Admin searches by below scenario {string} in the Class module', async ({cl
   console.log("Searching using "+classSearch+" is successful: "+result);
   expect(result).toBe(true);
 });
+
+//---------------------------- CHAINING SCENARIO STEPS ----------------------------------------
+
+Given('Admin creates a new Program for chaining', async ({programPageFixture}) => {
+  
+  console.log("Admin creates a new Program for chaining...");
+  const ProgramName = `ChainProgram${faker.string.alpha(3).toUpperCase()}`;
+  console.log(`Generated Program Name: ${ProgramName}`);
+  //const progSuccessMsg = 
+  await programPageFixture.chainingNewProgram(ProgramName);
+  //console.log("Is the program created successfully: "+progSuccessMsg);
+  //if(progSuccessMsg){
+    chainingData.setProgramName(ProgramName);
+    console.log("Program name is set as "+chainingData.getProgramName()+" in the chaining data...")
+   //}
+  // else{ //console.log("The program data is not set in chaining data successfully..."); } 
+
+});
+
+When('Admin creates a new batch with the created Program', async ({batchPageFixture}) => {
+   console.log("Admin creates a new Batch for chaining with newly created program...");
+    const batchId = `${faker.string.numeric(3)}`;          
+    //const batchCreated = 
+    await batchPageFixture.chainingFillNewBatchForm(batchId);
+    console.log("Batch is created successfully in chaining....");
+   
+});
+
+Then('Admin should be able to create a new class with the newly created batch', async ({classPageFixture}) => {
+  console.log("Admin creates a new class for chaining with new program and new batch created...");
+  
+ 
+  //-----------------------CHAINING ------------------
+  await classPageFixture.clickAddNewClassButton();
+  console.log("Admin enters the given details in the Create Class form");
+  
+  const classTopic = `Playwright_${faker.string.alphanumeric(3).toUpperCase()}`;
+  const batchName =  chainingData.getBatchName();
+  console.log("Class Topic generated for chaining is : ", classTopic);
+  chainingData.setClassName(classTopic);
+  console.log("The Batch Name is: " +batchName);
+  await classPageFixture.fillCreateClassForm({
+    batchName: batchName,
+    classTopic: classTopic,
+    classDesc: "chaining class Desc",
+    classDates: "04/28/2025,04/29/2025",
+    staffName: "Kevin Thomas",
+    status: "Active",
+    comments: "Chaining",
+    notes: "My notes",
+    recording: "Chain recording"
+   })
+
+   await classPageFixture.clickSaveButton();
+   console.log("The Class created using chaining is: "+chainingData.getClassName());
+   console.log("Chaining is completed successfully between program, batch and Class modules!!!!!");
+     
+});
+
+
+Then('Admin navigated to the respective pages when he clicks the {string} link on the data table in Class module', async ({classPageFixture}, pagelinks) => {
+  await classPageFixture.classPagination(pagelinks);
+});
+
