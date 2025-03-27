@@ -44,6 +44,7 @@ export default class batchPage {
         this.batchStatusEmptyErrorMsg = this.page.locator("//small[text()='Status is required.']");
         this.noOfClassesEmptyErrorMsg = this.page.locator("//small[text()='Number of classes is required.']");
         this.progCloseBtn = this.page.locator("//i[contains(@class,'p-dropdown-clear-icon')]");
+        this.progCloseBtn = this.page.locator("//i[contains(@class,'p-dropdown-clear-icon')]");
 
         //editIcon Elements
         this.editPopUp = this.page.locator("//div[@role='dialog']");
@@ -566,5 +567,30 @@ export default class batchPage {
         }
         return false;
     }
+
+
+    //--------------------------------CHAINING-----------------------------------
+ 
+ 
+        async chainingFillNewBatchForm(batchId) {
+           await this.batchMenuLink.click();
+           await this.addNewBatchMenuBtn.click();
+           await this.page.locator("//div[@role='button']").click();
+           const programName = chainingData.getProgramName();
+           console.log("Program name from chaining is: " + programName);         
+           await this.page.locator(`//div[contains(@class,'p-dropdown-panel')]//span[text()='${programName}']`).click();      
+           await this.batchNameInput.fill(String(batchId)); 
+           await this.batchDescription.fill("chaining batch Desc");
+           await this.statusActiveRadioBtn.click();
+           await this.NoOfClasses.fill(`${3}`);
+           await this.addNewBatchSaveBtn.click();
+           const BatchName = chainingData.getProgramName()+String(batchId)
+           if(this.successMsg.isVisible())
+            {
+             chainingData.setBatchName(BatchName);
+             console.log("The BatchName created is: "+chainingData.getBatchName());
+            }
+           return this.successMsg.isVisible();
+        }
 
 }
