@@ -402,3 +402,7 @@ Then('Admin should be able to create a new class with the newly created batch', 
 });
 
 
+Then('Admin navigated to the respective pages when he clicks the {string} link on the data table in Class module', async ({classPageFixture}, pagelinks) => {
+  await classPageFixture.classPagination(pagelinks);
+});
+

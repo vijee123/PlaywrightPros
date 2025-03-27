@@ -42,7 +42,7 @@ Feature: program Module
       | Delete_Icon |
 
 
-  #  # Add New Program Scenarios
+#   #  # Add New Program Scenarios
 
   Scenario: Verify add New Program pop up window
     Then Admin should see pop up window for program details after clicking the Add New Program button
@@ -51,7 +51,7 @@ Feature: program Module
     Then Admin should see the pop up window title as "Program Details" after clicking the Add New Program button
 
 
-   #  Add New Program
+#    #  Add New Program
  
 
 Scenario Outline: Verify Add New Program functionalities   
@@ -75,7 +75,7 @@ When 	Admin clicks on Edit option for particular program
 Then Admin lands on Program details form
 Then Admin should see the Heading as Program Details      
 
- # Edit Program
+#  # Edit Program
 
 
 Scenario Outline: Verify Edit Program Functionalities
@@ -111,7 +111,7 @@ Examples:
 |Program Status|
 
 
-# # Manage Program Sorting 
+# # # Manage Program Sorting 
 
 Scenario Outline: Manage Program - Sorting Program by Program Name/Program Description
 
@@ -125,7 +125,7 @@ Examples:
 |ProgramDescription_DecendingOrder|
 
 
-# #Program Pagination
+# # #Program Pagination
 
 Scenario Outline: Validating the text and pagination icon in the programPage
       Then Admin should see the below "<items>" pagination controls under the data table in the programPage
@@ -153,6 +153,17 @@ Examples:
 |searchBy_InValidProgramName|
 |searchBy_PartialProgramName|
 
+
+# Pagination links
+
+Scenario Outline: Program Page Pagination
+Then Admin navigated to the respective pages when he clicks the "<pages>" link on the data table in program module
+  Examples:
+      | pages    |
+      | next     |
+      | previous |
+      | first    |
+      | last     |
 
   ############################# Program Delete Scenarios##########################################
 

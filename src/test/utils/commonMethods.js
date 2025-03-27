@@ -41,6 +41,13 @@ export default class commonTest {
         this.secondCheckBox = this.page.locator("(//tbody//div[@role='checkbox'])[2]");
         this.multiDeleteIcon = this.page.locator("//mat-card-title[@class='mat-card-title']//button[@icon='pi pi-trash']");
 
+// Pagination locators
+
+       this.nextPage = this.page.locator("//button[contains(@class,'p-paginator-next')]");
+        this.lastPage = this.page.locator("//button[contains(@class,'p-paginator-last')]");
+        this.previousPage = this.page.locator("//button[contains(@class,'p-paginator-prev')]");
+
+        this.FirstPage = this.page.locator("//button[contains(@class,'p-paginator-first')]");
 
     }
 
@@ -400,8 +407,73 @@ export default class commonTest {
 
 
 
+ //pagination
+
+ async CommonpaginationValidation(pages) {
+    await this.page.keyboard.press('Escape');
+    //await this.page.waitForTimeout(2000);
+
+    await this.nextPage.click();
+    // const pagination = await this.page.locator("//span[@class='p-paginator-pages ng-star-inserted']");
+    const paginationPages = await this.page.locator("//span[contains(@class,'p-paginator-pages')]//button[contains(@class,'p-highlight')]");
+    await paginationPages.scrollIntoViewIfNeeded();
+    //await paginationPages.waitFor({ state: 'visible' });
+    //
+    const highlightedPage = await paginationPages.textContent();
+    console.log("current page: ", highlightedPage);
+    const befor = Number(highlightedPage);
+    let afterNum;
+    switch (pages) {
+        case 'next':
+            await this.nextPage.click();
+            const afterPage = await this.page.locator("//span[contains(@class,'p-paginator-pages')]//button[contains(@class,'p-highlight')]");
+            const after = await afterPage.textContent();
+            console.log("after clciking next button the current page is :", after);
+            afterNum = Number(after);
+            if (afterNum == befor + 1) {
+                return true;
+            }
+            return false;
+
+        case 'previous':
+            const notEnabled = await this.previousPage.isDisabled();
+            if (!notEnabled) {
+                console.log("previousPage is enabled..");
+                await this.previousPage.click();
+
+            } else {
+                await this.previousPage.waitFor({ state: 'visible', timeout: 3000 });
+                console.log("previousPage is enabled now..");
+                await this.previousPage.click();
+
+            }
+            const prevPage = await this.page.locator("//span[contains(@class,'p-paginator-pages')]//button[contains(@class,'p-highlight')]").textContent();
+            afterNum = Number(prevPage);
+            if (afterNum == befor - 1) {
+                console.log("After clicking previoud button, the current page is:", afterNum);
+                return true;
+            }
+            return false;
+
+        case 'last':
+            await this.lastPage.click();
+            const isdisabled = await this.nextPage.isDisabled();
+            if (isdisabled) {
+                console.log("currently in very last page!!next page is disabled..");
+            }
+            return isdisabled;
 
 
+        case 'first':
+            await this.FirstPage.click();
+            const isdisabledF = await this.previousPage.isDisabled();
+            if (isdisabledF) {
+                console.log("Currently in very first page!!!...previous page is disabled...");
+            }
+            return isdisabledF;
+
+    }
+}
 
 }
 

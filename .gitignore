@@ -1,7 +1,6 @@
 # Playwright
 /allure-results/
-/config/
-/fixture/
+/test-results/
 /node_modules/
 /playwright-report/
 /test-results/
