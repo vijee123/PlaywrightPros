@@ -192,8 +192,7 @@ Feature: Validate class page functionality
       | ClassDescription_DescendingOrder |
       | staffName_AscendingOrder         |
       | staffName_DecendingOrder         |
-      # | classDate_AscendingOrder         |
-      # | classDate_DescendingOrder        |
+   
 
       # # Search class scenarios
   Scenario Outline: Scenario Outline name: Search class by Batch Name, Class topic, Class Description and by Staff Name
@@ -204,6 +203,3 @@ Feature: Validate class page functionality
       | searchBy_classTopic       |
       | searchBy_ClassDescription |
       | searchBy_staffName        |
-
-
-
